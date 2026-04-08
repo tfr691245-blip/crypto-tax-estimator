@@ -2,58 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tax Estimator | CryptoTax</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #4c1d95 100%); background-attachment: fixed; }
+        .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-gradient { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
+        .btn-gradient:hover { background: linear-gradient(135deg, #7c3aed, #4f46e5); transform: translateY(-2px); }
+        .file-drop-area { transition: all 0.2s ease; }
+        .file-drop-area:hover { border-color: #8b5cf6; background: rgba(139,92,246,0.1); }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <nav class="bg-white shadow-md">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="font-bold text-2xl text-purple-600">💰 CryptoTax</div>
-            <div class="space-x-4">
-                <a href="index.html" class="text-gray-600">Home</a>
-                <a href="dashboard.html" class="text-gray-600">Dashboard</a>
-                <a href="airdrop-claim.html" class="text-gray-600">Claim</a>
+<body class="min-h-screen">
+    <nav class="glass-card fixed w-full z-20 border-b border-white/10">
+        <div class="container mx-auto px-5 sm:px-8 py-3.5 sm:py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl sm:text-3xl">💰</span>
+                <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
+            </div>
+            <div class="flex items-center gap-3 sm:gap-6">
+                <a href="index.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition">Home</a>
+                <a href="dashboard.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition">Dashboard</a>
+                <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-semibold shadow-lg">Claim</a>
             </div>
         </div>
     </nav>
-    <div class="container mx-auto px-6 py-12">
+
+    <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-36 pb-16 sm:pb-24">
         <div class="max-w-4xl mx-auto">
-            <div class="bg-white rounded-2xl shadow-xl p-8">
-                <h1 class="text-3xl font-bold mb-2">Tax Estimator</h1>
-                <p class="text-gray-500 mb-6">Upload your CSV file to calculate capital gains. Requires 5 CUT tokens.</p>
-                <div id="walletStatus" class="mb-6">
-                    <button id="connectBtn" class="bg-purple-600 text-white px-6 py-2 rounded-xl font-semibold">Connect Wallet</button>
+            <div class="text-center mb-10">
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-3 tracking-tight">Tax Estimator</h1>
+                <p class="text-gray-300 text-base sm:text-lg">Upload your CSV file to calculate capital gains. Requires 5 CUT tokens.</p>
+            </div>
+
+            <div id="walletStatus" class="glass-card rounded-2xl p-8 mb-8 text-center">
+                <button id="connectBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">🔌 Connect Wallet</button>
+            </div>
+
+            <div id="uploadArea" class="hidden">
+                <div class="glass-card rounded-2xl p-8 text-center file-drop-area cursor-pointer border-2 border-dashed border-white/20">
+                    <input type="file" id="csvFile" accept=".csv" class="hidden">
+                    <button id="uploadBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">📂 Upload CSV File</button>
+                    <p class="text-gray-400 text-sm mt-4">Format: date,type,amount,price<br>Example: 2024-01-01,buy,0.5,2000</p>
                 </div>
-                <div id="uploadArea" class="hidden">
-                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-purple-400 transition">
-                        <input type="file" id="csvFile" accept=".csv" class="hidden">
-                        <button id="uploadBtn" class="bg-purple-600 text-white px-6 py-3 rounded-xl font-semibold">📂 Upload CSV File</button>
-                        <p class="text-gray-400 text-sm mt-2">Format: date,type,amount,price (e.g., 2024-01-01,buy,0.5,2000)</p>
-                    </div>
-                </div>
-                <div id="resultArea" class="mt-6 hidden">
-                    <h2 class="text-xl font-semibold mb-3">Your Tax Estimate</h2>
-                    <div id="taxResult" class="bg-gray-50 p-4 rounded-xl"></div>
-                    <button id="downloadBtn" class="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">📄 Download PDF</button>
-                </div>
+            </div>
+
+            <div id="resultArea" class="hidden glass-card rounded-2xl p-6 sm:p-8 mt-8">
+                <h2 class="text-2xl font-bold text-white mb-4">📊 Your Tax Estimate</h2>
+                <div id="taxResult" class="space-y-2 text-gray-200"></div>
+                <button id="downloadBtn" class="mt-6 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-xl transition">📄 Download PDF</button>
             </div>
         </div>
     </div>
+
     <script>
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev/api/calculate-tax';
         let walletAddress = null;
         let currentTaxResult = null;
+
         document.getElementById('connectBtn').onclick = async () => {
             if (!window.ethereum) return alert('Install MetaMask!');
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             walletAddress = await signer.getAddress();
-            document.getElementById('connectBtn').innerText = `Connected: ${walletAddress.slice(0,6)}...`;
+            document.getElementById('connectBtn').innerHTML = `✅ Connected: ${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}`;
             document.getElementById('connectBtn').disabled = true;
             document.getElementById('uploadArea').classList.remove('hidden');
         };
+
         document.getElementById('uploadBtn').onclick = () => document.getElementById('csvFile').click();
         document.getElementById('csvFile').onchange = async (e) => {
             const file = e.target.files[0];
@@ -65,7 +85,7 @@
                 return { date, type, amount: parseFloat(amount), price: parseFloat(price) };
             });
             document.getElementById('uploadBtn').disabled = true;
-            document.getElementById('uploadBtn').innerText = 'Processing...';
+            document.getElementById('uploadBtn').innerHTML = '⏳ Processing...';
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
@@ -76,21 +96,19 @@
                 if (!res.ok) throw new Error(data.error);
                 currentTaxResult = data.taxResult;
                 document.getElementById('taxResult').innerHTML = `
-                    <p><strong>Total Gain:</strong> $${currentTaxResult.totalGain}</p>
-                    <p><strong>Estimated Tax (20%):</strong> $${currentTaxResult.estimatedTax}</p>
-                    <p><strong>Transactions Processed:</strong> ${currentTaxResult.transactionsProcessed}</p>
+                    <p>💰 <strong>Total Gain:</strong> $${currentTaxResult.totalGain}</p>
+                    <p>📉 <strong>Estimated Tax (20%):</strong> $${currentTaxResult.estimatedTax}</p>
+                    <p>📄 <strong>Transactions Processed:</strong> ${currentTaxResult.transactionsProcessed}</p>
                 `;
                 document.getElementById('resultArea').classList.remove('hidden');
             } catch (err) {
                 alert(`Error: ${err.message}`);
             } finally {
                 document.getElementById('uploadBtn').disabled = false;
-                document.getElementById('uploadBtn').innerText = '📂 Upload CSV File';
+                document.getElementById('uploadBtn').innerHTML = '📂 Upload CSV File';
             }
         };
-        document.getElementById('downloadBtn').onclick = () => {
-            alert('PDF generation will be added soon. Your tax result is ready!');
-        };
+        document.getElementById('downloadBtn').onclick = () => alert('PDF generation coming soon. Your tax result is ready!');
     </script>
 </body>
 </html>
