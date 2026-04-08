@@ -13,7 +13,7 @@
         .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
         .btn-gradient { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
         .btn-gradient:hover { background: linear-gradient(135deg, #7c3aed, #4f46e5); transform: translateY(-2px); }
-        .debug { font-size: 11px; color: #aaa; word-break: break-all; }
+        .error-text { color: #f87171; font-size: 12px; margin-top: 8px; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -49,11 +49,11 @@
             <div class="glass-card rounded-2xl p-6 sm:p-8 mb-6">
                 <h2 class="text-xl font-bold text-white mb-3">🔍 Manual Wallet Lookup</h2>
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <input type="text" id="manualAddress" placeholder="Enter wallet address (0x...)" class="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500">
+                    <input type="text" id="manualAddress" placeholder="Enter wallet address (0x...)" value="0xab659c1d4550da1f4d6454ca2e6c77ef6c019406" class="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500">
                     <button id="manualConnectBtn" class="btn-gradient text-white font-semibold px-6 py-3 rounded-xl shadow-lg whitespace-nowrap">View Balance</button>
                 </div>
+                <div id="manualError" class="error-text hidden"></div>
                 <p class="text-gray-400 text-xs mt-3">Example: 0xab659c1d4550da1f4d6454ca2e6c77ef6c019406</p>
-                <div id="debugManual" class="debug mt-2 hidden"></div>
             </div>
 
             <div class="text-center text-gray-400 text-sm mb-6">— OR —</div>
@@ -74,7 +74,6 @@
                             <p id="displayBalance" class="text-3xl font-bold text-purple-400">0 CUT</p>
                         </div>
                     </div>
-                    <div id="debugInfo" class="debug mt-2 text-gray-400 text-xs"></div>
                 </div>
                 <div class="glass-card rounded-2xl p-6 sm:p-8">
                     <h2 class="text-2xl font-bold text-white mb-4">📄 Your Tax Reports</h2>
@@ -84,8 +83,107 @@
                 </div>
             </div>
 
-            <!-- Step cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 mt-12">
                 <div class="glass-card rounded-2xl p-5">
                     <div class="text-3xl mb-2">1️⃣</div>
-                    <h3 class="text-white font-bold text
+                    <h3 class="text-white font-bold text-base sm:text-lg mb-1">Connect Wallet</h3>
+                    <p class="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">Connect your MetaMask wallet on Polygon Amoy testnet.</p>
+                </div>
+                <div class="glass-card rounded-2xl p-5">
+                    <div class="text-3xl mb-2">2️⃣</div>
+                    <h3 class="text-white font-bold text-base sm:text-lg mb-1">Upload CSV</h3>
+                    <p class="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">Upload your transaction history from any exchange.</p>
+                </div>
+                <div class="glass-card rounded-2xl p-5">
+                    <div class="text-3xl mb-2">3️⃣</div>
+                    <h3 class="text-white font-bold text-base sm:text-lg mb-1">Pay & Download</h3>
+                    <p class="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">Pay 5 CUT tokens and download your PDF report.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TOKEN_CONTRACT = '0xFa27130a7A85e96B9b814045545d7Cf6e8c2E8EC';
+        // Use a reliable public RPC as fallback
+        const RPC_URL = 'https://rpc-amoy.polygon.technology';
+        
+        const tokenABI = [
+            'function balanceOf(address owner) view returns (uint256)',
+            'function decimals() view returns (uint8)'
+        ];
+
+        let provider = new ethers.JsonRpcProvider(RPC_URL);
+        let tokenContract = new ethers.Contract(TOKEN_CONTRACT, tokenABI, provider);
+
+        async function fetchBalance(address) {
+            try {
+                const balanceRaw = await tokenContract.balanceOf(address);
+                const decimals = await tokenContract.decimals();
+                const balance = ethers.formatUnits(balanceRaw, decimals);
+                return parseFloat(balance);
+            } catch (err) {
+                console.error('fetchBalance error:', err);
+                throw err;
+            }
+        }
+
+        function showWalletInfo(address, balance) {
+            document.getElementById('displayAddress').innerText = address;
+            document.getElementById('displayBalance').innerHTML = `${balance.toLocaleString()} CUT`;
+            document.getElementById('walletStatus').classList.add('hidden');
+            document.getElementById('walletInfo').classList.remove('hidden');
+        }
+
+        // Manual connect
+        document.getElementById('manualConnectBtn').onclick = async () => {
+            const address = document.getElementById('manualAddress').value.trim();
+            const errorDiv = document.getElementById('manualError');
+            errorDiv.classList.add('hidden');
+            
+            if (!address || !address.startsWith('0x') || address.length !== 42) {
+                errorDiv.innerText = 'Invalid wallet address. Must be 0x followed by 40 hex characters.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // Show loading on button
+            const btn = document.getElementById('manualConnectBtn');
+            const originalText = btn.innerText;
+            btn.innerText = 'Loading...';
+            btn.disabled = true;
+            
+            try {
+                const balance = await fetchBalance(address);
+                if (balance === undefined) throw new Error('No balance returned');
+                showWalletInfo(address, balance);
+            } catch (err) {
+                errorDiv.innerText = `Error: ${err.message}. Check console for details.`;
+                errorDiv.classList.remove('hidden');
+                console.error(err);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        // MetaMask connect
+        document.getElementById('connectBtn').onclick = async () => {
+            if (!window.ethereum) {
+                alert('Please install MetaMask!');
+                return;
+            }
+            try {
+                const metamaskProvider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await metamaskProvider.getSigner();
+                const address = await signer.getAddress();
+                const balance = await fetchBalance(address);
+                showWalletInfo(address, balance);
+            } catch (err) {
+                console.error(err);
+                alert('Failed to connect wallet: ' + err.message);
+            }
+        };
+    </script>
+</body>
+</html>
