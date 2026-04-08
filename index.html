@@ -3,47 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Crypto Tax Estimator</title>
+    <title>Crypto Tax Estimator | Professional Crypto Tax Reports</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        /* Better touch targets on mobile */
-        button, a { cursor: pointer; touch-action: manipulation; }
+        * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #4c1d95 100%); background-attachment: fixed; }
+        .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .step-card { transition: all 0.3s ease; }
+        .step-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
+        .btn-glow:hover { box-shadow: 0 0 20px rgba(139,92,246,0.5); }
     </style>
 </head>
 <body class="min-h-screen">
-    <nav class="bg-white/10 backdrop-blur-lg fixed w-full z-10">
-        <div class="container mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
-            <div class="text-white font-bold text-xl sm:text-2xl">💰 CryptoTax</div>
-            <div class="flex gap-2 sm:gap-4">
-                <a href="dashboard.html" class="text-white text-sm sm:text-base hover:text-purple-200">Dashboard</a>
-                <a href="tax-estimator.html" class="text-white text-sm sm:text-base hover:text-purple-200">Estimator</a>
-                <a href="airdrop-claim.html" class="bg-white text-purple-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-semibold">Claim</a>
+    <!-- NAVBAR – Glassmorphism with better spacing -->
+    <nav class="glass-card fixed w-full z-20 border-b border-white/10">
+        <div class="container mx-auto px-5 sm:px-8 py-3.5 sm:py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl sm:text-3xl">💰</span>
+                <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
+            </div>
+            <div class="flex items-center gap-3 sm:gap-6">
+                <a href="dashboard.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition">Dashboard</a>
+                <a href="tax-estimator.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition">Estimator</a>
+                <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-semibold shadow-lg hover:shadow-purple-500/25 transition-all">Claim</a>
             </div>
         </div>
     </nav>
-    <div class="container mx-auto px-4 sm:px-6 pt-20 sm:pt-32 pb-12 sm:pb-20">
-        <div class="max-w-4xl mx-auto text-center text-white">
-            <h1 class="text-3xl sm:text-5xl font-bold mb-4 sm:mb-6 leading-tight">Estimate Your Crypto Taxes in 2 Minutes</h1>
-            <p class="text-base sm:text-xl mb-6 sm:mb-8 px-2 sm:px-0">Upload your transaction history, pay 5 CUT tokens, and get an instant PDF tax report.</p>
-            <a href="dashboard.html" class="bg-white text-purple-600 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-bold text-base sm:text-lg hover:shadow-xl transition inline-block">Launch App →</a>
+
+    <!-- HERO SECTION – Pro spacing -->
+    <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-36 pb-16 sm:pb-24">
+        <div class="max-w-4xl mx-auto text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-white/20">
+                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                <span class="text-white text-xs sm:text-sm font-medium">Live on Polygon Amoy</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white mb-5 leading-tight tracking-tight">
+                Estimate Your Crypto<br>Taxes in <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">2 Minutes</span>
+            </h1>
+            
+            <p class="text-gray-300 text-base sm:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">
+                Upload your transaction history, pay 5 CUT tokens, and get an instant PDF tax report. No spreadsheets, no headaches.
+            </p>
+            
+            <a href="dashboard.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl text-base sm:text-lg shadow-2xl transition-all duration-300 btn-glow">
+                Launch App
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+            </a>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-12 sm:mt-20">
-            <div class="bg-white/10 backdrop-blur rounded-2xl p-5 sm:p-6 text-white">
-                <div class="text-3xl mb-2 sm:mb-3">1️⃣</div>
-                <h3 class="text-lg sm:text-xl font-bold mb-1">Connect Wallet</h3>
-                <p class="text-sm sm:text-base">Connect your MetaMask wallet on Polygon Amoy testnet.</p>
+
+        <!-- STEP CARDS – Pro layout with icons -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto mt-20 sm:mt-28">
+            <!-- Step 1 -->
+            <div class="glass-card rounded-2xl p-6 sm:p-7 step-card">
+                <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <span class="text-2xl">1️⃣</span>
+                </div>
+                <h3 class="text-white text-xl font-bold mb-2">Connect Wallet</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">Connect your MetaMask wallet on Polygon Amoy testnet. One click, fully secure.</p>
             </div>
-            <div class="bg-white/10 backdrop-blur rounded-2xl p-5 sm:p-6 text-white">
-                <div class="text-3xl mb-2 sm:mb-3">2️⃣</div>
-                <h3 class="text-lg sm:text-xl font-bold mb-1">Upload CSV</h3>
-                <p class="text-sm sm:text-base">Upload your transaction history from any exchange.</p>
+            <!-- Step 2 -->
+            <div class="glass-card rounded-2xl p-6 sm:p-7 step-card">
+                <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <span class="text-2xl">2️⃣</span>
+                </div>
+                <h3 class="text-white text-xl font-bold mb-2">Upload CSV</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">Export your transaction history from any exchange and upload it. We handle the rest.</p>
             </div>
-            <div class="bg-white/10 backdrop-blur rounded-2xl p-5 sm:p-6 text-white">
-                <div class="text-3xl mb-2 sm:mb-3">3️⃣</div>
-                <h3 class="text-lg sm:text-xl font-bold mb-1">Pay & Download</h3>
-                <p class="text-sm sm:text-base">Pay 5 CUT tokens and download your tax report PDF.</p>
+            <!-- Step 3 -->
+            <div class="glass-card rounded-2xl p-6 sm:p-7 step-card">
+                <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <span class="text-2xl">3️⃣</span>
+                </div>
+                <h3 class="text-white text-xl font-bold mb-2">Pay & Download</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">Pay 5 CUT tokens and instantly download your professional tax report PDF.</p>
             </div>
+        </div>
+
+        <!-- TRUST BADGE (optional pro touch) -->
+        <div class="text-center mt-16">
+            <p class="text-gray-400 text-xs sm:text-sm flex items-center justify-center gap-2">
+                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                Secure • Instant • No Signup Required
+            </p>
         </div>
     </div>
 </body>
