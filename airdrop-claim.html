@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Airdrop | CryptoTax</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+</head>
+<body class="bg-gradient-to-r from-purple-600 to-blue-600 min-h-screen">
+    <div class="container mx-auto px-6 py-20">
+        <div class="max-w-md mx-auto bg-white rounded-2xl shadow-2xl p-8 text-center">
+            <h1 class="text-3xl font-bold mb-2">🎁 Claim Free Tokens</h1>
+            <p class="text-gray-500 mb-6">Get 10 CUT tokens to test the tax estimator.</p>
+            <div id="walletStatus">
+                <button id="connectBtn" class="bg-purple-600 text-white px-6 py-2 rounded-xl font-semibold w-full">Connect Wallet</button>
+            </div>
+            <div id="claimArea" class="hidden mt-6">
+                <button id="claimBtn" class="bg-green-600 text-white px-6 py-2 rounded-xl font-semibold w-full">Claim 10 CUT</button>
+                <p id="claimStatus" class="text-sm text-gray-500 mt-3"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        let signer, walletAddress;
+        document.getElementById('connectBtn').onclick = async () => {
+            if (!window.ethereum) return alert('Install MetaMask!');
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            signer = await provider.getSigner();
+            walletAddress = await signer.getAddress();
+            document.getElementById('connectBtn').innerText = `Connected: ${walletAddress.slice(0,6)}...`;
+            document.getElementById('connectBtn').disabled = true;
+            document.getElementById('claimArea').classList.remove('hidden');
+        };
+        document.getElementById('claimBtn').onclick = async () => {
+            document.getElementById('claimBtn').disabled = true;
+            document.getElementById('claimStatus').innerText = 'Claiming...';
+            alert('On testnet, tokens are claimed via the token owner. Contact admin or use faucet.');
+            document.getElementById('claimStatus').innerText = 'Manual claim: Contact support';
+            document.getElementById('claimBtn').disabled = false;
+        };
+    </script>
+</body>
+</html>
