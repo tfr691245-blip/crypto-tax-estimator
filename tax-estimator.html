@@ -18,16 +18,20 @@
     </style>
 </head>
 <body class="min-h-screen">
+    <!-- NAVBAR – FIXED SPACING -->
     <nav class="glass-card fixed w-full z-20 border-b border-white/10">
-        <div class="container mx-auto px-5 sm:px-8 py-3.5 sm:py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <span class="text-2xl sm:text-3xl">💰</span>
-                <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
-            </div>
-            <div class="flex items-center gap-3 sm:gap-6">
-                <a href="index.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition">Home</a>
-                <a href="dashboard.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition">Dashboard</a>
-                <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-semibold shadow-lg">Claim</a>
+        <div class="container mx-auto px-4 sm:px-8 py-3 sm:py-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl sm:text-3xl">💰</span>
+                    <span class="text-white font-bold text-lg sm:text-2xl tracking-tight">CryptoTax</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 sm:gap-5">
+                    <a href="index.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Home</a>
+                    <a href="dashboard.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Estimator</a>
+                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-3 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg whitespace-nowrap">Claim</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -35,11 +39,15 @@
     <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-36 pb-16 sm:pb-24">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-10">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-white/20">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span class="text-white text-xs sm:text-sm font-medium">Live on Polygon Amoy</span>
+                </div>
                 <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-3 tracking-tight">Tax Estimator</h1>
                 <p class="text-gray-300 text-base sm:text-lg">Upload your CSV file to calculate capital gains. Requires 5 CUT tokens.</p>
             </div>
 
-            <div id="walletStatus" class="glass-card rounded-2xl p-8 mb-8 text-center">
+            <div id="walletStatus" class="glass-card rounded-2xl p-6 sm:p-8 mb-8 text-center">
                 <button id="connectBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">🔌 Connect Wallet</button>
             </div>
 
