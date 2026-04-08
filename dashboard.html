@@ -16,7 +16,6 @@
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- NAVBAR -->
     <nav class="glass-card fixed w-full z-20 border-b border-white/10">
         <div class="container mx-auto px-4 sm:px-8 py-3 sm:py-4">
             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -55,17 +54,12 @@
                 <p class="text-gray-400 text-xs mt-3">Example: 0xab659c1d4550da1f4d6454ca2e6c77ef6c019406</p>
             </div>
 
-            <!-- OR Divider -->
             <div class="text-center text-gray-400 text-sm mb-6">— OR —</div>
 
-            <!-- MetaMask Connect -->
             <div id="walletStatus" class="glass-card rounded-2xl p-6 sm:p-8 mb-8 text-center">
-                <button id="connectBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg transition-all duration-200">
-                    🔌 Connect MetaMask
-                </button>
+                <button id="connectBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">🔌 Connect MetaMask</button>
             </div>
 
-            <!-- Wallet Info (shown after either connection method) -->
             <div id="walletInfo" class="hidden space-y-6">
                 <div class="glass-card rounded-2xl p-6 sm:p-8">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -87,7 +81,6 @@
                 </div>
             </div>
 
-            <!-- Step cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 mt-12">
                 <div class="glass-card rounded-2xl p-5">
                     <div class="text-3xl mb-2">1️⃣</div>
@@ -110,36 +103,22 @@
 
     <script>
         const TOKEN_CONTRACT = '0xFa27130a7A85e96B9b814045545d7Cf6e8c2E8EC';
-        let provider;
+        const RPC_URL = 'https://lb.drpc.live/polygon-amoy/AlKOOugi5EgeoaJxUsJsaFsKxwDeMRwR8aGVGrar0DFx';
         const tokenABI = [
             'function balanceOf(address owner) view returns (uint256)',
             'function decimals() view returns (uint8)'
         ];
 
-        // Helper: fetch balance for any address
+        // Create a read-only provider using the RPC URL
+        const provider = new ethers.JsonRpcProvider(RPC_URL);
+        const tokenContract = new ethers.Contract(TOKEN_CONTRACT, tokenABI, provider);
+
         async function fetchBalance(address) {
             try {
-                const rpcUrl = 'https://lb.drpc.live/polygon-amoy/AlKOOugi5EgeoaJxUsJsaFsKxwDeMRwR8aGVGrar0DFx';
-                const balanceOfSelector = '0x70a08231';
-                const paddedAddress = address.slice(2).padStart(64, '0');
-                const data = balanceOfSelector + paddedAddress;
-                const response = await fetch(rpcUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        method: 'eth_call',
-                        params: [{ to: TOKEN_CONTRACT, data: data }, 'latest'],
-                        id: 1
-                    })
-                });
-                const dataJson = await response.json();
-                if (dataJson.error) throw new Error(dataJson.error.message);
-                const balanceHex = dataJson.result;
-                const balanceRaw = parseInt(balanceHex, 16);
-                const decimals = 18;
-                const balance = balanceRaw / Math.pow(10, decimals);
-                return balance;
+                const balanceRaw = await tokenContract.balanceOf(address);
+                const decimals = await tokenContract.decimals();
+                const balance = ethers.formatUnits(balanceRaw, decimals);
+                return parseFloat(balance);
             } catch (err) {
                 console.error(err);
                 return null;
@@ -151,7 +130,6 @@
             document.getElementById('displayBalance').innerHTML = `${balance.toLocaleString()} CUT`;
             document.getElementById('walletStatus').classList.add('hidden');
             document.getElementById('walletInfo').classList.remove('hidden');
-            // Hide manual connect section after successful connect? Optional
         }
 
         // Manual connect
@@ -176,8 +154,8 @@
                 return;
             }
             try {
-                provider = new ethers.BrowserProvider(window.ethereum);
-                const signer = await provider.getSigner();
+                const metamaskProvider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await metamaskProvider.getSigner();
                 const address = await signer.getAddress();
                 const balance = await fetchBalance(address);
                 if (balance === null) throw new Error('Balance fetch failed');
