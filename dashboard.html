@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | CryptoTax</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-bold text-2xl text-purple-600">💰 CryptoTax</div>
+            <div class="space-x-4">
+                <a href="index.html" class="text-gray-600">Home</a>
+                <a href="tax-estimator.html" class="text-gray-600">Estimator</a>
+                <a href="airdrop-claim.html" class="text-gray-600">Claim</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container mx-auto px-6 py-12">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <h1 class="text-3xl font-bold mb-2">Dashboard</h1>
+                <p class="text-gray-500 mb-6">Connect your wallet to view your CUT token balance and past reports.</p>
+                <div id="walletStatus" class="bg-blue-50 p-4 rounded-xl mb-6">
+                    <button id="connectBtn" class="bg-purple-600 text-white px-6 py-2 rounded-xl font-semibold">Connect MetaMask</button>
+                </div>
+                <div id="walletInfo" class="hidden">
+                    <div class="bg-gray-50 p-4 rounded-xl mb-4">
+                        <p><strong>Wallet:</strong> <span id="walletAddress"></span></p>
+                        <p><strong>CUT Balance:</strong> <span id="tokenBalance">Loading...</span></p>
+                    </div>
+                    <h2 class="text-xl font-semibold mb-3">Your Tax Reports</h2>
+                    <div id="reportsList" class="space-y-3">
+                        <p class="text-gray-500">Connect wallet to see your reports.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const TOKEN_CONTRACT = '0xFa27130a7A85e96B9b814045545d7Cf6e8c2E8EC';
+        let provider, signer, tokenContract;
+        const tokenABI = ['function balanceOf(address owner) view returns (uint256)', 'function decimals() view returns (uint8)'];
+        document.getElementById('connectBtn').onclick = async () => {
+            if (!window.ethereum) return alert('Install MetaMask!');
+            provider = new ethers.BrowserProvider(window.ethereum);
+            signer = await provider.getSigner();
+            const address = await signer.getAddress();
+            tokenContract = new ethers.Contract(TOKEN_CONTRACT, tokenABI, provider);
+            const balanceRaw = await tokenContract.balanceOf(address);
+            const decimals = await tokenContract.decimals();
+            const balance = ethers.formatUnits(balanceRaw, decimals);
+            document.getElementById('walletAddress').innerText = `${address.slice(0,6)}...${address.slice(-4)}`;
+            document.getElementById('tokenBalance').innerText = `${parseFloat(balance).toFixed(2)} CUT`;
+            document.getElementById('walletStatus').classList.add('hidden');
+            document.getElementById('walletInfo').classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>
