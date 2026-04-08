@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Estimator | CryptoTax</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-bold text-2xl text-purple-600">💰 CryptoTax</div>
+            <div class="space-x-4">
+                <a href="index.html" class="text-gray-600">Home</a>
+                <a href="dashboard.html" class="text-gray-600">Dashboard</a>
+                <a href="airdrop-claim.html" class="text-gray-600">Claim</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container mx-auto px-6 py-12">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <h1 class="text-3xl font-bold mb-2">Tax Estimator</h1>
+                <p class="text-gray-500 mb-6">Upload your CSV file to calculate capital gains. Requires 5 CUT tokens.</p>
+                <div id="walletStatus" class="mb-6">
+                    <button id="connectBtn" class="bg-purple-600 text-white px-6 py-2 rounded-xl font-semibold">Connect Wallet</button>
+                </div>
+                <div id="uploadArea" class="hidden">
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-purple-400 transition">
+                        <input type="file" id="csvFile" accept=".csv" class="hidden">
+                        <button id="uploadBtn" class="bg-purple-600 text-white px-6 py-3 rounded-xl font-semibold">📂 Upload CSV File</button>
+                        <p class="text-gray-400 text-sm mt-2">Format: date,type,amount,price (e.g., 2024-01-01,buy,0.5,2000)</p>
+                    </div>
+                </div>
+                <div id="resultArea" class="mt-6 hidden">
+                    <h2 class="text-xl font-semibold mb-3">Your Tax Estimate</h2>
+                    <div id="taxResult" class="bg-gray-50 p-4 rounded-xl"></div>
+                    <button id="downloadBtn" class="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">📄 Download PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev/api/calculate-tax';
+        let walletAddress = null;
+        let currentTaxResult = null;
+        document.getElementById('connectBtn').onclick = async () => {
+            if (!window.ethereum) return alert('Install MetaMask!');
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            walletAddress = await signer.getAddress();
+            document.getElementById('connectBtn').innerText = `Connected: ${walletAddress.slice(0,6)}...`;
+            document.getElementById('connectBtn').disabled = true;
+            document.getElementById('uploadArea').classList.remove('hidden');
+        };
+        document.getElementById('uploadBtn').onclick = () => document.getElementById('csvFile').click();
+        document.getElementById('csvFile').onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file || !walletAddress) return;
+            const text = await file.text();
+            const lines = text.trim().split('\n');
+            const transactions = lines.slice(1).map(line => {
+                const [date, type, amount, price] = line.split(',');
+                return { date, type, amount: parseFloat(amount), price: parseFloat(price) };
+            });
+            document.getElementById('uploadBtn').disabled = true;
+            document.getElementById('uploadBtn').innerText = 'Processing...';
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ walletAddress, transactionData: transactions })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error);
+                currentTaxResult = data.taxResult;
+                document.getElementById('taxResult').innerHTML = `
+                    <p><strong>Total Gain:</strong> $${currentTaxResult.totalGain}</p>
+                    <p><strong>Estimated Tax (20%):</strong> $${currentTaxResult.estimatedTax}</p>
+                    <p><strong>Transactions Processed:</strong> ${currentTaxResult.transactionsProcessed}</p>
+                `;
+                document.getElementById('resultArea').classList.remove('hidden');
+            } catch (err) {
+                alert(`Error: ${err.message}`);
+            } finally {
+                document.getElementById('uploadBtn').disabled = false;
+                document.getElementById('uploadBtn').innerText = '📂 Upload CSV File';
+            }
+        };
+        document.getElementById('downloadBtn').onclick = () => {
+            alert('PDF generation will be added soon. Your tax result is ready!');
+        };
+    </script>
+</body>
+</html>
