@@ -2,22 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Claim Airdrop | CryptoTax</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #4c1d95 100%); background-attachment: fixed; }
+        .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-gradient { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
+    </style>
 </head>
-<body class="bg-gradient-to-r from-purple-600 to-blue-600 min-h-screen">
-    <div class="container mx-auto px-6 py-20">
-        <div class="max-w-md mx-auto bg-white rounded-2xl shadow-2xl p-8 text-center">
-            <h1 class="text-3xl font-bold mb-2">🎁 Claim Free Tokens</h1>
-            <p class="text-gray-500 mb-6">Get 10 CUT tokens to test the tax estimator.</p>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="container mx-auto px-5 py-12">
+        <div class="max-w-md mx-auto glass-card rounded-2xl p-8 text-center">
+            <div class="text-6xl mb-4">🎁</div>
+            <h1 class="text-3xl font-extrabold text-white mb-2">Claim Free Tokens</h1>
+            <p class="text-gray-300 mb-6">Get 10 CUT tokens to test the tax estimator.</p>
+            
             <div id="walletStatus">
-                <button id="connectBtn" class="bg-purple-600 text-white px-6 py-2 rounded-xl font-semibold w-full">Connect Wallet</button>
+                <button id="connectBtn" class="btn-gradient text-white font-semibold px-6 py-3 rounded-xl w-full shadow-lg">Connect MetaMask</button>
             </div>
+            
             <div id="claimArea" class="hidden mt-6">
-                <button id="claimBtn" class="bg-green-600 text-white px-6 py-2 rounded-xl font-semibold w-full">Claim 10 CUT</button>
-                <p id="claimStatus" class="text-sm text-gray-500 mt-3"></p>
+                <button id="claimBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl w-full transition">Claim 10 CUT</button>
+                <p id="claimStatus" class="text-sm text-gray-400 mt-3"></p>
             </div>
         </div>
     </div>
@@ -28,15 +38,15 @@
             const provider = new ethers.BrowserProvider(window.ethereum);
             signer = await provider.getSigner();
             walletAddress = await signer.getAddress();
-            document.getElementById('connectBtn').innerText = `Connected: ${walletAddress.slice(0,6)}...`;
+            document.getElementById('connectBtn').innerHTML = `✅ Connected: ${walletAddress.slice(0,6)}...`;
             document.getElementById('connectBtn').disabled = true;
             document.getElementById('claimArea').classList.remove('hidden');
         };
         document.getElementById('claimBtn').onclick = async () => {
             document.getElementById('claimBtn').disabled = true;
-            document.getElementById('claimStatus').innerText = 'Claiming...';
+            document.getElementById('claimStatus').innerHTML = 'Claiming...';
             alert('On testnet, tokens are claimed via the token owner. Contact admin or use faucet.');
-            document.getElementById('claimStatus').innerText = 'Manual claim: Contact support';
+            document.getElementById('claimStatus').innerHTML = 'Manual claim: Contact support';
             document.getElementById('claimBtn').disabled = false;
         };
     </script>
