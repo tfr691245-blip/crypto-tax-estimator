@@ -6,7 +6,7 @@
     <title>Dashboard | CryptoTax</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
         body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #4c1d95 100%); background-attachment: fixed; }
@@ -35,6 +35,10 @@
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
             <div class="text-center mb-10">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-white/20">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span class="text-white text-xs sm:text-sm font-medium">Live on Polygon Amoy</span>
+                </div>
                 <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-3 tracking-tight">Dashboard</h1>
                 <p class="text-gray-300 text-base sm:text-lg">Connect your wallet to view your CUT token balance and past reports.</p>
             </div>
@@ -66,6 +70,25 @@
                     <div id="reportsList" class="space-y-3">
                         <p class="text-gray-300">Connect wallet to see your reports.</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Step cards (for reference – matching landing page style) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12">
+                <div class="glass-card rounded-2xl p-5">
+                    <div class="text-2xl mb-2">1️⃣</div>
+                    <h3 class="text-white font-bold text-base sm:text-lg">Connect Wallet</h3>
+                    <p class="text-gray-300 text-xs sm:text-sm">Connect your MetaMask wallet on Polygon Amoy testnet.</p>
+                </div>
+                <div class="glass-card rounded-2xl p-5">
+                    <div class="text-2xl mb-2">2️⃣</div>
+                    <h3 class="text-white font-bold text-base sm:text-lg">Upload CSV</h3>
+                    <p class="text-gray-300 text-xs sm:text-sm">Upload your transaction history from any exchange.</p>
+                </div>
+                <div class="glass-card rounded-2xl p-5">
+                    <div class="text-2xl mb-2">3️⃣</div>
+                    <h3 class="text-white font-bold text-base sm:text-lg">Pay & Download</h3>
+                    <p class="text-gray-300 text-xs sm:text-sm">Pay 5 CUT tokens and download your PDF report.</p>
                 </div>
             </div>
         </div>
