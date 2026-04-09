@@ -11,7 +11,7 @@
         body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
         .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(139, 92, 246, 0.2); transition: all 0.3s ease; }
         .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
-        .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
         .btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
         .mode-tab { transition: all 0.3s ease; cursor: pointer; border-radius: 40px; padding: 10px 24px; font-weight: 500; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); }
@@ -19,22 +19,34 @@
         .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
         .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .network-trigger { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(139,92,246,0.3); border-radius: 60px; padding: 8px 16px 8px 12px; cursor: pointer; transition: all 0.2s ease; width: fit-content; }
+        
+        /* Network Selector - Fixed Z-Index & Positioning */
+        .network-selector-wrapper { position: relative; z-index: 100; margin-bottom: 20px; }
+        .network-trigger { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(139,92,246,0.3); border-radius: 60px; padding: 10px 18px; cursor: pointer; transition: all 0.2s ease; width: fit-content; }
         .network-trigger:hover { border-color: #8b5cf6; background: rgba(139,92,246,0.1); }
         .network-trigger.active { border-color: #8b5cf6; background: rgba(139,92,246,0.15); }
-        .network-dropdown { position: absolute; top: 100%; left: 0; margin-top: 8px; background: rgba(15,23,42,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(139,92,246,0.3); border-radius: 24px; padding: 8px; min-width: 280px; z-index: 50; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
+        .network-dropdown { position: absolute; top: 100%; left: 0; margin-top: 8px; background: rgba(15,23,42,0.98); backdrop-filter: blur(20px); border: 1px solid rgba(139,92,246,0.3); border-radius: 24px; padding: 8px; min-width: 280px; z-index: 1000; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
         .network-dropdown.show { opacity: 1; visibility: visible; transform: translateY(0); }
         .network-option { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 16px; cursor: pointer; transition: all 0.2s ease; }
         .network-option:hover { background: rgba(139,92,246,0.2); }
-        .network-option.selected { background: linear-gradient(135deg, rgba(139,92,246,0.3), rgba(99,102,241,0.2)); border-left: 3px solid #8b5cf6; }
         .network-icon-img { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; background: rgba(255,255,255,0.1); padding: 2px; }
         .network-name { font-weight: 500; color: white; }
         .network-desc { font-size: 11px; color: #94a3b8; }
-        .relative { position: relative; }
+        
+        /* Address Input - Fixed Overflow */
+        .address-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(139,92,246,0.3); border-radius: 16px; padding: 14px 18px; color: white; font-size: 14px; font-family: monospace; overflow-x: auto; white-space: nowrap; }
+        .address-input:focus { outline: none; border-color: #8b5cf6; }
+        .address-input::placeholder { color: #64748b; font-family: 'Inter', system-ui; }
+        
+        /* Transaction Row */
         .tx-row { background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 14px; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
         .tx-row:hover { background: rgba(139, 92, 246, 0.1); transform: translateX(4px); }
         .hash-link { color: #8b5cf6; text-decoration: none; font-size: 12px; }
         .hash-link:hover { text-decoration: underline; }
+        
+        /* Better contrast for labels */
+        .label-light { color: #cbd5e1; font-size: 13px; }
+        .value-text { color: #f1f5f9; }
     </style>
 </head>
 <body class="min-h-screen text-white">
@@ -58,6 +70,7 @@
 
     <div class="container mx-auto px-5 sm:px-8 pt-24 sm:pt-28 pb-16">
         <div class="max-w-6xl mx-auto">
+            <!-- Hero Section -->
             <div class="text-center mb-12">
                 <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-5 border border-purple-500/20">
                     <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
@@ -67,6 +80,7 @@
                 <p class="text-gray-400 text-lg max-w-2xl mx-auto">Calculate capital gains taxes across multiple blockchains. Upload CSV or fetch wallet data instantly.</p>
             </div>
 
+            <!-- Stats Row -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
                 <div class="stats-card"><div class="stats-number">6+</div><div class="text-gray-400 text-sm">Blockchains</div></div>
                 <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm">Calculation Method</div></div>
@@ -74,6 +88,7 @@
                 <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm">Mainnet Data</div></div>
             </div>
 
+            <!-- Mode Tabs -->
             <div class="flex justify-center gap-3 mb-8">
                 <div id="csvModeTab" class="mode-tab active">📁 Manual CSV</div>
                 <div id="walletModeTab" class="mode-tab">🤖 Auto Wallet</div>
@@ -91,7 +106,7 @@
                     <p class="text-sm text-gray-300"><span class="font-bold text-purple-400">📋 CSV Format:</span> date,type,amount,price</p>
                     <p class="text-xs text-gray-400 mt-1">Example: 2024-01-01,buy,0.5,20000</p>
                 </div>
-                <button id="uploadBtn" class="btn-primary w-full">📊 Calculate Tax</button>
+                <button id="uploadBtn" class="btn-primary w-full"><span>📊</span> Calculate Tax</button>
             </div>
 
             <!-- Wallet Mode -->
@@ -102,51 +117,58 @@
                     <p class="text-gray-400 text-sm mt-1">Fetch real-time balance and transaction history</p>
                 </div>
                 
-                <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
-                <div class="relative" id="networkDropdownContainer">
-                    <div id="networkTrigger" class="network-trigger">
-                        <img id="selectedNetworkIcon" class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" alt="BNB">
-                        <span id="selectedNetworkName" class="font-medium">BNB Chain</span>
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </div>
-                    <div id="networkDropdown" class="network-dropdown">
-                        <div class="network-option" data-chain="bnb" data-name="BNB Chain" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" data-balance="bnb-balance" data-tx="bnb-transactions" data-has-tx="true">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png">
-                            <div><div class="network-name">BNB Chain</div><div class="network-desc">Binance Smart Chain</div></div>
+                <!-- Network Selector - Fixed with proper spacing -->
+                <div class="network-selector-wrapper">
+                    <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
+                    <div class="relative">
+                        <div id="networkTrigger" class="network-trigger">
+                            <img id="selectedNetworkIcon" class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" alt="BNB">
+                            <span id="selectedNetworkName" class="font-medium">BNB Chain</span>
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
-                        <div class="network-option" data-chain="eth" data-name="Ethereum" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" data-balance="eth-balance" data-tx="eth-transactions" data-has-tx="true">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png">
-                            <div><div class="network-name">Ethereum</div><div class="network-desc">Ethereum Mainnet</div></div>
-                        </div>
-                        <div class="network-option" data-chain="polygon" data-name="Polygon" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="polygon-balance" data-tx="polygon-transactions" data-has-tx="true">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
-                            <div><div class="network-name">Polygon</div><div class="network-desc">Polygon Mainnet (MATIC)</div></div>
-                        </div>
-                        <div class="network-option" data-chain="sol" data-name="Solana" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" data-balance="sol-balance" data-tx="sol-transactions" data-has-tx="true">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png">
-                            <div><div class="network-name">Solana</div><div class="network-desc">Solana Mainnet</div></div>
-                        </div>
-                        <div class="network-option" data-chain="btc" data-name="Bitcoin" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" data-balance="btc-balance" data-tx="btc-transactions" data-has-tx="true">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png">
-                            <div><div class="network-name">Bitcoin</div><div class="network-desc">Bitcoin Mainnet</div></div>
-                        </div>
-                        <div class="network-option" data-chain="mfc" data-name="Polygon Amoy" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="mfc-balance" data-tx="" data-has-tx="false">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
-                            <div><div class="network-name">Polygon Amoy</div><div class="network-desc">MFC Token (Testnet)</div></div>
+                        <div id="networkDropdown" class="network-dropdown">
+                            <div class="network-option" data-chain="bnb" data-name="BNB Chain" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" data-balance="bnb-balance" data-tx="bnb-transactions" data-has-tx="true">
+                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png">
+                                <div><div class="network-name">BNB Chain</div><div class="network-desc">Binance Smart Chain</div></div>
+                            </div>
+                            <div class="network-option" data-chain="eth" data-name="Ethereum" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" data-balance="eth-balance" data-tx="eth-transactions" data-has-tx="true">
+                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png">
+                                <div><div class="network-name">Ethereum</div><div class="network-desc">Ethereum Mainnet</div></div>
+                            </div>
+                            <div class="network-option" data-chain="polygon" data-name="Polygon" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="polygon-balance" data-tx="polygon-transactions" data-has-tx="true">
+                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
+                                <div><div class="network-name">Polygon</div><div class="network-desc">Polygon Mainnet (MATIC)</div></div>
+                            </div>
+                            <div class="network-option" data-chain="sol" data-name="Solana" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" data-balance="sol-balance" data-tx="sol-transactions" data-has-tx="true">
+                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png">
+                                <div><div class="network-name">Solana</div><div class="network-desc">Solana Mainnet</div></div>
+                            </div>
+                            <div class="network-option" data-chain="btc" data-name="Bitcoin" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" data-balance="btc-balance" data-tx="btc-transactions" data-has-tx="true">
+                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png">
+                                <div><div class="network-name">Bitcoin</div><div class="network-desc">Bitcoin Mainnet</div></div>
+                            </div>
+                            <div class="network-option" data-chain="mfc" data-name="Polygon Amoy" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="mfc-balance" data-tx="" data-has-tx="false">
+                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
+                                <div><div class="network-name">Polygon Amoy</div><div class="network-desc">MFC Token (Testnet)</div></div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <input type="text" id="walletAddress" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mt-4 mb-4" placeholder="Enter wallet address (0x... or address)">
+                <!-- Address Input - Fixed overflow -->
+                <div class="mt-4 mb-4">
+                    <label class="block text-sm text-gray-400 mb-2">Wallet Address</label>
+                    <input type="text" id="walletAddress" class="address-input" placeholder="Enter wallet address (0x... or address)">
+                </div>
                 
                 <div class="bg-purple-500/10 rounded-xl p-3 mb-4">
                     <p class="text-xs text-gray-400">📌 <span class="text-purple-300">Note:</span> Free tier may have transaction limits. For full history, use CSV export from block explorer.</p>
                 </div>
                 
-                <button id="fetchWalletBtn" class="btn-primary w-full">🔍 Fetch Balance & Transactions</button>
+                <button id="fetchWalletBtn" class="btn-primary w-full"><span>🔍</span> Fetch Balance & Transactions</button>
             </div>
 
-            <!-- Results Section -->
+            <!-- Results Section - Hidden until fetch -->
             <div id="results" class="hidden mt-8">
                 <!-- Balance Card -->
                 <div class="glass-card p-6 mb-6">
@@ -154,7 +176,7 @@
                         <div>
                             <p class="text-gray-400 text-sm">Wallet Balance</p>
                             <p id="balanceAmount" class="text-3xl font-bold gradient-text">0</p>
-                            <p id="balanceCurrency" class="text-gray-400 text-sm">Loading...</p>
+                            <p id="balanceCurrency" class="text-gray-400 text-sm">Waiting for fetch...</p>
                         </div>
                         <div class="text-right">
                             <p class="text-gray-400 text-sm">Network</p>
@@ -181,7 +203,7 @@
                         <span id="txCount" class="text-purple-400 text-sm bg-purple-500/20 px-3 py-1 rounded-full">0</span>
                     </div>
                     <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
-                        <div class="text-center text-gray-400 py-4">No transactions loaded</div>
+                        <div class="text-center text-gray-400 py-4">Select a network and enter address, then click Fetch</div>
                     </div>
                 </div>
             </div>
@@ -201,6 +223,37 @@
         const dropdown = document.getElementById('networkDropdown');
         const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
         const selectedNetworkName = document.getElementById('selectedNetworkName');
+        
+        // Clear results function
+        function clearResults() {
+            document.getElementById('balanceAmount').innerHTML = '0';
+            document.getElementById('balanceCurrency').innerHTML = 'Waiting for fetch...';
+            document.getElementById('networkName').innerHTML = '-';
+            document.getElementById('totalGain').innerHTML = '$0';
+            document.getElementById('totalLoss').innerHTML = '$0';
+            document.getElementById('netGain').innerHTML = '$0';
+            document.getElementById('estimatedTax').innerHTML = '$0';
+            document.getElementById('txCount').innerHTML = '0';
+            document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">Select a network and enter address, then click Fetch</div>';
+            document.getElementById('results').classList.add('hidden');
+        }
+        
+        // Simple address format validation
+        function validateAddressFormat(address, chain) {
+            if (!address) return false;
+            
+            if (chain === 'btc') {
+                // Bitcoin: starts with 1, 3, or bc1
+                return /^(1|3|bc1|tb1)/i.test(address);
+            } else if (chain === 'sol') {
+                // Solana: base58 encoded, length 32-44 characters
+                return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
+            } else if (chain === 'eth' || chain === 'bnb' || chain === 'polygon' || chain === 'mfc') {
+                // EVM: starts with 0x, 42 characters total
+                return /^0x[a-fA-F0-9]{40}$/.test(address);
+            }
+            return true;
+        }
         
         trigger.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -225,6 +278,8 @@
                 selectedNetworkIcon.src = option.dataset.icon;
                 selectedNetworkName.textContent = selectedChainName;
                 
+                clearResults();
+                
                 dropdown.classList.remove('show');
                 trigger.classList.remove('active');
             });
@@ -237,14 +292,14 @@
             document.getElementById('walletModeTab').classList.remove('active');
             csvMode.classList.remove('hidden');
             walletMode.classList.add('hidden');
-            document.getElementById('results').classList.add('hidden');
+            clearResults();
         };
         document.getElementById('walletModeTab').onclick = () => {
             document.getElementById('walletModeTab').classList.add('active');
             document.getElementById('csvModeTab').classList.remove('active');
             csvMode.classList.add('hidden');
             walletMode.classList.remove('hidden');
-            document.getElementById('results').classList.add('hidden');
+            clearResults();
         };
         
         function displayResults(balance, nativeToken, network, transactions) {
@@ -334,20 +389,24 @@
             } else { alert('Error: ' + data.error); }
         };
         
-        // Wallet Fetch
+        // Wallet Fetch with validation
         document.getElementById('fetchWalletBtn').onclick = async () => {
             const address = document.getElementById('walletAddress').value.trim();
             if (!address) { alert('Please enter a wallet address'); return; }
             
+            // Validate address format
+            if (!validateAddressFormat(address, selectedChain)) {
+                alert(`Address format does not match ${selectedChainName} network.\n\nPlease enter a valid ${selectedChainName} address.`);
+                return;
+            }
+            
             document.getElementById('fetchWalletBtn').disabled = true;
-            document.getElementById('fetchWalletBtn').innerHTML = 'Loading...';
+            document.getElementById('fetchWalletBtn').innerHTML = '<span>⏳</span> Loading...';
             
             try {
-                // Fetch balance
                 const balanceRes = await fetch(`${API_URL}/api/${selectedBalanceEndpoint}?address=${address}`);
                 const balanceData = await balanceRes.json();
                 
-                // Fetch transactions if supported
                 let transactions = [];
                 if (selectedHasTx && selectedTxEndpoint) {
                     const txRes = await fetch(`${API_URL}/api/${selectedTxEndpoint}?address=${address}`);
@@ -364,7 +423,7 @@
                 alert('Error: ' + err.message);
             } finally {
                 document.getElementById('fetchWalletBtn').disabled = false;
-                document.getElementById('fetchWalletBtn').innerHTML = '🔍 Fetch Balance & Transactions';
+                document.getElementById('fetchWalletBtn').innerHTML = '<span>🔍</span> Fetch Balance & Transactions';
             }
         };
     </script>
