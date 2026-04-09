@@ -49,7 +49,7 @@
             <div class="glass-card rounded-2xl p-6 sm:p-8 mb-6">
                 <h2 class="text-xl font-bold text-white mb-3">🔍 Manual Wallet Lookup</h2>
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <input type="text" id="manualAddress" placeholder="Enter wallet address (0x...)" value="0xab659c1d4550da1f4d6454ca2e6c77ef6c019406" class="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500">
+                    <input type="text" id="manualAddress" placeholder="Enter wallet address (0x...)" value="0xab659C1D4550DAf14D6454ca2E6C77EF6C019406" class="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500">
                     <button id="manualConnectBtn" class="btn-gradient text-white font-semibold px-6 py-3 rounded-xl shadow-lg whitespace-nowrap">View Balance & Txns</button>
                 </div>
                 <div id="manualError" class="text-red-400 text-sm mt-2 hidden"></div>
@@ -76,8 +76,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Transactions Card -->
                 <div class="glass-card rounded-2xl p-6 sm:p-8">
                     <h2 class="text-2xl font-bold text-white mb-4">📜 Recent Transactions (Polygon Amoy)</h2>
                     <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
@@ -86,7 +84,6 @@
                 </div>
             </div>
 
-            <!-- Step Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 mt-12">
                 <div class="glass-card rounded-2xl p-5">
                     <div class="text-3xl mb-2">1️⃣</div>
@@ -108,10 +105,10 @@
     </div>
 
     <script>
-        // ========== UPDATED TOKEN CONTRACT ==========
-        const TOKEN_CONTRACT = '0xe7C747a39CbB0aE81E6364cBc447586Cb1f7a126F';
+        // ========== PRODUCTION CONFIGURATION ==========
+        const TOKEN_CONTRACT = '0xe7C74768e9AdF945C920967e334FFF40167A126F';   // MFC token
         const ETHERSCAN_API_KEY = 'DDSSHGQWI9C4WAVJI6WVHB86893V8T6MMU';
-        const RPC_URL = 'https://lb.drpc.live/polygon-amoy/AlKOOugi5EgeoaJxUsJsaFsKxwDeMRwR8aGVGrar0DFx';
+        const RPC_URL = 'https://lb.drpc.live/polygon-amoy/AlKOOugi5EgeoaJxUsJsaFsKxwDeMRwR8aGVGrar0DFx';  // DRPC endpoint
         
         const tokenABI = [
             'function balanceOf(address owner) view returns (uint256)',
@@ -152,14 +149,12 @@
                 container.innerHTML = '<div class="text-center text-gray-400 py-4">No transactions found for this address.</div>';
                 return;
             }
-            
             container.innerHTML = transactions.map(tx => {
                 const date = new Date(tx.timeStamp * 1000).toLocaleString();
                 const value = (parseFloat(tx.value) / 1e18).toFixed(4);
-                const isIncoming = tx.to.toLowerCase() === document.getElementById('displayAddress').innerText.toLowerCase();
+                const currentAddr = document.getElementById('displayAddress').innerText.toLowerCase();
+                const isIncoming = tx.to.toLowerCase() === currentAddr;
                 const direction = isIncoming ? '📥 Received' : '📤 Sent';
-                const color = isIncoming ? 'text-green-400' : 'text-orange-400';
-                
                 return `
                     <div class="tx-row bg-white/5 rounded-lg p-3 transition">
                         <div class="flex flex-wrap justify-between items-center gap-2">
@@ -186,23 +181,19 @@
             const errorDiv = document.getElementById('manualError');
             errorDiv.classList.add('hidden');
             document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">Loading transactions...</div>';
-            
             try {
                 const balance = await fetchMFCBalance(address);
-                if (balance === null) throw new Error('Could not fetch MFC balance');
+                if (balance === null) throw new Error('Could not fetch MFC balance. Check contract address or RPC.');
                 const transactions = await fetchTransactions(address);
-                
                 document.getElementById('displayAddress').innerText = address;
                 document.getElementById('displayBalance').innerHTML = `${balance.toLocaleString()} MFC`;
                 displayTransactions(transactions);
-                
                 document.getElementById('walletStatus').classList.add('hidden');
                 document.getElementById('walletInfo').classList.remove('hidden');
             } catch (err) {
-                console.error(err);
                 errorDiv.innerText = `Error: ${err.message}`;
                 errorDiv.classList.remove('hidden');
-                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-red-400 py-4">Failed to load data. Check address or network.</div>';
+                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-red-400 py-4">Failed to load data.</div>';
             }
         }
         
@@ -217,18 +208,14 @@
         };
         
         document.getElementById('connectBtn').onclick = async () => {
-            if (!window.ethereum) {
-                alert('Please install MetaMask!');
-                return;
-            }
+            if (!window.ethereum) return alert('Install MetaMask!');
             try {
                 const metamaskProvider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await metamaskProvider.getSigner();
                 const address = await signer.getAddress();
                 await loadWalletData(address);
             } catch (err) {
-                console.error(err);
-                alert('Failed to connect wallet: ' + err.message);
+                alert('Failed to connect: ' + err.message);
             }
         };
     </script>
