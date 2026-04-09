@@ -3,99 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Dashboard | CryptoTax</title>
+    <title>CryptoTax | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #4c1d95 100%); background-attachment: fixed; }
-        .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-gradient { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
-        .btn-gradient:hover { background: linear-gradient(135deg, #7c3aed, #4f46e5); transform: translateY(-2px); }
+        body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
+        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(139, 92, 246, 0.2); transition: all 0.3s ease; }
+        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
+        .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
     </style>
 </head>
-<body class="min-h-screen">
-    <nav class="glass-card fixed w-full z-20 border-b border-white/10">
-        <div class="container mx-auto px-4 sm:px-8 py-3 sm:py-4">
-            <div class="flex flex-wrap items-center justify-between gap-2">
+<body class="min-h-screen text-white">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
+        <div class="container mx-auto px-5 sm:px-8 py-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl sm:text-3xl">💰</span>
-                    <span class="text-white font-bold text-lg sm:text-2xl tracking-tight">CryptoTax</span>
+                    <span class="text-2xl sm:text-3xl animate-pulse">💰</span>
+                    <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
+                    <span class="hidden sm:inline-flex text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full ml-2">BETA</span>
                 </div>
-                <div class="flex flex-wrap items-center gap-3 sm:gap-5">
-                    <a href="index.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Home</a>
-                    <a href="dashboard.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Estimator</a>
-                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-3 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg whitespace-nowrap">Claim</a>
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <a href="index.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Home</a>
+                    <a href="dashboard.html" class="text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg bg-purple-600/20">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Estimator</a>
+                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-36 pb-16 sm:pb-24">
-        <div class="max-w-5xl mx-auto">
+    <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-32 pb-16">
+        <div class="max-w-4xl mx-auto">
             <div class="text-center mb-10">
-                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-white/20">
-                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span class="text-white text-xs sm:text-sm font-medium">Live on Polygon Amoy</span>
-                </div>
-                <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-3 tracking-tight">Dashboard</h1>
-                <p class="text-gray-300 text-base sm:text-lg">View your MFC balance and on‑chain activity.</p>
+                <h1 class="text-5xl font-extrabold mb-3 tracking-tight">Dashboard</h1>
+                <p class="text-gray-400 text-lg">View your MFC token balance</p>
             </div>
 
-            <!-- Manual Wallet Lookup -->
-            <div class="glass-card rounded-2xl p-6 sm:p-8 mb-6">
-                <h2 class="text-xl font-bold text-white mb-3">🔍 Manual Wallet Lookup</h2>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <input type="text" id="manualAddress" placeholder="Enter wallet address (0x...)" value="0xab659C1D4550DAf14D6454ca2E6C77EF6C019406" class="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500">
-                    <button id="manualConnectBtn" class="btn-gradient text-white font-semibold px-6 py-3 rounded-xl shadow-lg whitespace-nowrap">View Balance & Txns</button>
-                </div>
-                <div id="manualError" class="text-red-400 text-sm mt-2 hidden"></div>
-            </div>
-
-            <div class="text-center text-gray-400 text-sm mb-6">— OR —</div>
-
-            <div id="walletStatus" class="glass-card rounded-2xl p-6 sm:p-8 mb-8 text-center">
-                <button id="connectBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">🔌 Connect MetaMask</button>
-            </div>
-
-            <div id="walletInfo" class="hidden space-y-6">
-                <div class="glass-card rounded-2xl p-6 sm:p-8">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <p class="text-gray-300 text-sm">Wallet Address</p>
-                            <p id="displayAddress" class="text-white text-lg font-mono font-semibold break-all"></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-gray-300 text-sm">MFC Balance</p>
-                            <p id="displayBalance" class="text-3xl font-bold text-purple-400">0 MFC</p>
+            <div class="glass-card p-8">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-20 h-20 bg-purple-500/20 rounded-2xl flex items-center justify-center text-4xl mb-4">💜</div>
+                    <h2 class="text-2xl font-bold mb-2">MFC Token Balance</h2>
+                    <p class="text-gray-400 text-sm mb-6">Polygon Amoy Testnet</p>
+                    
+                    <div id="walletStatus" class="w-full">
+                        <button id="connectBtn" class="btn-primary">🔌 Connect MetaMask</button>
+                    </div>
+                    
+                    <div id="walletInfo" class="hidden w-full mt-6">
+                        <div class="bg-purple-500/10 rounded-xl p-6">
+                            <p class="text-gray-300 text-sm">Connected Wallet</p>
+                            <p id="walletAddress" class="text-white font-mono text-sm break-all"></p>
+                            <div class="mt-4 pt-4 border-t border-white/10">
+                                <p class="text-gray-300 text-sm">MFC Balance</p>
+                                <p id="tokenBalance" class="text-4xl font-bold gradient-text">0 MFC</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="glass-card rounded-2xl p-6 sm:p-8">
-                    <h2 class="text-2xl font-bold text-white mb-4">📜 Recent Transactions</h2>
-                    <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
-                        <div class="text-center text-gray-400 py-4">Loading transactions...</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 mt-12">
-                <div class="glass-card rounded-2xl p-5">
-                    <div class="text-3xl mb-2">1️⃣</div>
-                    <h3 class="text-white font-bold text-base sm:text-lg mb-1">Connect Wallet</h3>
-                    <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">Connect your MetaMask wallet on Polygon Amoy testnet.</p>
-                </div>
-                <div class="glass-card rounded-2xl p-5">
-                    <div class="text-3xl mb-2">2️⃣</div>
-                    <h3 class="text-white font-bold text-base sm:text-lg mb-1">Upload CSV</h3>
-                    <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">Upload your transaction history from any exchange.</p>
-                </div>
-                <div class="glass-card rounded-2xl p-5">
-                    <div class="text-3xl mb-2">3️⃣</div>
-                    <h3 class="text-white font-bold text-base sm:text-lg mb-1">Pay & Download</h3>
-                    <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">Pay 5 MFC tokens and download your PDF report.</p>
                 </div>
             </div>
         </div>
@@ -103,13 +70,9 @@
 
     <script>
         const TOKEN_CONTRACT = '0xe7C74768e9AdF945C920967e334FFF40167A126F';
-        const ETHERSCAN_API_KEY = 'DDSSHGQWI9C4WAVJI6WVHB86893V8T6MMU';
         const RPC_URL = 'https://lb.drpc.live/polygon-amoy/AlKOOugi5EgeoaJxUsJsaFsKxwDeMRwR8aGVGrar0DFx';
         
-        const tokenABI = [
-            'function balanceOf(address owner) view returns (uint256)',
-            'function decimals() view returns (uint8)'
-        ];
+        const tokenABI = ['function balanceOf(address owner) view returns (uint256)', 'function decimals() view returns (uint8)'];
         
         let provider = new ethers.JsonRpcProvider(RPC_URL);
         let tokenContract = new ethers.Contract(TOKEN_CONTRACT, tokenABI, provider);
@@ -121,98 +84,26 @@
                 const balance = ethers.formatUnits(balanceRaw, decimals);
                 return parseFloat(balance);
             } catch (err) {
-                console.error('Balance fetch error:', err);
+                console.error(err);
                 return null;
             }
         }
         
-        // Fetch only POL transfers (simpler, reliable)
-        async function fetchPolTransfers(address) {
-            try {
-                const url = `https://api-amoy.polygonscan.com/api?module=account&action=txlist&address=${address}&sort=desc&apikey=${ETHERSCAN_API_KEY}`;
-                const response = await fetch(url);
-                const data = await response.json();
-                if (data.status !== '1') return [];
-                return data.result.slice(0, 20).map(tx => ({
-                    from: tx.from,
-                    to: tx.to,
-                    value: (parseFloat(tx.value) / 1e18).toFixed(4),
-                    timeStamp: parseInt(tx.timeStamp),
-                    symbol: 'POL',
-                    isError: tx.isError
-                }));
-            } catch (err) {
-                console.error('POL fetch error:', err);
-                return [];
-            }
-        }
-        
-        function displayTransactions(transactions, currentAddress) {
-            const container = document.getElementById('transactionsList');
-            if (!transactions || transactions.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center text-gray-400 py-4">
-                        No POL transactions found.<br>
-                        <span class="text-xs">Your MFC tokens were minted, but token transfers may not appear here due to testnet limitations.</span>
-                    </div>`;
-                return;
-            }
-            container.innerHTML = transactions.map(tx => {
-                const date = new Date(tx.timeStamp * 1000).toLocaleString();
-                const isIncoming = tx.to.toLowerCase() === currentAddress.toLowerCase();
-                const direction = isIncoming ? '📥 Received' : '📤 Sent';
-                const status = tx.isError === '1' ? '❌ Failed' : '';
-                return `
-                    <div class="bg-white/5 rounded-lg p-3">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <div class="text-white text-sm font-medium">${direction} ${tx.value} ${tx.symbol} ${status}</div>
-                                <div class="text-gray-400 text-xs">From: ${tx.from.slice(0,8)}...${tx.from.slice(-6)} → To: ${tx.to.slice(0,8)}...${tx.to.slice(-6)}</div>
-                            </div>
-                            <div class="text-gray-300 text-xs">${date}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        async function loadWalletData(address) {
-            const errorDiv = document.getElementById('manualError');
-            errorDiv.classList.add('hidden');
-            document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">Loading...</div>';
-            try {
-                const balance = await fetchMFCBalance(address);
-                if (balance === null) throw new Error('Could not fetch MFC balance.');
-                const polTxs = await fetchPolTransfers(address);
-                document.getElementById('displayAddress').innerText = address;
-                document.getElementById('displayBalance').innerHTML = `${balance.toLocaleString()} MFC`;
-                displayTransactions(polTxs, address);
-                document.getElementById('walletStatus').classList.add('hidden');
-                document.getElementById('walletInfo').classList.remove('hidden');
-            } catch (err) {
-                errorDiv.innerText = `Error: ${err.message}`;
-                errorDiv.classList.remove('hidden');
-                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-red-400 py-4">Failed to load data.</div>';
-            }
-        }
-        
-        document.getElementById('manualConnectBtn').onclick = async () => {
-            const address = document.getElementById('manualAddress').value.trim();
-            if (!address || !address.startsWith('0x') || address.length !== 42) {
-                document.getElementById('manualError').innerText = 'Invalid wallet address.';
-                document.getElementById('manualError').classList.remove('hidden');
-                return;
-            }
-            await loadWalletData(address);
-        };
-        
         document.getElementById('connectBtn').onclick = async () => {
-            if (!window.ethereum) return alert('Install MetaMask!');
+            if (!window.ethereum) {
+                alert('Please install MetaMask!');
+                return;
+            }
             try {
                 const metamaskProvider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await metamaskProvider.getSigner();
                 const address = await signer.getAddress();
-                await loadWalletData(address);
+                const balance = await fetchMFCBalance(address);
+                
+                document.getElementById('walletAddress').innerText = address;
+                document.getElementById('tokenBalance').innerHTML = `${balance.toLocaleString()} MFC`;
+                document.getElementById('walletStatus').classList.add('hidden');
+                document.getElementById('walletInfo').classList.remove('hidden');
             } catch (err) {
                 alert('Failed to connect: ' + err.message);
             }
