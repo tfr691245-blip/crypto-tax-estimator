@@ -20,37 +20,147 @@
         .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
         .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         
-        /* Network Selector - Fixed Z-Index (higher than everything) */
-        .network-selector-wrapper { position: relative; z-index: 1000; margin-bottom: 20px; }
-        .network-trigger { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(139,92,246,0.3); border-radius: 60px; padding: 10px 18px; cursor: pointer; transition: all 0.2s ease; width: fit-content; }
-        .network-trigger:hover { border-color: #8b5cf6; background: rgba(139,92,246,0.1); }
-        .network-trigger.active { border-color: #8b5cf6; background: rgba(139,92,246,0.15); }
-        .network-dropdown { position: absolute; top: calc(100% + 5px); left: 0; background: rgba(15,23,42,0.98); backdrop-filter: blur(20px); border: 1px solid rgba(139,92,246,0.4); border-radius: 24px; padding: 8px; min-width: 280px; z-index: 10000; box-shadow: 0 25px 40px -12px rgba(0,0,0,0.8); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
-        .network-dropdown.show { opacity: 1; visibility: visible; transform: translateY(0); }
-        .network-option { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 16px; cursor: pointer; transition: all 0.2s ease; }
-        .network-option:hover { background: rgba(139,92,246,0.2); }
-        .network-icon-img { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; background: rgba(255,255,255,0.1); padding: 2px; }
-        .network-name { font-weight: 500; color: white; }
-        .network-desc { font-size: 11px; color: #94a3b8; }
+        /* ========== FIXED NETWORK SELECTOR - HIGHEST Z-INDEX ========== */
+        .network-selector-wrapper { 
+            position: relative; 
+            z-index: 1000; 
+            margin-bottom: 24px; 
+        }
+        .network-trigger { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            background: rgba(0,0,0,0.5); 
+            border: 1px solid rgba(139,92,246,0.4); 
+            border-radius: 60px; 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            width: fit-content; 
+        }
+        .network-trigger:hover { 
+            border-color: #8b5cf6; 
+            background: rgba(139,92,246,0.15); 
+        }
+        .network-trigger.active { 
+            border-color: #8b5cf6; 
+            background: rgba(139,92,246,0.2); 
+        }
+        .network-dropdown { 
+            position: absolute; 
+            top: calc(100% + 8px); 
+            left: 0; 
+            background: rgba(10, 15, 30, 0.98); 
+            backdrop-filter: blur(24px); 
+            border: 1px solid rgba(139,92,246,0.4); 
+            border-radius: 24px; 
+            padding: 8px; 
+            min-width: 280px; 
+            z-index: 10000; 
+            box-shadow: 0 25px 40px -12px rgba(0,0,0,0.8); 
+            opacity: 0; 
+            visibility: hidden; 
+            transform: translateY(-10px); 
+            transition: all 0.2s ease;
+        }
+        .network-dropdown.show { 
+            opacity: 1; 
+            visibility: visible; 
+            transform: translateY(0); 
+        }
+        .network-option { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 12px 16px; 
+            border-radius: 16px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+        }
+        .network-option:hover { 
+            background: rgba(139,92,246,0.2); 
+        }
+        .network-icon-img { 
+            width: 28px; 
+            height: 28px; 
+            border-radius: 50%; 
+            object-fit: contain; 
+            background: rgba(255,255,255,0.1); 
+            padding: 2px; 
+        }
+        .network-name { 
+            font-weight: 500; 
+            color: white; 
+        }
+        .network-desc { 
+            font-size: 11px; 
+            color: #94a3b8; 
+        }
         
         /* Address Input */
-        .address-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(139,92,246,0.3); border-radius: 16px; padding: 14px 18px; color: white; font-size: 14px; font-family: monospace; overflow-x: auto; white-space: nowrap; }
-        .address-input:focus { outline: none; border-color: #8b5cf6; }
-        .address-input::placeholder { color: #64748b; font-family: 'Inter', system-ui; }
+        .address-input { 
+            width: 100%; 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid rgba(139,92,246,0.3); 
+            border-radius: 16px; 
+            padding: 14px 18px; 
+            color: white; 
+            font-size: 14px; 
+            font-family: monospace; 
+            overflow-x: auto; 
+            white-space: nowrap; 
+        }
+        .address-input:focus { 
+            outline: none; 
+            border-color: #8b5cf6; 
+            box-shadow: 0 0 0 2px rgba(139,92,246,0.2);
+        }
+        .address-input::placeholder { 
+            color: #64748b; 
+            font-family: 'Inter', system-ui; 
+        }
         
-        /* Results section - lower z-index */
-        .results-section { position: relative; z-index: 1; }
+        /* Results Section - Normal z-index */
+        .results-section { 
+            position: relative; 
+            z-index: 1; 
+        }
         
         /* Transaction Row */
-        .tx-row { background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 14px; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .tx-row:hover { background: rgba(139, 92, 246, 0.1); transform: translateX(4px); }
-        .hash-link { color: #8b5cf6; text-decoration: none; font-size: 12px; }
-        .hash-link:hover { text-decoration: underline; }
-        .label-light { color: #cbd5e1; font-size: 13px; }
+        .tx-row { 
+            background: rgba(255, 255, 255, 0.03); 
+            border-radius: 16px; 
+            padding: 14px; 
+            transition: all 0.3s ease; 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+        .tx-row:hover { 
+            background: rgba(139, 92, 246, 0.1); 
+            transform: translateX(4px); 
+        }
+        .hash-link { 
+            color: #8b5cf6; 
+            text-decoration: none; 
+            font-size: 12px; 
+        }
+        .hash-link:hover { 
+            text-decoration: underline; 
+        }
         
-        /* Ensure proper stacking */
-        .relative { position: relative; }
-        .z-high { z-index: 10000; }
+        /* Ensure proper stacking context */
+        .relative { 
+            position: relative; 
+        }
+        
+        /* Clear fix for results */
+        .balance-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c4b5fd, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
     </style>
 </head>
 <body class="min-h-screen text-white">
@@ -121,13 +231,13 @@
                     <p class="text-gray-400 text-sm mt-1">Fetch real-time balance and transaction history</p>
                 </div>
                 
-                <!-- Network Selector - High z-index -->
+                <!-- Network Selector - HIGHEST Z-INDEX -->
                 <div class="network-selector-wrapper">
                     <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
                     <div class="relative">
                         <div id="networkTrigger" class="network-trigger">
-                            <img id="selectedNetworkIcon" class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" alt="BNB">
-                            <span id="selectedNetworkName" class="font-medium">BNB Chain</span>
+                            <img id="selectedNetworkIcon" class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" alt="Bitcoin">
+                            <span id="selectedNetworkName" class="font-medium">Bitcoin</span>
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="networkDropdown" class="network-dropdown">
@@ -172,14 +282,14 @@
                 <button id="fetchWalletBtn" class="btn-primary"><span>🔍</span> Fetch Balance & Transactions</button>
             </div>
 
-            <!-- Results Section - Lower z-index -->
+            <!-- Results Section - Normal z-index, hidden until fetch -->
             <div id="results" class="results-section hidden mt-8">
                 <div class="glass-card p-6 mb-6">
                     <div class="flex justify-between items-center">
                         <div>
                             <p class="text-gray-400 text-sm">Wallet Balance</p>
-                            <p id="balanceAmount" class="text-3xl font-bold gradient-text">0</p>
-                            <p id="balanceCurrency" class="text-gray-400 text-sm">Waiting for fetch...</p>
+                            <p id="balanceAmount" class="balance-value">0</p>
+                            <p id="balanceCurrency" class="text-gray-400 text-sm mt-1">Not fetched yet</p>
                         </div>
                         <div class="text-right">
                             <p class="text-gray-400 text-sm">Network</p>
@@ -214,10 +324,10 @@
     <script>
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev';
         
-        let selectedChain = 'bnb';
-        let selectedChainName = 'BNB Chain';
-        let selectedBalanceEndpoint = 'bnb-balance';
-        let selectedTxEndpoint = 'bnb-transactions';
+        let selectedChain = 'btc';
+        let selectedChainName = 'Bitcoin';
+        let selectedBalanceEndpoint = 'btc-balance';
+        let selectedTxEndpoint = 'btc-transactions';
         let selectedHasTx = true;
         
         const trigger = document.getElementById('networkTrigger');
@@ -227,7 +337,7 @@
         
         function clearResults() {
             document.getElementById('balanceAmount').innerHTML = '0';
-            document.getElementById('balanceCurrency').innerHTML = 'Waiting for fetch...';
+            document.getElementById('balanceCurrency').innerHTML = 'Not fetched yet';
             document.getElementById('networkName').innerHTML = '-';
             document.getElementById('totalGain').innerHTML = '$0';
             document.getElementById('totalLoss').innerHTML = '$0';
@@ -269,6 +379,7 @@
                 selectedNetworkIcon.src = option.dataset.icon;
                 selectedNetworkName.textContent = selectedChainName;
                 
+                // Clear results when network changes
                 clearResults();
                 
                 dropdown.classList.remove('show');
