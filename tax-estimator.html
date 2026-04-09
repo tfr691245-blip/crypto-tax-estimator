@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>CryptoTax | Professional Crypto Tax Estimator</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
@@ -17,11 +16,7 @@
         .btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
         .mode-tab { transition: all 0.3s ease; cursor: pointer; border-radius: 40px; padding: 10px 24px; font-weight: 500; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); }
         .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
-        .tx-row { background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 14px; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .tx-row:hover { background: rgba(139, 92, 246, 0.1); transform: translateX(4px); }
         .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .loading-pulse { animation: pulse 1.5s ease-in-out infinite; }
         .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
         .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         
@@ -29,19 +24,18 @@
         .network-trigger { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(139,92,246,0.3); border-radius: 60px; padding: 8px 16px 8px 12px; cursor: pointer; transition: all 0.2s ease; width: fit-content; }
         .network-trigger:hover { border-color: #8b5cf6; background: rgba(139,92,246,0.1); }
         .network-trigger.active { border-color: #8b5cf6; background: rgba(139,92,246,0.15); }
-        .network-dropdown { position: absolute; top: 100%; left: 0; margin-top: 8px; background: rgba(15,23,42,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(139,92,246,0.3); border-radius: 24px; padding: 8px; min-width: 240px; z-index: 50; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
+        .network-dropdown { position: absolute; top: 100%; left: 0; margin-top: 8px; background: rgba(15,23,42,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(139,92,246,0.3); border-radius: 24px; padding: 8px; min-width: 260px; z-index: 50; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
         .network-dropdown.show { opacity: 1; visibility: visible; transform: translateY(0); }
         .network-option { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 16px; cursor: pointer; transition: all 0.2s ease; }
         .network-option:hover { background: rgba(139,92,246,0.2); }
         .network-option.selected { background: linear-gradient(135deg, rgba(139,92,246,0.3), rgba(99,102,241,0.2)); border-left: 3px solid #8b5cf6; }
-        .network-icon-img { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; }
+        .network-icon-img { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; background: rgba(255,255,255,0.1); padding: 2px; }
         .network-name { font-weight: 500; color: white; }
         .network-desc { font-size: 11px; color: #94a3b8; }
         .relative { position: relative; }
     </style>
 </head>
 <body class="min-h-screen text-white">
-    <!-- Premium Navbar -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
         <div class="container mx-auto px-5 sm:px-8 py-4">
             <div class="flex flex-wrap items-center justify-between gap-3">
@@ -62,7 +56,6 @@
 
     <div class="container mx-auto px-5 sm:px-8 pt-24 sm:pt-28 pb-16">
         <div class="max-w-6xl mx-auto">
-            <!-- Hero Section -->
             <div class="text-center mb-12">
                 <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-5 border border-purple-500/20">
                     <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
@@ -72,7 +65,6 @@
                 <p class="text-gray-400 text-lg max-w-2xl mx-auto">Calculate capital gains taxes across multiple blockchains. Upload CSV or fetch wallet data instantly.</p>
             </div>
 
-            <!-- Stats Row -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
                 <div class="stats-card"><div class="stats-number">5+</div><div class="text-gray-400 text-sm">Blockchains</div></div>
                 <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm">Calculation Method</div></div>
@@ -80,7 +72,6 @@
                 <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm">Mainnet Data</div></div>
             </div>
 
-            <!-- Mode Tabs -->
             <div class="flex justify-center gap-3 mb-8">
                 <div id="csvModeTab" class="mode-tab active">📁 Manual CSV</div>
                 <div id="walletModeTab" class="mode-tab">🤖 Auto Wallet</div>
@@ -109,33 +100,33 @@
                     <p class="text-gray-400 text-sm mt-1">Fetch real-time balance from any blockchain</p>
                 </div>
                 
-                <!-- Modern Popup Network Selector with Real Images -->
+                <!-- Modern Popup Network Selector -->
                 <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
                 <div class="relative" id="networkDropdownContainer">
                     <div id="networkTrigger" class="network-trigger">
-                        <img id="selectedNetworkIcon" class="network-icon-img" src="https://cryptologos.cc/logos/bnb-bnb-logo.svg" alt="BNB" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                        <img id="selectedNetworkIcon" class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" alt="BNB" onerror="this.style.display='none'; this.nextElementSibling.style.marginLeft='0'">
                         <span id="selectedNetworkName" class="font-medium">BNB Chain</span>
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div id="networkDropdown" class="network-dropdown">
-                        <div class="network-option" data-chain="bnb" data-name="BNB Chain" data-icon="https://cryptologos.cc/logos/bnb-bnb-logo.svg" data-balance="bnb-balance" data-tx="bnb-transactions">
-                            <img class="network-icon-img" src="https://cryptologos.cc/logos/bnb-bnb-logo.svg" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                        <div class="network-option" data-chain="bnb" data-name="BNB Chain" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" data-balance="bnb-balance">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
                             <div><div class="network-name">BNB Chain</div><div class="network-desc">Binance Smart Chain</div></div>
                         </div>
-                        <div class="network-option" data-chain="eth" data-name="Ethereum" data-icon="https://cryptologos.cc/logos/ethereum-eth-logo.svg" data-balance="eth-balance" data-tx="eth-transactions">
-                            <img class="network-icon-img" src="https://cryptologos.cc/logos/ethereum-eth-logo.svg" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                        <div class="network-option" data-chain="eth" data-name="Ethereum" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" data-balance="eth-balance">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
                             <div><div class="network-name">Ethereum</div><div class="network-desc">Ethereum Mainnet</div></div>
                         </div>
-                        <div class="network-option" data-chain="sol" data-name="Solana" data-icon="https://cryptologos.cc/logos/solana-sol-logo.svg" data-balance="sol-balance" data-tx="sol-transactions">
-                            <img class="network-icon-img" src="https://cryptologos.cc/logos/solana-sol-logo.svg" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                        <div class="network-option" data-chain="sol" data-name="Solana" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" data-balance="sol-balance">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
                             <div><div class="network-name">Solana</div><div class="network-desc">Solana Mainnet</div></div>
                         </div>
-                        <div class="network-option" data-chain="btc" data-name="Bitcoin" data-icon="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" data-balance="btc-balance" data-tx="btc-transactions">
-                            <img class="network-icon-img" src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                        <div class="network-option" data-chain="btc" data-name="Bitcoin" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" data-balance="btc-balance">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
                             <div><div class="network-name">Bitcoin</div><div class="network-desc">Bitcoin Mainnet</div></div>
                         </div>
-                        <div class="network-option" data-chain="mfc" data-name="Polygon Amoy" data-icon="https://cryptologos.cc/logos/polygon-matic-logo.svg" data-balance="mfc-balance" data-tx="mfc-balance">
-                            <img class="network-icon-img" src="https://cryptologos.cc/logos/polygon-matic-logo.svg" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                        <div class="network-option" data-chain="mfc" data-name="Polygon Amoy" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="mfc-balance">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
                             <div><div class="network-name">Polygon Amoy</div><div class="network-desc">MFC Token (Testnet)</div></div>
                         </div>
                     </div>
@@ -152,7 +143,6 @@
 
             <!-- Results Section -->
             <div id="results" class="hidden mt-8">
-                <!-- Balance Card -->
                 <div class="glass-card p-6 mb-6">
                     <div class="flex justify-between items-center">
                         <div>
@@ -167,7 +157,6 @@
                     </div>
                 </div>
 
-                <!-- Tax Result Card -->
                 <div class="glass-card p-6 mb-6">
                     <h3 class="text-xl font-bold mb-4">📊 Tax Estimate</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -184,7 +173,6 @@
     <script>
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev';
         
-        // Network dropdown functionality
         let selectedChain = 'bnb';
         let selectedChainName = 'BNB Chain';
         let selectedBalanceEndpoint = 'bnb-balance';
@@ -238,17 +226,10 @@
             document.getElementById('results').classList.add('hidden');
         };
         
-        // Display results function
         function displayResults(balance, nativeToken, network) {
             document.getElementById('balanceAmount').innerHTML = `${balance.toFixed(6)} ${nativeToken}`;
             document.getElementById('balanceCurrency').innerHTML = network;
             document.getElementById('networkName').innerHTML = network;
-            
-            document.getElementById('totalGain').innerHTML = '$0';
-            document.getElementById('totalLoss').innerHTML = '$0';
-            document.getElementById('netGain').innerHTML = '$0';
-            document.getElementById('estimatedTax').innerHTML = '$0';
-            
             document.getElementById('results').classList.remove('hidden');
         }
         
