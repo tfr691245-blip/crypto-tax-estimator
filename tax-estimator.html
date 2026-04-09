@@ -19,8 +19,6 @@
         .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
         .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        
-        /* Modern Popup Network Selector */
         .network-trigger { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(139,92,246,0.3); border-radius: 60px; padding: 8px 16px 8px 12px; cursor: pointer; transition: all 0.2s ease; width: fit-content; }
         .network-trigger:hover { border-color: #8b5cf6; background: rgba(139,92,246,0.1); }
         .network-trigger.active { border-color: #8b5cf6; background: rgba(139,92,246,0.15); }
@@ -33,6 +31,8 @@
         .network-name { font-weight: 500; color: white; }
         .network-desc { font-size: 11px; color: #94a3b8; }
         .relative { position: relative; }
+        .tx-row { background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 14px; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .tx-row:hover { background: rgba(139, 92, 246, 0.1); transform: translateX(4px); }
     </style>
 </head>
 <body class="min-h-screen text-white">
@@ -59,14 +59,14 @@
             <div class="text-center mb-12">
                 <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-5 border border-purple-500/20">
                     <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span class="text-purple-300 text-xs font-medium">Powered by 5+ Blockchains</span>
+                    <span class="text-purple-300 text-xs font-medium">Powered by 6+ Blockchains</span>
                 </div>
                 <h1 class="text-5xl sm:text-7xl font-extrabold mb-4 tracking-tight">Tax Estimator</h1>
                 <p class="text-gray-400 text-lg max-w-2xl mx-auto">Calculate capital gains taxes across multiple blockchains. Upload CSV or fetch wallet data instantly.</p>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
-                <div class="stats-card"><div class="stats-number">5+</div><div class="text-gray-400 text-sm">Blockchains</div></div>
+                <div class="stats-card"><div class="stats-number">6+</div><div class="text-gray-400 text-sm">Blockchains</div></div>
                 <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm">Calculation Method</div></div>
                 <div class="stats-card"><div class="stats-number">Free</div><div class="text-gray-400 text-sm">No Hidden Fees</div></div>
                 <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm">Mainnet Data</div></div>
@@ -100,33 +100,36 @@
                     <p class="text-gray-400 text-sm mt-1">Fetch real-time balance from any blockchain</p>
                 </div>
                 
-                <!-- Modern Popup Network Selector -->
                 <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
                 <div class="relative" id="networkDropdownContainer">
                     <div id="networkTrigger" class="network-trigger">
-                        <img id="selectedNetworkIcon" class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" alt="BNB" onerror="this.style.display='none'; this.nextElementSibling.style.marginLeft='0'">
+                        <img id="selectedNetworkIcon" class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" alt="BNB">
                         <span id="selectedNetworkName" class="font-medium">BNB Chain</span>
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div id="networkDropdown" class="network-dropdown">
                         <div class="network-option" data-chain="bnb" data-name="BNB Chain" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" data-balance="bnb-balance">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png">
                             <div><div class="network-name">BNB Chain</div><div class="network-desc">Binance Smart Chain</div></div>
                         </div>
                         <div class="network-option" data-chain="eth" data-name="Ethereum" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" data-balance="eth-balance">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png">
                             <div><div class="network-name">Ethereum</div><div class="network-desc">Ethereum Mainnet</div></div>
                         </div>
+                        <div class="network-option" data-chain="polygon" data-name="Polygon" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="polygon-balance">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
+                            <div><div class="network-name">Polygon</div><div class="network-desc">Polygon Mainnet (MATIC)</div></div>
+                        </div>
                         <div class="network-option" data-chain="sol" data-name="Solana" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" data-balance="sol-balance">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png">
                             <div><div class="network-name">Solana</div><div class="network-desc">Solana Mainnet</div></div>
                         </div>
                         <div class="network-option" data-chain="btc" data-name="Bitcoin" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" data-balance="btc-balance">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png">
                             <div><div class="network-name">Bitcoin</div><div class="network-desc">Bitcoin Mainnet</div></div>
                         </div>
                         <div class="network-option" data-chain="mfc" data-name="Polygon Amoy" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="mfc-balance">
-                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" onerror="this.src='https://assets.codepen.io/.../default.png'">
+                            <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
                             <div><div class="network-name">Polygon Amoy</div><div class="network-desc">MFC Token (Testnet)</div></div>
                         </div>
                     </div>
@@ -208,7 +211,6 @@
             });
         });
         
-        // Mode switching
         const csvMode = document.getElementById('csvMode');
         const walletMode = document.getElementById('walletMode');
         document.getElementById('csvModeTab').onclick = () => {
