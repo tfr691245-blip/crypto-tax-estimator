@@ -10,18 +10,19 @@
         .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); }
         .btn-gradient { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
         .btn-gradient:hover { transform: translateY(-2px); }
+        .tx-row:hover { background: rgba(139,92,246,0.2); }
     </style>
 </head>
 <body class="min-h-screen text-white">
     <div class="container mx-auto px-4 py-8">
-        <div class="max-w-4xl mx-auto">
+        <div class="max-w-5xl mx-auto">
             <h1 class="text-4xl font-bold text-center mb-2">Tax Estimator</h1>
-            <p class="text-center text-gray-400 mb-8">Upload CSV or fetch wallet data</p>
+            <p class="text-center text-gray-400 mb-8">Upload CSV or fetch wallet data from any blockchain</p>
             
             <!-- Mode Selector -->
             <div class="flex gap-4 mb-6">
-                <button id="csvModeBtn" class="flex-1 glass-card py-3 font-semibold hover:bg-purple-500/20">📁 CSV Upload</button>
-                <button id="walletModeBtn" class="flex-1 glass-card py-3 font-semibold hover:bg-purple-500/20">🤖 Auto Wallet</button>
+                <button id="csvModeBtn" class="flex-1 glass-card py-3 font-semibold hover:bg-purple-500/20 transition">📁 CSV Upload</button>
+                <button id="walletModeBtn" class="flex-1 glass-card py-3 font-semibold hover:bg-purple-500/20 transition">🤖 Auto Wallet</button>
             </div>
             
             <!-- CSV Mode -->
@@ -29,28 +30,33 @@
                 <h2 class="text-xl font-bold mb-4">Upload CSV File</h2>
                 <input type="file" id="csvFile" accept=".csv" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4">
                 <p class="text-gray-400 text-sm mb-4">Format: date,type,amount,price<br>Example: 2024-01-01,buy,0.5,20000</p>
-                <button id="uploadBtn" class="btn-gradient w-full py-3 rounded-xl font-semibold">Calculate Tax</button>
+                <button id="uploadBtn" class="btn-gradient w-full py-3 rounded-xl font-semibold transition">📊 Calculate Tax</button>
             </div>
             
             <!-- Wallet Mode -->
             <div id="walletMode" class="glass-card p-6 hidden">
                 <h2 class="text-xl font-bold mb-4">Enter Wallet Address</h2>
                 <select id="chainSelect" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4">
-                    <option value="bnb">🟡 BNB Chain (BSC)</option>
-                    <option value="sol">🟣 Solana</option>
+                    <option value="bnb">🟡 BNB Chain (BSC) - Balance + Transactions</option>
+                    <option value="eth">🔵 Ethereum - Balance + Transactions</option>
+                    <option value="sol">🟣 Solana - Balance + Transactions</option>
+                    <option value="btc">🟠 Bitcoin - Balance + Transactions</option>
+                    <option value="mfc">💜 Polygon Amoy - MFC Token Balance</option>
                 </select>
                 <input type="text" id="walletAddress" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4" placeholder="Enter wallet address">
-                <button id="fetchWalletBtn" class="btn-gradient w-full py-3 rounded-xl font-semibold">Fetch Balance & Transactions</button>
+                <button id="fetchWalletBtn" class="btn-gradient w-full py-3 rounded-xl font-semibold transition">🔍 Fetch Data</button>
             </div>
             
             <!-- Results -->
             <div id="results" class="glass-card p-6 mt-6 hidden">
-                <h2 class="text-xl font-bold mb-4">📊 Results</h2>
                 <div id="balanceResult" class="mb-4"></div>
-                <div id="taxResult" class="mb-4"></div>
+                <div id="networkResult" class="mb-4"></div>
                 <div id="transactionsResult">
-                    <h3 class="font-semibold mb-2">📜 Transactions</h3>
-                    <div id="transactionsList" class="max-h-64 overflow-y-auto space-y-2"></div>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xl font-bold">📜 Transactions</h3>
+                        <span id="txCount" class="text-purple-400 text-sm"></span>
+                    </div>
+                    <div id="transactionsList" class="max-h-96 overflow-y-auto space-y-2"></div>
                 </div>
             </div>
         </div>
@@ -76,49 +82,40 @@
         // CSV Upload
         document.getElementById('uploadBtn').onclick = async () => {
             const file = document.getElementById('csvFile').files[0];
-            if (!file) {
-                alert('Please select a CSV file');
-                return;
-            }
+            if (!file) { alert('Please select a CSV file'); return; }
             
             const text = await file.text();
             const lines = text.trim().split('\n');
-            const headers = lines[0].toLowerCase().split(',');
-            
             const transactions = lines.slice(1).map(line => {
-                const values = line.split(',');
-                return {
-                    date: values[0],
-                    type: values[1].toLowerCase(),
-                    amount: parseFloat(values[2]),
-                    price: parseFloat(values[3])
-                };
+                const [date, type, amount, price] = line.split(',');
+                return { date, type: type.toLowerCase(), amount: parseFloat(amount), price: parseFloat(price) };
             }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price));
             
             const response = await fetch(`${API_URL}/api/calculate-tax`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ transactionData: transactions })
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ transactionData: transactions })
             });
             const data = await response.json();
             
             if (data.success) {
-                document.getElementById('balanceResult').innerHTML = `<div class="bg-green-500/20 p-3 rounded-lg">📈 Total Gain: $${data.taxResult.totalGain} | 📉 Estimated Tax: $${data.taxResult.estimatedTax}</div>`;
-                document.getElementById('taxResult').innerHTML = `<div class="bg-purple-500/20 p-3 rounded-lg">📊 Transactions Processed: ${data.taxResult.transactionsProcessed}</div>`;
-                document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 10).map(tx => `
-                    <div class="bg-white/5 p-3 rounded-lg">
-                        <div class="flex justify-between">
-                            <span>${tx.date}</span>
-                            <span class="${tx.type === 'buy' ? 'text-green-400' : 'text-orange-400'}">${tx.type.toUpperCase()}</span>
-                            <span>${tx.amount} @ $${tx.price}</span>
-                            <span>Gain: $${tx.gain || 0}</span>
+                document.getElementById('balanceResult').innerHTML = `<div class="bg-green-500/20 p-3 rounded-lg">📈 Total Gain: $${data.taxResult.totalGain} | 📉 Total Loss: $${data.taxResult.totalLoss} | 🎯 Net Gain: $${data.taxResult.netGain}</div>`;
+                document.getElementById('networkResult').innerHTML = `<div class="bg-purple-500/20 p-3 rounded-lg">💰 Estimated Tax (20%): $${data.taxResult.estimatedTax} | 📊 Transactions Processed: ${data.taxResult.transactionsProcessed}</div>`;
+                document.getElementById('txCount').innerHTML = `${data.transactions.length} transactions`;
+                document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 30).map(tx => `
+                    <div class="tx-row bg-white/5 p-3 rounded-lg transition">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="font-mono text-sm">${tx.date}</div>
+                                <div class="text-xs text-gray-400">${tx.type.toUpperCase()}</div>
+                            </div>
+                            <div class="text-right">
+                                <div>${tx.amount} @ $${tx.price}</div>
+                                <div class="text-sm ${tx.gain >= 0 ? 'text-green-400' : 'text-red-400'}">Gain: $${tx.gain}</div>
+                            </div>
                         </div>
                     </div>
                 `).join('');
                 document.getElementById('results').classList.remove('hidden');
-            } else {
-                alert('Error: ' + data.error);
-            }
+            } else { alert('Error: ' + data.error); }
         };
         
         // Wallet Fetch
@@ -126,30 +123,69 @@
             const address = document.getElementById('walletAddress').value.trim();
             const chain = document.getElementById('chainSelect').value;
             
-            if (!address) {
-                alert('Please enter a wallet address');
-                return;
-            }
+            if (!address) { alert('Please enter a wallet address'); return; }
             
-            const endpoint = chain === 'bnb' ? '/api/bnb-data' : '/api/sol-data';
-            const response = await fetch(`${API_URL}${endpoint}?address=${address}`);
+            let endpoint = '';
+            if (chain === 'bnb') endpoint = `/api/bnb-data?address=${address}`;
+            else if (chain === 'eth') endpoint = `/api/eth-data?address=${address}`;
+            else if (chain === 'sol') endpoint = `/api/sol-data?address=${address}`;
+            else if (chain === 'btc') endpoint = `/api/btc-data?address=${address}`;
+            else if (chain === 'mfc') endpoint = `/api/mfc-balance?address=${address}`;
+            
+            const response = await fetch(`${API_URL}${endpoint}`);
             const data = await response.json();
             
             if (data.success) {
                 document.getElementById('balanceResult').innerHTML = `<div class="bg-green-500/20 p-3 rounded-lg">💰 Balance: ${data.balance} ${data.nativeToken}</div>`;
-                document.getElementById('taxResult').innerHTML = `<div class="bg-purple-500/20 p-3 rounded-lg">📊 Total Transactions: ${data.transactions.length}</div>`;
-                document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 10).map(tx => `
-                    <div class="bg-white/5 p-3 rounded-lg">
-                        <div class="flex justify-between text-sm">
-                            <span class="font-mono">${tx.hash?.slice(0, 16)}...</span>
-                            <span>${tx.value ? tx.value.toFixed(6) + ' ' + data.nativeToken : 'Solana TX'}</span>
-                        </div>
-                    </div>
-                `).join('');
+                document.getElementById('networkResult').innerHTML = `<div class="bg-purple-500/20 p-3 rounded-lg">🌐 Network: ${data.network || 'Blockchain'} | 📊 Total Transactions: ${data.totalTransactions || 0}</div>`;
+                document.getElementById('txCount').innerHTML = `${data.transactions?.length || 0} transactions`;
+                
+                if (data.transactions && data.transactions.length > 0) {
+                    document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 30).map(tx => {
+                        if (chain === 'bnb' || chain === 'eth') {
+                            return `
+                                <div class="tx-row bg-white/5 p-3 rounded-lg transition">
+                                    <div class="flex justify-between items-center">
+                                        <div class="font-mono text-xs break-all flex-1">${tx.hash}</div>
+                                        <div class="text-right">
+                                            <div>${parseFloat(tx.value).toFixed(6)} ${data.nativeToken}</div>
+                                            <div class="text-xs text-gray-400">${new Date(tx.timestamp * 1000).toLocaleString()}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } else if (chain === 'sol') {
+                            return `
+                                <div class="tx-row bg-white/5 p-3 rounded-lg transition">
+                                    <div class="flex justify-between items-center">
+                                        <div class="font-mono text-xs break-all flex-1">${tx.signature}</div>
+                                        <div class="text-right">
+                                            <div class="text-xs text-gray-400">Slot: ${tx.slot}</div>
+                                            <div class="text-xs text-gray-400">${tx.blockTime ? new Date(tx.blockTime * 1000).toLocaleString() : 'Pending'}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } else if (chain === 'btc') {
+                            return `
+                                <div class="tx-row bg-white/5 p-3 rounded-lg transition">
+                                    <div class="flex justify-between items-center">
+                                        <div class="font-mono text-xs break-all flex-1">${tx.hash}</div>
+                                        <div class="text-right">
+                                            <div>${tx.value} BTC</div>
+                                            <div class="text-xs text-gray-400">${tx.confirmations} confirmations</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        return '';
+                    }).join('');
+                } else {
+                    document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">No transactions found for this address</div>';
+                }
                 document.getElementById('results').classList.remove('hidden');
-            } else {
-                alert('Error: ' + data.error);
-            }
+            } else { alert('Error: ' + data.error); }
         };
     </script>
 </body>
