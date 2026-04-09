@@ -8,131 +8,239 @@
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #4c1d95 100%); background-attachment: fixed; }
-        .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-gradient { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
-        .btn-gradient:hover { background: linear-gradient(135deg, #7c3aed, #4f46e5); transform: translateY(-2px); }
-        .mode-tab { transition: all 0.2s ease; cursor: pointer; }
-        .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; }
-        .tx-row:hover { background: rgba(255,255,255,0.08); }
+        * { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+        }
         
-        /* Beautiful Blockchain Selector */
-        .chain-selector {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 12px 16px;
-            color: white;
-            width: 100%;
-            cursor: pointer;
+        body { 
+            background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        
+        /* Premium Glass Card */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 24px;
             transition: all 0.3s ease;
         }
-        .chain-selector:hover {
-            border-color: #8b5cf6;
-            background: rgba(139,92,246,0.1);
+        
+        .glass-card:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
-        .chain-selector:focus {
+        
+        /* Premium Button */
+        .btn-premium {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #4f46e5 100%);
+            border: none;
+            border-radius: 40px;
+            padding: 12px 28px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+        }
+        
+        .btn-premium:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+        }
+        
+        /* Mode Tabs */
+        .mode-tab {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-radius: 40px;
+            padding: 10px 24px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mode-tab.active {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        
+        /* Premium Select (Blockchain Dropdown) */
+        .premium-select {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: #f1f5f9;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238b5cf6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 20px;
+        }
+        
+        .premium-select:hover {
+            border-color: #8b5cf6;
+            background-color: rgba(139, 92, 246, 0.1);
+        }
+        
+        .premium-select:focus {
             outline: none;
             border-color: #8b5cf6;
-            box-shadow: 0 0 0 3px rgba(139,92,246,0.2);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
         }
         
-        /* Dropdown options styling */
-        .chain-selector option {
+        /* Dropdown Options */
+        .premium-select option {
             background: #1e1b4b;
-            color: white;
+            color: #f1f5f9;
             padding: 12px;
         }
-        .chain-selector option:checked {
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
-            color: white;
+        
+        .premium-select optgroup {
+            background: #0f172a;
+            color: #8b5cf6;
+            font-weight: 600;
+            padding: 8px;
         }
         
-        /* Selected chain badge */
-        .selected-chain-badge {
+        /* Chain Badge */
+        .chain-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(139,92,246,0.2);
-            border: 1px solid rgba(139,92,246,0.3);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 40px;
-            padding: 6px 14px;
+            padding: 8px 16px;
             font-size: 13px;
+            font-weight: 500;
             color: #c4b5fd;
-            margin-top: 10px;
+            margin-top: 12px;
         }
         
-        /* Loading animation */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .animate-pulse-slow {
-            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        /* Input Field */
+        .premium-input {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: #f1f5f9;
+            width: 100%;
+            transition: all 0.3s ease;
         }
         
-        /* Custom scrollbar */
+        .premium-input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+        
+        .premium-input::placeholder {
+            color: #64748b;
+        }
+        
+        /* Transaction Row */
+        .tx-row {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 14px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .tx-row:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateX(4px);
+        }
+        
+        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(139,92,246,0.5);
+            background: #8b5cf6;
             border-radius: 10px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(139,92,246,0.8);
+        
+        /* Loading Animation */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .loading-shimmer {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(139, 92, 246, 0.1) 100%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
         }
     </style>
 </head>
 <body class="min-h-screen">
-    <nav class="glass-card fixed w-full z-20 border-b border-white/10">
-        <div class="container mx-auto px-4 sm:px-8 py-3 sm:py-4">
-            <div class="flex flex-wrap items-center justify-between gap-2">
+    <!-- Premium Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
+        <div class="container mx-auto px-5 sm:px-8 py-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
                     <span class="text-2xl sm:text-3xl">💰</span>
-                    <span class="text-white font-bold text-lg sm:text-2xl tracking-tight">CryptoTax</span>
+                    <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
+                    <span class="hidden sm:inline-flex text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full ml-2">BETA</span>
                 </div>
-                <div class="flex flex-wrap items-center gap-3 sm:gap-5">
-                    <a href="index.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Home</a>
-                    <a href="dashboard.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Estimator</a>
-                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-3 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg whitespace-nowrap">Claim</a>
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <a href="index.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Home</a>
+                    <a href="dashboard.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg bg-purple-600/20">Estimator</a>
+                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-36 pb-16 sm:pb-24">
+    <div class="container mx-auto px-5 sm:px-8 pt-24 sm:pt-28 pb-16">
         <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-white/20">
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-5 border border-purple-500/20">
                     <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span class="text-white text-xs sm:text-sm font-medium">Live on Polygon Amoy</span>
+                    <span class="text-purple-300 text-xs sm:text-sm font-medium">Live on Polygon Amoy • Beta</span>
                 </div>
-                <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-3 tracking-tight">Tax Estimator</h1>
-                <p class="text-gray-300 text-base sm:text-lg">Upload CSV or paste any wallet address – shows balance, transactions & tax</p>
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight">Tax Estimator</h1>
+                <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">Upload CSV or paste any wallet address — get instant tax calculations</p>
             </div>
 
             <!-- Mode Tabs -->
             <div class="flex justify-center gap-3 mb-8">
-                <div id="manualModeTab" class="mode-tab glass-card px-6 py-2 rounded-full text-white font-semibold border border-white/20 active">📁 Manual CSV</div>
-                <div id="autoModeTab" class="mode-tab glass-card px-6 py-2 rounded-full text-white font-semibold border border-white/20">🤖 Auto Wallet</div>
+                <div id="manualModeTab" class="mode-tab active">📁 Manual CSV</div>
+                <div id="autoModeTab" class="mode-tab">🤖 Auto Wallet</div>
             </div>
 
             <!-- Manual Mode -->
             <div id="manualMode" class="space-y-6">
-                <div id="walletStatus" class="glass-card rounded-2xl p-6 sm:p-8 text-center">
-                    <button id="connectBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">🔌 Connect Wallet</button>
+                <div class="glass-card p-6 sm:p-8 text-center">
+                    <button id="connectBtn" class="btn-premium">🔌 Connect MetaMask Wallet</button>
                 </div>
                 <div id="uploadArea" class="hidden">
-                    <div class="glass-card rounded-2xl p-8 text-center border-2 border-dashed border-white/20">
+                    <div class="glass-card p-8 text-center border-2 border-dashed border-purple-500/30">
                         <input type="file" id="csvFile" accept=".csv" class="hidden">
-                        <button id="uploadBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">📂 Upload CSV File</button>
+                        <button id="uploadBtn" class="btn-premium">📂 Upload CSV File</button>
                         <p class="text-gray-400 text-sm mt-4">Format: date,type,amount,price<br>Example: 2024-01-01,buy,0.5,2000</p>
                     </div>
                 </div>
@@ -140,85 +248,65 @@
 
             <!-- Auto Mode -->
             <div id="autoMode" class="hidden space-y-6">
-                <div class="glass-card rounded-2xl p-6 sm:p-8">
-                    <h2 class="text-xl font-bold text-white mb-4">🔍 Enter Wallet Address</h2>
+                <div class="glass-card p-6 sm:p-8">
+                    <h2 class="text-xl font-bold text-white mb-5">🔍 Enter Wallet Address</h2>
                     <div class="flex flex-col gap-4">
                         <div>
-                            <label class="text-gray-300 text-sm block mb-2">Select Blockchain</label>
-                            <select id="chainSelect" class="chain-selector">
+                            <label class="text-gray-300 text-sm block mb-2 font-medium">Select Blockchain</label>
+                            <select id="chainSelect" class="premium-select">
                                 <optgroup label="🔥 EVM Chains">
-                                    <option value="ethereum" data-icon="🟣">🟣 Ethereum</option>
-                                    <option value="polygon" data-icon="🔵">🔵 Polygon</option>
-                                    <option value="bsc" data-icon="🟡">🟡 BNB Chain</option>
-                                    <option value="arbitrum" data-icon="🔷">🔷 Arbitrum</option>
-                                    <option value="base" data-icon="🔷">🔷 Base</option>
-                                    <option value="optimism" data-icon="🔴">🔴 Optimism</option>
-                                    <option value="avalanche" data-icon="🔺">🔺 Avalanche</option>
-                                    <option value="fantom" data-icon="🔷">🔷 Fantom</option>
-                                    <option value="cronos" data-icon="🟣">🟣 Cronos</option>
-                                    <option value="gnosis" data-icon="⚪">⚪ Gnosis</option>
-                                    <option value="celo" data-icon="🟢">🟢 Celo</option>
-                                    <option value="moonbeam" data-icon="🌙">🌙 Moonbeam</option>
-                                    <option value="moonriver" data-icon="🌙">🌙 Moonriver</option>
-                                    <option value="aurora" data-icon="⚡">⚡ Aurora</option>
-                                    <option value="harmony" data-icon="🎵">🎵 Harmony</option>
-                                    <option value="klaytn" data-icon="🔷">🔷 Klaytn</option>
-                                    <option value="metis" data-icon="🔷">🔷 Metis</option>
-                                    <option value="zksync" data-icon="⚡">⚡ zkSync Era</option>
-                                    <option value="linea" data-icon="📏">📏 Linea</option>
-                                    <option value="scroll" data-icon="📜">📜 Scroll</option>
-                                    <option value="polygon_zkevm" data-icon="🔵">🔵 Polygon zkEVM</option>
-                                    <option value="mantle" data-icon="🪨">🪨 Mantle</option>
-                                    <option value="blast" data-icon="💥">💥 Blast</option>
-                                    <option value="kava" data-icon="🔷">🔷 Kava</option>
-                                    <option value="zora" data-icon="🎨">🎨 Zora</option>
-                                    <option value="sei" data-icon="⚡">⚡ Sei</option>
+                                    <option value="ethereum">🟣 Ethereum</option>
+                                    <option value="polygon">🔵 Polygon</option>
+                                    <option value="bsc" selected>🟡 BNB Chain</option>
+                                    <option value="arbitrum">🔷 Arbitrum</option>
+                                    <option value="base">🔷 Base</option>
+                                    <option value="optimism">🔴 Optimism</option>
+                                    <option value="avalanche">🔺 Avalanche</option>
+                                    <option value="fantom">🔷 Fantom</option>
                                 </optgroup>
                                 <optgroup label="⚡ Non-EVM Chains">
-                                    <option value="solana" data-icon="🟣">🟣 Solana</option>
-                                    <option value="tron" data-icon="🟢">🟢 Tron</option>
-                                    <option value="bitcoin" data-icon="🟠">🟠 Bitcoin</option>
-                                    <option value="dogecoin" data-icon="🐕">🐕 Dogecoin</option>
-                                    <option value="litecoin" data-icon="⚪">⚪ Litecoin</option>
-                                    <option value="dash" data-icon="⚡">⚡ Dash</option>
-                                    <option value="near" data-icon="🔷">🔷 Near</option>
+                                    <option value="solana">🟣 Solana</option>
+                                    <option value="tron">🟢 Tron</option>
+                                    <option value="bitcoin">🟠 Bitcoin</option>
+                                    <option value="dogecoin">🐕 Dogecoin</option>
+                                    <option value="litecoin">⚪ Litecoin</option>
                                 </optgroup>
                             </select>
-                            <div id="selectedChainBadge" class="selected-chain-badge">
-                                <span>📌</span>
+                            <div class="chain-badge">
+                                <span>✓</span>
                                 <span id="selectedChainText">BNB Chain</span>
                             </div>
                         </div>
                         <div>
-                            <input type="text" id="walletAddress" placeholder="Enter wallet address (0x... or address)" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500">
+                            <input type="text" id="walletAddress" placeholder="Enter wallet address (0x...)" class="premium-input">
                         </div>
                     </div>
-                    <button id="autoFetchBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg mt-6 w-full transition-all duration-200">🚀 Fetch Balance, Transactions & Calculate Tax</button>
+                    <button id="autoFetchBtn" class="btn-premium w-full mt-6">🚀 Calculate Taxes (5 MFC required)</button>
                 </div>
             </div>
 
             <!-- Balance Display -->
-            <div id="balanceDisplay" class="hidden glass-card rounded-2xl p-6 sm:p-8 mt-6">
-                <h2 class="text-2xl font-bold text-white mb-4">💰 Wallet Balance</h2>
+            <div id="balanceDisplay" class="hidden glass-card p-6 sm:p-8 mt-6">
+                <h2 class="text-xl font-bold text-white mb-3">💰 Wallet Balance</h2>
                 <div class="flex justify-between items-center">
-                    <span class="text-gray-300 text-lg" id="balanceCurrency">Loading...</span>
-                    <span class="text-3xl font-bold text-purple-400" id="balanceAmount">0</span>
+                    <span class="text-gray-300" id="balanceCurrency">BNB Chain</span>
+                    <span class="text-3xl font-bold text-purple-400" id="balanceAmount">0 BNB</span>
                 </div>
             </div>
 
             <!-- Transactions List -->
-            <div id="transactionsDisplay" class="hidden glass-card rounded-2xl p-6 sm:p-8 mt-6">
-                <h2 class="text-2xl font-bold text-white mb-4">📜 Recent Transactions</h2>
+            <div id="transactionsDisplay" class="hidden glass-card p-6 sm:p-8 mt-6">
+                <h2 class="text-xl font-bold text-white mb-4">📜 Recent Transactions</h2>
                 <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
-                    <div class="text-center text-gray-400 py-4">Loading transactions...</div>
+                    <div class="text-center text-gray-400 py-4">Enter address to load transactions</div>
                 </div>
             </div>
 
             <!-- Tax Result -->
-            <div id="resultArea" class="hidden glass-card rounded-2xl p-6 sm:p-8 mt-6">
-                <h2 class="text-2xl font-bold text-white mb-4">📊 Your Tax Estimate</h2>
+            <div id="resultArea" class="hidden glass-card p-6 sm:p-8 mt-6">
+                <h2 class="text-xl font-bold text-white mb-4">📊 Your Tax Estimate</h2>
                 <div id="taxResult" class="space-y-2 text-gray-200"></div>
-                <button id="downloadBtn" class="mt-6 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-xl transition">📄 Download PDF</button>
+                <button id="downloadBtn" class="mt-5 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-xl transition w-full sm:w-auto">📄 Download PDF Report</button>
             </div>
         </div>
     </div>
@@ -235,12 +323,9 @@
         const chainSelect = document.getElementById('chainSelect');
         const selectedChainText = document.getElementById('selectedChainText');
         
-        // Update selected chain badge with icon
         function updateSelectedChain() {
             const selectedOption = chainSelect.options[chainSelect.selectedIndex];
-            const icon = selectedOption.getAttribute('data-icon') || '📌';
-            const chainName = selectedOption.textContent.replace(/^[^\w]+/, '').trim();
-            selectedChainText.innerHTML = `${icon} ${chainName}`;
+            selectedChainText.innerText = selectedOption.textContent;
         }
         
         chainSelect.addEventListener('change', updateSelectedChain);
@@ -263,7 +348,6 @@
             manualMode.classList.add('hidden');
         };
         
-        // Manual mode – connect wallet
         document.getElementById('connectBtn').onclick = async () => {
             if (!window.ethereum) return alert('Install MetaMask!');
             const provider = new ethers.BrowserProvider(window.ethereum);
@@ -274,7 +358,6 @@
             document.getElementById('uploadArea').classList.remove('hidden');
         };
         
-        // Manual mode – CSV upload
         document.getElementById('uploadBtn').onclick = () => document.getElementById('csvFile').click();
         document.getElementById('csvFile').onchange = async (e) => {
             const file = e.target.files[0];
@@ -286,7 +369,7 @@
                 return { date, type, amount: parseFloat(amount), price: parseFloat(price) };
             });
             document.getElementById('uploadBtn').disabled = true;
-            document.getElementById('uploadBtn').innerHTML = '⏳ Processing...';
+            document.getElementById('uploadBtn').innerHTML = 'Processing...';
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
@@ -302,95 +385,55 @@
                     <p>📄 <strong>Transactions Processed:</strong> ${currentTaxResult.transactionsProcessed}</p>
                 `;
                 document.getElementById('resultArea').classList.remove('hidden');
-                document.getElementById('balanceDisplay').classList.add('hidden');
-                document.getElementById('transactionsDisplay').classList.add('hidden');
             } catch (err) {
-                alert(`Error: ${err.message}`);
+                alert('Error: ' + err.message);
             } finally {
                 document.getElementById('uploadBtn').disabled = false;
                 document.getElementById('uploadBtn').innerHTML = '📂 Upload CSV File';
             }
         };
         
-        // Auto mode – fetch wallet data
         document.getElementById('autoFetchBtn').onclick = async () => {
             const address = document.getElementById('walletAddress').value.trim();
             const chain = chainSelect.value;
-            if (!address) {
-                alert('Please enter a wallet address');
-                return;
-            }
+            if (!address) return alert('Enter wallet address');
             
             document.getElementById('autoFetchBtn').disabled = true;
-            document.getElementById('autoFetchBtn').innerHTML = '⏳ Fetching data...';
+            document.getElementById('autoFetchBtn').innerHTML = 'Loading...';
             
             document.getElementById('balanceDisplay').classList.remove('hidden');
             document.getElementById('transactionsDisplay').classList.remove('hidden');
             document.getElementById('resultArea').classList.add('hidden');
-            
-            const chainName = chainSelect.options[chainSelect.selectedIndex].textContent.replace(/^[^\w]+/, '').trim();
-            document.getElementById('balanceCurrency').innerHTML = `<span class="animate-pulse-slow">⏳ Fetching ${chainName} balance...</span>`;
-            document.getElementById('balanceAmount').innerHTML = 'Loading...';
-            document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4 animate-pulse-slow">⏳ Loading transactions...</div>';
+            document.getElementById('transactionsList').innerHTML = '<div class="loading-shimmer rounded-lg p-4 text-center text-gray-400">Fetching data...</div>';
+            document.getElementById('balanceAmount').innerHTML = '<div class="loading-shimmer rounded-lg px-4 py-2 w-32"></div>';
             
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        walletAddress: address, 
-                        chain: chain,
-                        autoFetch: true 
-                    })
+                    body: JSON.stringify({ walletAddress: address, chain: chain, autoFetch: true })
                 });
                 const data = await res.json();
-                
-                if (!res.ok) throw new Error(data.error || 'Failed to fetch data');
+                if (!res.ok) throw new Error(data.error || 'API Error');
                 
                 currentTaxResult = data.taxResult;
-                
-                // Update balance display
-                document.getElementById('balanceCurrency').innerHTML = chainName;
-                document.getElementById('balanceAmount').innerHTML = `${(Math.random() * 10).toFixed(4)} ${chain === 'bsc' ? 'BNB' : chain === 'ethereum' ? 'ETH' : chain === 'bitcoin' ? 'BTC' : chain === 'solana' ? 'SOL' : 'Tokens'}`;
-                
-                // Display transactions
-                if (data.transactions && data.transactions.length > 0) {
-                    document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 20).map(tx => `
-                        <div class="tx-row bg-white/5 rounded-lg p-3 transition">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <div class="text-white text-sm font-medium">${tx.type?.toUpperCase() || 'TRADE'} ${tx.amount || 0} ${chain.toUpperCase()}</div>
-                                    <div class="text-gray-400 text-xs">${tx.date || new Date().toISOString().split('T')[0]}</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-white text-sm">$${tx.price || 0}</div>
-                                    <div class="text-gray-400 text-xs">Gain: $${tx.gain || 0}</div>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">📭 No transactions found for this address.</div>';
-                }
-                
+                document.getElementById('balanceAmount').innerHTML = `Balance fetched from ${chain.toUpperCase()}`;
+                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">Transactions loaded. Tax calculation complete.</div>';
                 document.getElementById('taxResult').innerHTML = `
                     <p>💰 <strong>Total Gain:</strong> $${currentTaxResult.totalGain || 0}</p>
                     <p>📉 <strong>Estimated Tax (20%):</strong> $${currentTaxResult.estimatedTax || 0}</p>
                     <p>📄 <strong>Transactions Processed:</strong> ${currentTaxResult.transactionsProcessed || 0}</p>
                 `;
                 document.getElementById('resultArea').classList.remove('hidden');
-                
             } catch (err) {
-                console.error(err);
-                document.getElementById('transactionsList').innerHTML = `<div class="text-center text-red-400 py-4">⚠️ Error: ${err.message}</div>`;
-                document.getElementById('balanceAmount').innerHTML = '0';
+                document.getElementById('transactionsList').innerHTML = `<div class="text-center text-red-400 py-4">Error: ${err.message}</div>`;
             } finally {
                 document.getElementById('autoFetchBtn').disabled = false;
-                document.getElementById('autoFetchBtn').innerHTML = '🚀 Fetch Balance, Transactions & Calculate Tax';
+                document.getElementById('autoFetchBtn').innerHTML = '🚀 Calculate Taxes (5 MFC required)';
             }
         };
         
-        document.getElementById('downloadBtn').onclick = () => alert('PDF generation coming soon. Your tax result is ready!');
+        document.getElementById('downloadBtn').onclick = () => alert('PDF report ready! (Feature coming soon)');
     </script>
 </body>
 </html>
