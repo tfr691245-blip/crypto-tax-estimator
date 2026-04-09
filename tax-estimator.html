@@ -16,36 +16,42 @@
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
             <h1 class="text-4xl font-bold text-center mb-2">Tax Estimator</h1>
-            <p class="text-center text-gray-400 mb-8">Real mainnet data</p>
+            <p class="text-center text-gray-400 mb-8">Upload CSV or fetch wallet data</p>
             
-            <!-- Chain Selector -->
-            <div class="glass-card p-6 mb-6">
-                <label class="block mb-2 font-medium">Select Blockchain</label>
-                <select id="chainSelect" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3">
-                    <option value="bsc">🟡 BNB Chain (BSC) Mainnet</option>
-                    <option value="sol">🟣 Solana Mainnet</option>
-                    <option value="eth">🔵 Ethereum Mainnet</option>
-                    <option value="btc">🟠 Bitcoin Mainnet</option>
+            <!-- Mode Selector -->
+            <div class="flex gap-4 mb-6">
+                <button id="csvModeBtn" class="flex-1 glass-card py-3 font-semibold hover:bg-purple-500/20">📁 CSV Upload</button>
+                <button id="walletModeBtn" class="flex-1 glass-card py-3 font-semibold hover:bg-purple-500/20">🤖 Auto Wallet</button>
+            </div>
+            
+            <!-- CSV Mode -->
+            <div id="csvMode" class="glass-card p-6">
+                <h2 class="text-xl font-bold mb-4">Upload CSV File</h2>
+                <input type="file" id="csvFile" accept=".csv" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4">
+                <p class="text-gray-400 text-sm mb-4">Format: date,type,amount,price<br>Example: 2024-01-01,buy,0.5,20000</p>
+                <button id="uploadBtn" class="btn-gradient w-full py-3 rounded-xl font-semibold">Calculate Tax</button>
+            </div>
+            
+            <!-- Wallet Mode -->
+            <div id="walletMode" class="glass-card p-6 hidden">
+                <h2 class="text-xl font-bold mb-4">Enter Wallet Address</h2>
+                <select id="chainSelect" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4">
+                    <option value="bnb">🟡 BNB Chain (BSC)</option>
+                    <option value="sol">🟣 Solana</option>
                 </select>
+                <input type="text" id="walletAddress" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4" placeholder="Enter wallet address">
+                <button id="fetchWalletBtn" class="btn-gradient w-full py-3 rounded-xl font-semibold">Fetch Balance & Transactions</button>
             </div>
             
-            <!-- Address Input -->
-            <div class="glass-card p-6 mb-6">
-                <label class="block mb-2 font-medium">Wallet Address</label>
-                <input type="text" id="addressInput" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3" placeholder="Enter wallet address" value="0xA6AeBFce98456a8d10B2609DbD3609015F80B20a">
-            </div>
-            
-            <!-- Fetch Button -->
-            <button id="fetchBtn" class="btn-gradient w-full py-3 rounded-xl font-semibold mb-6 transition-all">🚀 Fetch Balance</button>
-            
-            <!-- Balance Display -->
-            <div id="balanceDisplay" class="glass-card p-6 hidden">
-                <h2 class="text-xl font-bold mb-2">💰 Wallet Balance</h2>
-                <div class="flex justify-between items-center">
-                    <span id="balanceCurrency" class="text-gray-300">Chain</span>
-                    <span id="balanceAmount" class="text-3xl font-bold text-purple-400">0</span>
+            <!-- Results -->
+            <div id="results" class="glass-card p-6 mt-6 hidden">
+                <h2 class="text-xl font-bold mb-4">📊 Results</h2>
+                <div id="balanceResult" class="mb-4"></div>
+                <div id="taxResult" class="mb-4"></div>
+                <div id="transactionsResult">
+                    <h3 class="font-semibold mb-2">📜 Transactions</h3>
+                    <div id="transactionsList" class="max-h-64 overflow-y-auto space-y-2"></div>
                 </div>
-                <div id="balanceError" class="text-red-400 text-sm mt-3 hidden"></div>
             </div>
         </div>
     </div>
@@ -53,50 +59,96 @@
     <script>
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev';
         
-        document.getElementById('fetchBtn').onclick = async () => {
-            const address = document.getElementById('addressInput').value.trim();
-            const chainSelect = document.getElementById('chainSelect');
-            const chain = chainSelect.value;
-            const chainText = chainSelect.options[chainSelect.selectedIndex].text;
+        // Mode switching
+        const csvMode = document.getElementById('csvMode');
+        const walletMode = document.getElementById('walletMode');
+        document.getElementById('csvModeBtn').onclick = () => {
+            csvMode.classList.remove('hidden');
+            walletMode.classList.add('hidden');
+            document.getElementById('results').classList.add('hidden');
+        };
+        document.getElementById('walletModeBtn').onclick = () => {
+            csvMode.classList.add('hidden');
+            walletMode.classList.remove('hidden');
+            document.getElementById('results').classList.add('hidden');
+        };
+        
+        // CSV Upload
+        document.getElementById('uploadBtn').onclick = async () => {
+            const file = document.getElementById('csvFile').files[0];
+            if (!file) {
+                alert('Please select a CSV file');
+                return;
+            }
+            
+            const text = await file.text();
+            const lines = text.trim().split('\n');
+            const headers = lines[0].toLowerCase().split(',');
+            
+            const transactions = lines.slice(1).map(line => {
+                const values = line.split(',');
+                return {
+                    date: values[0],
+                    type: values[1].toLowerCase(),
+                    amount: parseFloat(values[2]),
+                    price: parseFloat(values[3])
+                };
+            }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price));
+            
+            const response = await fetch(`${API_URL}/api/calculate-tax`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ transactionData: transactions })
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                document.getElementById('balanceResult').innerHTML = `<div class="bg-green-500/20 p-3 rounded-lg">📈 Total Gain: $${data.taxResult.totalGain} | 📉 Estimated Tax: $${data.taxResult.estimatedTax}</div>`;
+                document.getElementById('taxResult').innerHTML = `<div class="bg-purple-500/20 p-3 rounded-lg">📊 Transactions Processed: ${data.taxResult.transactionsProcessed}</div>`;
+                document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 10).map(tx => `
+                    <div class="bg-white/5 p-3 rounded-lg">
+                        <div class="flex justify-between">
+                            <span>${tx.date}</span>
+                            <span class="${tx.type === 'buy' ? 'text-green-400' : 'text-orange-400'}">${tx.type.toUpperCase()}</span>
+                            <span>${tx.amount} @ $${tx.price}</span>
+                            <span>Gain: $${tx.gain || 0}</span>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('results').classList.remove('hidden');
+            } else {
+                alert('Error: ' + data.error);
+            }
+        };
+        
+        // Wallet Fetch
+        document.getElementById('fetchWalletBtn').onclick = async () => {
+            const address = document.getElementById('walletAddress').value.trim();
+            const chain = document.getElementById('chainSelect').value;
             
             if (!address) {
                 alert('Please enter a wallet address');
                 return;
             }
             
-            const balanceDiv = document.getElementById('balanceDisplay');
-            const balanceAmount = document.getElementById('balanceAmount');
-            const balanceCurrency = document.getElementById('balanceCurrency');
-            const balanceError = document.getElementById('balanceError');
+            const endpoint = chain === 'bnb' ? '/api/bnb-data' : '/api/sol-data';
+            const response = await fetch(`${API_URL}${endpoint}?address=${address}`);
+            const data = await response.json();
             
-            balanceDiv.classList.remove('hidden');
-            balanceError.classList.add('hidden');
-            balanceAmount.innerHTML = 'Loading...';
-            balanceCurrency.innerHTML = chainText;
-            
-            let endpoint = '';
-            switch(chain) {
-                case 'bsc': endpoint = `/api/bnb-balance?address=${address}`; break;
-                case 'sol': endpoint = `/api/sol-balance?address=${address}`; break;
-                case 'eth': endpoint = `/api/eth-balance?address=${address}`; break;
-                case 'btc': endpoint = `/api/btc-balance?address=${address}`; break;
-            }
-            
-            try {
-                const response = await fetch(`${API_URL}${endpoint}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    balanceAmount.innerHTML = `${data.balance.toFixed(6)} ${data.nativeToken || chain.toUpperCase()}`;
-                } else {
-                    balanceError.classList.remove('hidden');
-                    balanceError.innerHTML = data.error || 'Failed to fetch balance';
-                    balanceAmount.innerHTML = 'Error';
-                }
-            } catch (err) {
-                balanceError.classList.remove('hidden');
-                balanceError.innerHTML = err.message;
-                balanceAmount.innerHTML = 'Error';
+            if (data.success) {
+                document.getElementById('balanceResult').innerHTML = `<div class="bg-green-500/20 p-3 rounded-lg">💰 Balance: ${data.balance} ${data.nativeToken}</div>`;
+                document.getElementById('taxResult').innerHTML = `<div class="bg-purple-500/20 p-3 rounded-lg">📊 Total Transactions: ${data.transactions.length}</div>`;
+                document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 10).map(tx => `
+                    <div class="bg-white/5 p-3 rounded-lg">
+                        <div class="flex justify-between text-sm">
+                            <span class="font-mono">${tx.hash?.slice(0, 16)}...</span>
+                            <span>${tx.value ? tx.value.toFixed(6) + ' ' + data.nativeToken : 'Solana TX'}</span>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('results').classList.remove('hidden');
+            } else {
+                alert('Error: ' + data.error);
             }
         };
     </script>
