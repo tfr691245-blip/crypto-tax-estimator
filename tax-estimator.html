@@ -2,61 +2,150 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Estimator | CryptoTax</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CryptoTax | Professional Crypto Tax Estimator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); }
-        .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); }
-        .btn-gradient { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
-        .btn-gradient:hover { transform: translateY(-2px); }
-        .tx-row:hover { background: rgba(139,92,246,0.2); }
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
+        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(139, 92, 246, 0.2); transition: all 0.3s ease; }
+        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
+        .btn-secondary { background: rgba(255,255,255,0.08); border-radius: 40px; padding: 12px 28px; font-weight: 500; color: white; transition: all 0.3s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+        .mode-tab { transition: all 0.3s ease; cursor: pointer; border-radius: 40px; padding: 10px 24px; font-weight: 500; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+        .tx-row { background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 14px; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .tx-row:hover { background: rgba(139, 92, 246, 0.1); transform: translateX(4px); }
+        .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .loading-pulse { animation: pulse 1.5s ease-in-out infinite; }
+        .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
+        .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
     </style>
 </head>
 <body class="min-h-screen text-white">
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-5xl mx-auto">
-            <h1 class="text-4xl font-bold text-center mb-2">Tax Estimator</h1>
-            <p class="text-center text-gray-400 mb-8">Upload CSV or fetch wallet data from any blockchain</p>
-            
-            <!-- Mode Selector -->
-            <div class="flex gap-4 mb-6">
-                <button id="csvModeBtn" class="flex-1 glass-card py-3 font-semibold hover:bg-purple-500/20 transition">📁 CSV Upload</button>
-                <button id="walletModeBtn" class="flex-1 glass-card py-3 font-semibold hover:bg-purple-500/20 transition">🤖 Auto Wallet</button>
+    <!-- Premium Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
+        <div class="container mx-auto px-5 sm:px-8 py-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl sm:text-3xl animate-pulse">💰</span>
+                    <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
+                    <span class="hidden sm:inline-flex text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full ml-2">BETA</span>
+                </div>
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <a href="index.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Home</a>
+                    <a href="dashboard.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg bg-purple-600/20">Estimator</a>
+                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
+                </div>
             </div>
-            
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-5 sm:px-8 pt-24 sm:pt-28 pb-16">
+        <div class="max-w-6xl mx-auto">
+            <!-- Hero Section -->
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-5 border border-purple-500/20">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span class="text-purple-300 text-xs font-medium">Powered by 5+ Blockchains</span>
+                </div>
+                <h1 class="text-5xl sm:text-7xl font-extrabold mb-4 tracking-tight">Tax Estimator</h1>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Calculate capital gains taxes across multiple blockchains. Upload CSV or fetch wallet data instantly.</p>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+                <div class="stats-card"><div class="stats-number">5+</div><div class="text-gray-400 text-sm">Blockchains</div></div>
+                <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm">Calculation Method</div></div>
+                <div class="stats-card"><div class="stats-number">Free</div><div class="text-gray-400 text-sm">No Hidden Fees</div></div>
+                <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm">Mainnet Data</div></div>
+            </div>
+
+            <!-- Mode Tabs -->
+            <div class="flex justify-center gap-3 mb-8">
+                <div id="csvModeTab" class="mode-tab active">📁 Manual CSV</div>
+                <div id="walletModeTab" class="mode-tab">🤖 Auto Wallet</div>
+            </div>
+
             <!-- CSV Mode -->
-            <div id="csvMode" class="glass-card p-6">
-                <h2 class="text-xl font-bold mb-4">Upload CSV File</h2>
-                <input type="file" id="csvFile" accept=".csv" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4">
-                <p class="text-gray-400 text-sm mb-4">Format: date,type,amount,price<br>Example: 2024-01-01,buy,0.5,20000</p>
-                <button id="uploadBtn" class="btn-gradient w-full py-3 rounded-xl font-semibold transition">📊 Calculate Tax</button>
+            <div id="csvMode" class="glass-card p-6 sm:p-8">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3">📂</div>
+                    <h2 class="text-2xl font-bold">Upload CSV File</h2>
+                    <p class="text-gray-400 text-sm mt-1">Export your transaction history from any exchange or wallet</p>
+                </div>
+                <input type="file" id="csvFile" accept=".csv" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700">
+                <div class="bg-purple-500/10 rounded-xl p-4 mb-4">
+                    <p class="text-sm text-gray-300"><span class="font-bold text-purple-400">📋 CSV Format:</span> date,type,amount,price</p>
+                    <p class="text-xs text-gray-400 mt-1">Example: 2024-01-01,buy,0.5,20000</p>
+                </div>
+                <button id="uploadBtn" class="btn-primary w-full">📊 Calculate Tax</button>
             </div>
-            
+
             <!-- Wallet Mode -->
-            <div id="walletMode" class="glass-card p-6 hidden">
-                <h2 class="text-xl font-bold mb-4">Enter Wallet Address</h2>
+            <div id="walletMode" class="glass-card p-6 sm:p-8 hidden">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3">🔗</div>
+                    <h2 class="text-2xl font-bold">Enter Wallet Address</h2>
+                    <p class="text-gray-400 text-sm mt-1">Fetch real-time balance and transaction history</p>
+                </div>
                 <select id="chainSelect" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4">
-                    <option value="bnb">🟡 BNB Chain (BSC) - Balance + Transactions</option>
-                    <option value="eth">🔵 Ethereum - Balance + Transactions</option>
-                    <option value="sol">🟣 Solana - Balance + Transactions</option>
-                    <option value="btc">🟠 Bitcoin - Balance + Transactions</option>
-                    <option value="mfc">💜 Polygon Amoy - MFC Token Balance</option>
+                    <option value="bnb">🟡 BNB Chain (BSC)</option>
+                    <option value="eth">🔵 Ethereum</option>
+                    <option value="sol">🟣 Solana</option>
+                    <option value="btc">🟠 Bitcoin</option>
+                    <option value="mfc">💜 Polygon Amoy (MFC Token)</option>
                 </select>
-                <input type="text" id="walletAddress" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4" placeholder="Enter wallet address">
-                <button id="fetchWalletBtn" class="btn-gradient w-full py-3 rounded-xl font-semibold transition">🔍 Fetch Data</button>
+                <input type="text" id="walletAddress" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4" placeholder="Enter wallet address (0x... or address)">
+                <div class="bg-purple-500/10 rounded-xl p-3 mb-4">
+                    <p class="text-xs text-gray-400">📌 <span class="text-purple-300">BSC Note:</span> Free tier limited to 10k transactions. For full history, use CSV export from BscScan.</p>
+                </div>
+                <button id="fetchWalletBtn" class="btn-primary w-full">🔍 Fetch Data</button>
             </div>
-            
-            <!-- Results -->
-            <div id="results" class="glass-card p-6 mt-6 hidden">
-                <div id="balanceResult" class="mb-4"></div>
-                <div id="networkResult" class="mb-4"></div>
-                <div id="transactionsResult">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-xl font-bold">📜 Transactions</h3>
-                        <span id="txCount" class="text-purple-400 text-sm"></span>
+
+            <!-- Results Section -->
+            <div id="results" class="hidden mt-8">
+                <!-- Balance Card -->
+                <div class="glass-card p-6 mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-400 text-sm">Wallet Balance</p>
+                            <p id="balanceAmount" class="text-3xl font-bold gradient-text">0</p>
+                            <p id="balanceCurrency" class="text-gray-400 text-sm">Loading...</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-400 text-sm">Network</p>
+                            <p id="networkName" class="text-white font-semibold">-</p>
+                        </div>
                     </div>
-                    <div id="transactionsList" class="max-h-96 overflow-y-auto space-y-2"></div>
+                </div>
+
+                <!-- Tax Result Card -->
+                <div class="glass-card p-6 mb-6">
+                    <h3 class="text-xl font-bold mb-4">📊 Tax Estimate</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div><p class="text-gray-400 text-sm">Total Gain</p><p id="totalGain" class="text-xl font-bold text-green-400">$0</p></div>
+                        <div><p class="text-gray-400 text-sm">Total Loss</p><p id="totalLoss" class="text-xl font-bold text-red-400">$0</p></div>
+                        <div><p class="text-gray-400 text-sm">Net Gain</p><p id="netGain" class="text-xl font-bold text-purple-400">$0</p></div>
+                        <div><p class="text-gray-400 text-sm">Estimated Tax (20%)</p><p id="estimatedTax" class="text-xl font-bold text-yellow-400">$0</p></div>
+                    </div>
+                </div>
+
+                <!-- Transactions Card -->
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">📜 Recent Transactions</h3>
+                        <span id="txCount" class="text-purple-400 text-sm bg-purple-500/20 px-3 py-1 rounded-full">0</span>
+                    </div>
+                    <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
+                        <div class="text-center text-gray-400 py-4">No transactions loaded</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -68,16 +157,57 @@
         // Mode switching
         const csvMode = document.getElementById('csvMode');
         const walletMode = document.getElementById('walletMode');
-        document.getElementById('csvModeBtn').onclick = () => {
+        document.getElementById('csvModeTab').onclick = () => {
+            document.getElementById('csvModeTab').classList.add('active');
+            document.getElementById('walletModeTab').classList.remove('active');
             csvMode.classList.remove('hidden');
             walletMode.classList.add('hidden');
             document.getElementById('results').classList.add('hidden');
         };
-        document.getElementById('walletModeBtn').onclick = () => {
+        document.getElementById('walletModeTab').onclick = () => {
+            document.getElementById('walletModeTab').classList.add('active');
+            document.getElementById('csvModeTab').classList.remove('active');
             csvMode.classList.add('hidden');
             walletMode.classList.remove('hidden');
             document.getElementById('results').classList.add('hidden');
         };
+        
+        // Display results function
+        function displayResults(balance, nativeToken, network, transactions, taxResult) {
+            document.getElementById('balanceAmount').innerHTML = `${balance.toFixed(6)} ${nativeToken}`;
+            document.getElementById('balanceCurrency').innerHTML = network;
+            document.getElementById('networkName').innerHTML = network;
+            
+            if (taxResult) {
+                document.getElementById('totalGain').innerHTML = `$${taxResult.totalGain}`;
+                document.getElementById('totalLoss').innerHTML = `$${taxResult.totalLoss}`;
+                document.getElementById('netGain').innerHTML = `$${taxResult.netGain}`;
+                document.getElementById('estimatedTax').innerHTML = `$${taxResult.estimatedTax}`;
+            }
+            
+            document.getElementById('txCount').innerHTML = `${transactions.length} transactions`;
+            
+            if (transactions.length > 0) {
+                document.getElementById('transactionsList').innerHTML = transactions.slice(0, 30).map(tx => `
+                    <div class="tx-row">
+                        <div class="flex justify-between items-center flex-wrap gap-2">
+                            <div class="flex-1">
+                                <div class="font-mono text-xs text-purple-300 break-all">${tx.hash || tx.signature || 'N/A'}</div>
+                                <div class="text-gray-400 text-xs mt-1">${tx.timestamp ? new Date(tx.timestamp * 1000).toLocaleString() : tx.blockTime ? new Date(tx.blockTime * 1000).toLocaleString() : 'Recent'}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-white font-medium">${tx.value ? tx.value.toFixed(6) + ' ' + (nativeToken || 'TOKEN') : 'Transfer'}</div>
+                                <div class="text-gray-400 text-xs">${tx.gain ? `Gain: $${tx.gain}` : ''}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">No transactions found for this address</div>';
+            }
+            
+            document.getElementById('results').classList.remove('hidden');
+        }
         
         // CSV Upload
         document.getElementById('uploadBtn').onclick = async () => {
@@ -88,7 +218,7 @@
             const lines = text.trim().split('\n');
             const transactions = lines.slice(1).map(line => {
                 const [date, type, amount, price] = line.split(',');
-                return { date, type: type.toLowerCase(), amount: parseFloat(amount), price: parseFloat(price) };
+                return { date, type: type?.toLowerCase(), amount: parseFloat(amount), price: parseFloat(price) };
             }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price));
             
             const response = await fetch(`${API_URL}/api/calculate-tax`, {
@@ -97,24 +227,7 @@
             const data = await response.json();
             
             if (data.success) {
-                document.getElementById('balanceResult').innerHTML = `<div class="bg-green-500/20 p-3 rounded-lg">📈 Total Gain: $${data.taxResult.totalGain} | 📉 Total Loss: $${data.taxResult.totalLoss} | 🎯 Net Gain: $${data.taxResult.netGain}</div>`;
-                document.getElementById('networkResult').innerHTML = `<div class="bg-purple-500/20 p-3 rounded-lg">💰 Estimated Tax (20%): $${data.taxResult.estimatedTax} | 📊 Transactions Processed: ${data.taxResult.transactionsProcessed}</div>`;
-                document.getElementById('txCount').innerHTML = `${data.transactions.length} transactions`;
-                document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 30).map(tx => `
-                    <div class="tx-row bg-white/5 p-3 rounded-lg transition">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <div class="font-mono text-sm">${tx.date}</div>
-                                <div class="text-xs text-gray-400">${tx.type.toUpperCase()}</div>
-                            </div>
-                            <div class="text-right">
-                                <div>${tx.amount} @ $${tx.price}</div>
-                                <div class="text-sm ${tx.gain >= 0 ? 'text-green-400' : 'text-red-400'}">Gain: $${tx.gain}</div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                document.getElementById('results').classList.remove('hidden');
+                displayResults(0, 'TOKEN', 'CSV Upload', data.transactions, data.taxResult);
             } else { alert('Error: ' + data.error); }
         };
         
@@ -122,70 +235,35 @@
         document.getElementById('fetchWalletBtn').onclick = async () => {
             const address = document.getElementById('walletAddress').value.trim();
             const chain = document.getElementById('chainSelect').value;
-            
             if (!address) { alert('Please enter a wallet address'); return; }
             
-            let endpoint = '';
-            if (chain === 'bnb') endpoint = `/api/bnb-data?address=${address}`;
-            else if (chain === 'eth') endpoint = `/api/eth-data?address=${address}`;
-            else if (chain === 'sol') endpoint = `/api/sol-data?address=${address}`;
-            else if (chain === 'btc') endpoint = `/api/btc-data?address=${address}`;
-            else if (chain === 'mfc') endpoint = `/api/mfc-balance?address=${address}`;
+            document.getElementById('fetchWalletBtn').disabled = true;
+            document.getElementById('fetchWalletBtn').innerHTML = 'Loading...';
             
-            const response = await fetch(`${API_URL}${endpoint}`);
-            const data = await response.json();
-            
-            if (data.success) {
-                document.getElementById('balanceResult').innerHTML = `<div class="bg-green-500/20 p-3 rounded-lg">💰 Balance: ${data.balance} ${data.nativeToken}</div>`;
-                document.getElementById('networkResult').innerHTML = `<div class="bg-purple-500/20 p-3 rounded-lg">🌐 Network: ${data.network || 'Blockchain'} | 📊 Total Transactions: ${data.totalTransactions || 0}</div>`;
-                document.getElementById('txCount').innerHTML = `${data.transactions?.length || 0} transactions`;
+            try {
+                // Fetch balance
+                const balanceRes = await fetch(`${API_URL}/api/${chain}-balance?address=${address}`);
+                const balanceData = await balanceRes.json();
                 
-                if (data.transactions && data.transactions.length > 0) {
-                    document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 30).map(tx => {
-                        if (chain === 'bnb' || chain === 'eth') {
-                            return `
-                                <div class="tx-row bg-white/5 p-3 rounded-lg transition">
-                                    <div class="flex justify-between items-center">
-                                        <div class="font-mono text-xs break-all flex-1">${tx.hash}</div>
-                                        <div class="text-right">
-                                            <div>${parseFloat(tx.value).toFixed(6)} ${data.nativeToken}</div>
-                                            <div class="text-xs text-gray-400">${new Date(tx.timestamp * 1000).toLocaleString()}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        } else if (chain === 'sol') {
-                            return `
-                                <div class="tx-row bg-white/5 p-3 rounded-lg transition">
-                                    <div class="flex justify-between items-center">
-                                        <div class="font-mono text-xs break-all flex-1">${tx.signature}</div>
-                                        <div class="text-right">
-                                            <div class="text-xs text-gray-400">Slot: ${tx.slot}</div>
-                                            <div class="text-xs text-gray-400">${tx.blockTime ? new Date(tx.blockTime * 1000).toLocaleString() : 'Pending'}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        } else if (chain === 'btc') {
-                            return `
-                                <div class="tx-row bg-white/5 p-3 rounded-lg transition">
-                                    <div class="flex justify-between items-center">
-                                        <div class="font-mono text-xs break-all flex-1">${tx.hash}</div>
-                                        <div class="text-right">
-                                            <div>${tx.value} BTC</div>
-                                            <div class="text-xs text-gray-400">${tx.confirmations} confirmations</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                        return '';
-                    }).join('');
-                } else {
-                    document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">No transactions found for this address</div>';
+                // Fetch transactions if supported
+                let transactions = [];
+                if (chain !== 'mfc') {
+                    const txRes = await fetch(`${API_URL}/api/${chain}-transactions?address=${address}`);
+                    const txData = await txRes.json();
+                    if (txData.success) transactions = txData.transactions;
                 }
-                document.getElementById('results').classList.remove('hidden');
-            } else { alert('Error: ' + data.error); }
+                
+                if (balanceData.success) {
+                    displayResults(balanceData.balance, balanceData.nativeToken, balanceData.network, transactions, null);
+                } else {
+                    alert('Error: ' + balanceData.error);
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            } finally {
+                document.getElementById('fetchWalletBtn').disabled = false;
+                document.getElementById('fetchWalletBtn').innerHTML = '🔍 Fetch Data';
+            }
         };
     </script>
 </body>
