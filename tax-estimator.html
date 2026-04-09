@@ -8,293 +8,109 @@
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { 
-            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
-        }
-        
-        body { 
-            background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
-        }
-        
-        /* Premium Glass Card */
-        .glass-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 24px;
-            transition: all 0.3s ease;
-        }
-        
-        .glass-card:hover {
-            border-color: rgba(139, 92, 246, 0.4);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* Premium Button */
-        .btn-premium {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #4f46e5 100%);
-            border: none;
-            border-radius: 40px;
-            padding: 12px 28px;
-            font-weight: 600;
-            color: white;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-        
-        .btn-premium:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
-        }
-        
-        .btn-premium:disabled {
-            opacity: 0.5;
-            transform: none;
-            cursor: not-allowed;
-        }
-        
-        /* Mode Tabs */
-        .mode-tab {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border-radius: 40px;
-            padding: 10px 24px;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .mode-tab.active {
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
-            border-color: transparent;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-        
-        /* Premium Select (Blockchain Dropdown) */
-        .premium-select {
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 16px;
-            padding: 14px 18px;
-            color: #f1f5f9;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238b5cf6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 20px;
-        }
-        
-        .premium-select:hover {
-            border-color: #8b5cf6;
-            background-color: rgba(139, 92, 246, 0.1);
-        }
-        
-        .premium-select:focus {
-            outline: none;
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-        }
-        
-        /* Dropdown Options */
-        .premium-select option {
-            background: #1e1b4b;
-            color: #f1f5f9;
-            padding: 12px;
-        }
-        
-        .premium-select optgroup {
-            background: #0f172a;
-            color: #8b5cf6;
-            font-weight: 600;
-            padding: 8px;
-        }
-        
-        /* Chain Badge */
-        .chain-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1));
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 40px;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #c4b5fd;
-            margin-top: 12px;
-        }
-        
-        /* Input Field */
-        .premium-input {
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 14px 18px;
-            color: #f1f5f9;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        .premium-input:focus {
-            outline: none;
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-        }
-        
-        .premium-input::placeholder {
-            color: #64748b;
-        }
-        
-        /* Transaction Row */
-        .tx-row {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 14px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .tx-row:hover {
-            background: rgba(139, 92, 246, 0.1);
-            border-color: rgba(139, 92, 246, 0.3);
-            transform: translateX(4px);
-        }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #8b5cf6;
-            border-radius: 10px;
-        }
-        
-        /* Loading Animation */
-        @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
-        }
-        
-        .loading-shimmer {
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(139, 92, 246, 0.1) 100%);
-            background-size: 1000px 100%;
-            animation: shimmer 2s infinite;
-        }
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
+        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 24px; transition: all 0.3s ease; }
+        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .btn-premium { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
+        .btn-premium:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+        .mode-tab { transition: all 0.3s ease; cursor: pointer; border-radius: 40px; padding: 10px 24px; font-weight: 500; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+        .premium-select { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 14px 18px; color: #f1f5f9; cursor: pointer; width: 100%; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238b5cf6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; background-size: 20px; }
+        .premium-select:hover { border-color: #8b5cf6; background-color: rgba(139, 92, 246, 0.1); }
+        .premium-select option { background: #1e1b4b; color: #f1f5f9; }
+        .premium-select optgroup { background: #0f172a; color: #8b5cf6; font-weight: 600; }
+        .chain-badge { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1)); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 40px; padding: 8px 16px; font-size: 13px; font-weight: 500; color: #c4b5fd; margin-top: 12px; }
+        .premium-input { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 14px 18px; color: #f1f5f9; width: 100%; }
+        .premium-input:focus { outline: none; border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2); }
+        .tx-row { background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 14px; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .tx-row:hover { background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3); transform: translateX(4px); }
     </style>
 </head>
-<body class="min-h-screen">
-    <!-- Premium Navbar -->
+<body>
     <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
         <div class="container mx-auto px-5 sm:px-8 py-4">
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl sm:text-3xl">💰</span>
-                    <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
-                    <span class="hidden sm:inline-flex text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full ml-2">BETA</span>
-                </div>
+                <div class="flex items-center gap-2"><span class="text-2xl">💰</span><span class="text-white font-bold text-xl">CryptoTax</span></div>
                 <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="index.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Home</a>
-                    <a href="dashboard.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg bg-purple-600/20">Estimator</a>
-                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
+                    <a href="index.html" class="text-gray-300 hover:text-white text-sm transition px-3 py-1.5 rounded-lg hover:bg-white/5">Home</a>
+                    <a href="dashboard.html" class="text-gray-300 hover:text-white text-sm transition px-3 py-1.5 rounded-lg hover:bg-white/5">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-white text-sm transition px-3 py-1.5 rounded-lg bg-purple-600/20">Estimator</a>
+                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold">Claim</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-5 sm:px-8 pt-24 sm:pt-28 pb-16">
+    <div class="container mx-auto px-5 sm:px-8 pt-28 pb-16">
         <div class="max-w-5xl mx-auto">
-            <!-- Header -->
             <div class="text-center mb-10">
                 <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-5 border border-purple-500/20">
                     <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span class="text-purple-300 text-xs sm:text-sm font-medium">Live on Polygon Amoy • Beta</span>
+                    <span class="text-purple-300 text-xs font-medium">Mainnet + Testnet Support</span>
                 </div>
-                <h1 class="text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight">Tax Estimator</h1>
-                <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">Upload CSV or paste any wallet address — get instant tax calculations</p>
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-white mb-4">Tax Estimator</h1>
+                <p class="text-gray-400 text-base sm:text-lg">Upload CSV or paste any wallet address — real mainnet data</p>
             </div>
 
-            <!-- Mode Tabs -->
             <div class="flex justify-center gap-3 mb-8">
                 <div id="manualModeTab" class="mode-tab active">📁 Manual CSV</div>
                 <div id="autoModeTab" class="mode-tab">🤖 Auto Wallet</div>
             </div>
 
-            <!-- Manual Mode -->
             <div id="manualMode" class="space-y-6">
                 <div class="glass-card p-6 sm:p-8 text-center">
-                    <button id="connectBtn" class="btn-premium">🔌 Connect MetaMask Wallet</button>
+                    <button id="connectBtn" class="btn-premium">🔌 Connect MetaMask</button>
                 </div>
                 <div id="uploadArea" class="hidden">
                     <div class="glass-card p-8 text-center border-2 border-dashed border-purple-500/30">
                         <input type="file" id="csvFile" accept=".csv" class="hidden">
-                        <button id="uploadBtn" class="btn-premium">📂 Upload CSV File</button>
-                        <p class="text-gray-400 text-sm mt-4">Format: date,type,amount,price<br>Example: 2024-01-01,buy,0.5,2000</p>
+                        <button id="uploadBtn" class="btn-premium">📂 Upload CSV</button>
+                        <p class="text-gray-400 text-sm mt-4">Format: date,type,amount,price</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Auto Mode -->
             <div id="autoMode" class="hidden space-y-6">
                 <div class="glass-card p-6 sm:p-8">
-                    <h2 class="text-xl font-bold text-white mb-5">🔍 Enter Wallet Address</h2>
+                    <h2 class="text-xl font-bold text-white mb-5">Enter Wallet Address</h2>
                     <div class="flex flex-col gap-4">
                         <div>
-                            <label class="text-gray-300 text-sm block mb-2 font-medium">Select Blockchain</label>
+                            <label class="text-gray-300 text-sm block mb-2">Select Blockchain</label>
                             <select id="chainSelect" class="premium-select">
-                                <optgroup label="🔥 EVM Chains">
-                                    <option value="ethereum">🟣 Ethereum</option>
-                                    <option value="polygon">🔵 Polygon</option>
-                                    <option value="bsc" selected>🟡 BNB Chain</option>
-                                    <option value="arbitrum">🔷 Arbitrum</option>
-                                    <option value="base">🔷 Base</option>
-                                    <option value="optimism">🔴 Optimism</option>
-                                    <option value="avalanche">🔺 Avalanche</option>
-                                    <option value="fantom">🔷 Fantom</option>
+                                <optgroup label="🔥 Mainnet (Real Transactions)">
+                                    <option value="bsc" selected>🟡 BNB Chain (BSC) Mainnet</option>
+                                    <option value="ethereum">🟣 Ethereum Mainnet</option>
+                                    <option value="polygon">🔵 Polygon Mainnet</option>
+                                    <option value="solana">🟣 Solana Mainnet</option>
+                                    <option value="bitcoin">🟠 Bitcoin Mainnet</option>
+                                    <option value="dogecoin">🐕 Dogecoin Mainnet</option>
+                                    <option value="litecoin">⚪ Litecoin Mainnet</option>
+                                    <option value="tron">🟢 Tron Mainnet</option>
                                 </optgroup>
-                                <optgroup label="⚡ Non-EVM Chains">
-                                    <option value="solana">🟣 Solana</option>
-                                    <option value="tron">🟢 Tron</option>
-                                    <option value="bitcoin">🟠 Bitcoin</option>
-                                    <option value="dogecoin">🐕 Dogecoin</option>
-                                    <option value="litecoin">⚪ Litecoin</option>
+                                <optgroup label="🧪 Testnet (For MFC Testing)">
+                                    <option value="amoy">🔵 Polygon Amoy Testnet (MFC)</option>
                                 </optgroup>
                             </select>
-                            <div class="chain-badge">
-                                <span>✓</span>
-                                <span id="selectedChainText">BNB Chain</span>
-                            </div>
+                            <div class="chain-badge"><span>✓</span><span id="selectedChainText">BNB Chain Mainnet</span></div>
                         </div>
                         <div>
-                            <input type="text" id="walletAddress" placeholder="Enter wallet address (0x...)" class="premium-input">
+                            <input type="text" id="walletAddress" placeholder="Enter wallet address (0x...)" class="premium-input" value="0xB01caEa8c6C47bbf4F4b4c5080Ca642043359C2E">
                         </div>
                     </div>
-                    <button id="autoFetchBtn" class="btn-premium w-full mt-6">🚀 Calculate Taxes (5 MFC required)</button>
+                    <button id="autoFetchBtn" class="btn-premium w-full mt-6">🚀 Calculate Taxes</button>
                 </div>
             </div>
 
-            <!-- Balance Display -->
             <div id="balanceDisplay" class="hidden glass-card p-6 sm:p-8 mt-6">
                 <h2 class="text-xl font-bold text-white mb-3">💰 Wallet Balance</h2>
                 <div class="flex justify-between items-center">
                     <span class="text-gray-300" id="balanceCurrency">BNB Chain</span>
-                    <span class="text-3xl font-bold text-purple-400" id="balanceAmount">0 BNB</span>
+                    <span class="text-3xl font-bold text-purple-400" id="balanceAmount">Loading...</span>
                 </div>
             </div>
 
-            <!-- Transactions List -->
             <div id="transactionsDisplay" class="hidden glass-card p-6 sm:p-8 mt-6">
                 <h2 class="text-xl font-bold text-white mb-4">📜 Recent Transactions</h2>
                 <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
@@ -302,11 +118,10 @@
                 </div>
             </div>
 
-            <!-- Tax Result -->
             <div id="resultArea" class="hidden glass-card p-6 sm:p-8 mt-6">
                 <h2 class="text-xl font-bold text-white mb-4">📊 Your Tax Estimate</h2>
                 <div id="taxResult" class="space-y-2 text-gray-200"></div>
-                <button id="downloadBtn" class="mt-5 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-xl transition w-full sm:w-auto">📄 Download PDF Report</button>
+                <button id="downloadBtn" class="mt-5 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-xl transition">📄 Download PDF</button>
             </div>
         </div>
     </div>
@@ -314,7 +129,6 @@
     <script>
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev/api/calculate-tax';
         let walletAddress = null;
-        let currentTaxResult = null;
         
         const manualMode = document.getElementById('manualMode');
         const autoMode = document.getElementById('autoMode');
@@ -324,10 +138,9 @@
         const selectedChainText = document.getElementById('selectedChainText');
         
         function updateSelectedChain() {
-            const selectedOption = chainSelect.options[chainSelect.selectedIndex];
-            selectedChainText.innerText = selectedOption.textContent;
+            const opt = chainSelect.options[chainSelect.selectedIndex];
+            selectedChainText.innerText = opt.textContent;
         }
-        
         chainSelect.addEventListener('change', updateSelectedChain);
         updateSelectedChain();
         
@@ -353,7 +166,7 @@
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             walletAddress = await signer.getAddress();
-            document.getElementById('connectBtn').innerHTML = `✅ Connected: ${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}`;
+            document.getElementById('connectBtn').innerHTML = `✅ ${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}`;
             document.getElementById('connectBtn').disabled = true;
             document.getElementById('uploadArea').classList.remove('hidden');
         };
@@ -371,69 +184,37 @@
             document.getElementById('uploadBtn').disabled = true;
             document.getElementById('uploadBtn').innerHTML = 'Processing...';
             try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ walletAddress, transactionData: transactions })
-                });
+                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ walletAddress, transactionData: transactions }) });
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error);
-                currentTaxResult = data.taxResult;
-                document.getElementById('taxResult').innerHTML = `
-                    <p>💰 <strong>Total Gain:</strong> $${currentTaxResult.totalGain}</p>
-                    <p>📉 <strong>Estimated Tax (20%):</strong> $${currentTaxResult.estimatedTax}</p>
-                    <p>📄 <strong>Transactions Processed:</strong> ${currentTaxResult.transactionsProcessed}</p>
-                `;
+                document.getElementById('taxResult').innerHTML = `<p>💰 Total Gain: $${data.taxResult.totalGain}</p><p>📉 Tax (20%): $${data.taxResult.estimatedTax}</p>`;
                 document.getElementById('resultArea').classList.remove('hidden');
-            } catch (err) {
-                alert('Error: ' + err.message);
-            } finally {
-                document.getElementById('uploadBtn').disabled = false;
-                document.getElementById('uploadBtn').innerHTML = '📂 Upload CSV File';
-            }
+            } catch (err) { alert('Error: ' + err.message); }
+            finally { document.getElementById('uploadBtn').disabled = false; document.getElementById('uploadBtn').innerHTML = '📂 Upload CSV'; }
         };
         
         document.getElementById('autoFetchBtn').onclick = async () => {
             const address = document.getElementById('walletAddress').value.trim();
             const chain = chainSelect.value;
             if (!address) return alert('Enter wallet address');
-            
             document.getElementById('autoFetchBtn').disabled = true;
             document.getElementById('autoFetchBtn').innerHTML = 'Loading...';
-            
             document.getElementById('balanceDisplay').classList.remove('hidden');
             document.getElementById('transactionsDisplay').classList.remove('hidden');
             document.getElementById('resultArea').classList.add('hidden');
-            document.getElementById('transactionsList').innerHTML = '<div class="loading-shimmer rounded-lg p-4 text-center text-gray-400">Fetching data...</div>';
-            document.getElementById('balanceAmount').innerHTML = '<div class="loading-shimmer rounded-lg px-4 py-2 w-32"></div>';
-            
             try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ walletAddress: address, chain: chain, autoFetch: true })
-                });
+                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ walletAddress: address, chain, autoFetch: true }) });
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'API Error');
-                
-                currentTaxResult = data.taxResult;
-                document.getElementById('balanceAmount').innerHTML = `Balance fetched from ${chain.toUpperCase()}`;
-                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">Transactions loaded. Tax calculation complete.</div>';
-                document.getElementById('taxResult').innerHTML = `
-                    <p>💰 <strong>Total Gain:</strong> $${currentTaxResult.totalGain || 0}</p>
-                    <p>📉 <strong>Estimated Tax (20%):</strong> $${currentTaxResult.estimatedTax || 0}</p>
-                    <p>📄 <strong>Transactions Processed:</strong> ${currentTaxResult.transactionsProcessed || 0}</p>
-                `;
+                if (!res.ok) throw new Error(data.error);
+                document.getElementById('balanceAmount').innerHTML = `Transactions found on ${chain.toUpperCase()}`;
+                document.getElementById('transactionsList').innerHTML = `<div class="text-center text-green-400 py-4">✅ ${data.taxResult.transactionsProcessed || 0} transactions processed</div>`;
+                document.getElementById('taxResult').innerHTML = `<p>💰 Total Gain: $${data.taxResult.totalGain}</p><p>📉 Tax (20%): $${data.taxResult.estimatedTax}</p>`;
                 document.getElementById('resultArea').classList.remove('hidden');
-            } catch (err) {
-                document.getElementById('transactionsList').innerHTML = `<div class="text-center text-red-400 py-4">Error: ${err.message}</div>`;
-            } finally {
-                document.getElementById('autoFetchBtn').disabled = false;
-                document.getElementById('autoFetchBtn').innerHTML = '🚀 Calculate Taxes (5 MFC required)';
-            }
+            } catch (err) { document.getElementById('transactionsList').innerHTML = `<div class="text-center text-red-400 py-4">Error: ${err.message}</div>`; }
+            finally { document.getElementById('autoFetchBtn').disabled = false; document.getElementById('autoFetchBtn').innerHTML = '🚀 Calculate Taxes'; }
         };
         
-        document.getElementById('downloadBtn').onclick = () => alert('PDF report ready! (Feature coming soon)');
+        document.getElementById('downloadBtn').onclick = () => alert('PDF report coming soon!');
     </script>
 </body>
 </html>
