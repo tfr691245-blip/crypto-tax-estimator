@@ -17,7 +17,6 @@
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Navbar -->
     <nav class="glass-card fixed w-full z-20 border-b border-white/10">
         <div class="container mx-auto px-4 sm:px-8 py-3 sm:py-4">
             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -43,7 +42,7 @@
                     <span class="text-white text-xs sm:text-sm font-medium">Live on Polygon Amoy</span>
                 </div>
                 <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-3 tracking-tight">Dashboard</h1>
-                <p class="text-gray-300 text-base sm:text-lg">View your CUT balance and all on‑chain transactions.</p>
+                <p class="text-gray-300 text-base sm:text-lg">View your MFC balance and all on‑chain transactions.</p>
             </div>
 
             <!-- Manual Wallet Lookup -->
@@ -63,9 +62,8 @@
                 <button id="connectBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">🔌 Connect MetaMask</button>
             </div>
 
-            <!-- Wallet Info (balance + transactions) -->
+            <!-- Wallet Info -->
             <div id="walletInfo" class="hidden space-y-6">
-                <!-- Balance Card -->
                 <div class="glass-card rounded-2xl p-6 sm:p-8">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
@@ -73,8 +71,8 @@
                             <p id="displayAddress" class="text-white text-lg font-mono font-semibold break-all"></p>
                         </div>
                         <div class="text-right">
-                            <p class="text-gray-300 text-sm">CUT Balance</p>
-                            <p id="displayBalance" class="text-3xl font-bold text-purple-400">0 CUT</p>
+                            <p class="text-gray-300 text-sm">MFC Balance</p>
+                            <p id="displayBalance" class="text-3xl font-bold text-purple-400">0 MFC</p>
                         </div>
                     </div>
                 </div>
@@ -88,7 +86,7 @@
                 </div>
             </div>
 
-            <!-- Step Cards (unchanged) -->
+            <!-- Step Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 mt-12">
                 <div class="glass-card rounded-2xl p-5">
                     <div class="text-3xl mb-2">1️⃣</div>
@@ -103,18 +101,17 @@
                 <div class="glass-card rounded-2xl p-5">
                     <div class="text-3xl mb-2">3️⃣</div>
                     <h3 class="text-white font-bold text-base sm:text-lg mb-1">Pay & Download</h3>
-                    <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">Pay 5 CUT tokens and download your PDF report.</p>
+                    <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">Pay 5 MFC tokens and download your PDF report.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== CONFIGURATION ==========
-        const TOKEN_CONTRACT = '0xFa27130a7A85e96B9b814045545d7Cf6e8c2E8EC';
+        // ========== UPDATED TOKEN CONTRACT ==========
+        const TOKEN_CONTRACT = '0xe7C747a39CbB0aE81E6364cBc447586Cb1f7a126F';
         const ETHERSCAN_API_KEY = 'DDSSHGQWI9C4WAVJI6WVHB86893V8T6MMU';
         const RPC_URL = 'https://lb.drpc.live/polygon-amoy/AlKOOugi5EgeoaJxUsJsaFsKxwDeMRwR8aGVGrar0DFx';
-        const CHAIN_ID = 80002; // Polygon Amoy testnet
         
         const tokenABI = [
             'function balanceOf(address owner) view returns (uint256)',
@@ -124,8 +121,7 @@
         let provider = new ethers.JsonRpcProvider(RPC_URL);
         let tokenContract = new ethers.Contract(TOKEN_CONTRACT, tokenABI, provider);
         
-        // ========== FETCH CUT BALANCE ==========
-        async function fetchCUTBalance(address) {
+        async function fetchMFCBalance(address) {
             try {
                 const balanceRaw = await tokenContract.balanceOf(address);
                 const decimals = await tokenContract.decimals();
@@ -137,23 +133,19 @@
             }
         }
         
-        // ========== FETCH TRANSACTIONS (via Etherscan API) ==========
         async function fetchTransactions(address) {
             try {
-                const url = `https://api.etherscan.io/v2/api?chainid=${CHAIN_ID}&module=account&action=txlist&address=${address}&sort=desc&apikey=${ETHERSCAN_API_KEY}`;
+                const url = `https://api-amoy.polygonscan.com/api?module=account&action=txlist&address=${address}&sort=desc&apikey=${ETHERSCAN_API_KEY}`;
                 const response = await fetch(url);
                 const data = await response.json();
-                if (data.status !== '1') {
-                    throw new Error(data.message || 'Failed to fetch transactions');
-                }
-                return data.result.slice(0, 30); // Last 30 transactions
+                if (data.status !== '1') throw new Error(data.message || 'Failed to fetch transactions');
+                return data.result.slice(0, 30);
             } catch (err) {
                 console.error('Transaction fetch error:', err);
                 return [];
             }
         }
         
-        // ========== DISPLAY TRANSACTIONS IN TABLE ==========
         function displayTransactions(transactions) {
             const container = document.getElementById('transactionsList');
             if (!transactions || transactions.length === 0) {
@@ -173,7 +165,7 @@
                         <div class="flex flex-wrap justify-between items-center gap-2">
                             <div class="flex-1 min-w-0">
                                 <div class="text-white text-sm font-medium break-all">
-                                    ${direction} ${value} MATIC
+                                    ${direction} ${value} POL
                                 </div>
                                 <div class="text-gray-400 text-xs mt-1 break-all">
                                     From: ${tx.from.slice(0,8)}...${tx.from.slice(-6)}<br>
@@ -190,31 +182,22 @@
             }).join('');
         }
         
-        // ========== LOAD FULL WALLET DATA (Balance + Transactions) ==========
         async function loadWalletData(address) {
             const errorDiv = document.getElementById('manualError');
             errorDiv.classList.add('hidden');
-            
-            // Show loading in transaction list
             document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">Loading transactions...</div>';
             
             try {
-                // Fetch CUT balance
-                const balance = await fetchCUTBalance(address);
-                if (balance === null) throw new Error('Could not fetch CUT balance');
-                
-                // Fetch transactions
+                const balance = await fetchMFCBalance(address);
+                if (balance === null) throw new Error('Could not fetch MFC balance');
                 const transactions = await fetchTransactions(address);
                 
-                // Update UI
                 document.getElementById('displayAddress').innerText = address;
-                document.getElementById('displayBalance').innerHTML = `${balance.toLocaleString()} CUT`;
+                document.getElementById('displayBalance').innerHTML = `${balance.toLocaleString()} MFC`;
                 displayTransactions(transactions);
                 
-                // Hide the connection buttons and show wallet info
                 document.getElementById('walletStatus').classList.add('hidden');
                 document.getElementById('walletInfo').classList.remove('hidden');
-                
             } catch (err) {
                 console.error(err);
                 errorDiv.innerText = `Error: ${err.message}`;
@@ -223,7 +206,6 @@
             }
         }
         
-        // ========== MANUAL CONNECT ==========
         document.getElementById('manualConnectBtn').onclick = async () => {
             const address = document.getElementById('manualAddress').value.trim();
             if (!address || !address.startsWith('0x') || address.length !== 42) {
@@ -234,7 +216,6 @@
             await loadWalletData(address);
         };
         
-        // ========== METAMASK CONNECT ==========
         document.getElementById('connectBtn').onclick = async () => {
             if (!window.ethereum) {
                 alert('Please install MetaMask!');
