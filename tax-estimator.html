@@ -5,27 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tax Estimator | CryptoTax</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
         body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
         .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 24px; transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
-        .btn-premium { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); }
+        .btn-premium { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; }
         .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
-        .btn-premium:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
         .mode-tab { transition: all 0.3s ease; cursor: pointer; border-radius: 40px; padding: 10px 24px; font-weight: 500; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
-        .premium-select { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 14px 18px; color: #f1f5f9; cursor: pointer; width: 100%; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238b5cf6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; background-size: 20px; }
-        .premium-select:hover { border-color: #8b5cf6; background-color: rgba(139, 92, 246, 0.1); }
+        .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; }
+        .premium-select { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 14px 18px; color: #f1f5f9; cursor: pointer; width: 100%; }
+        .premium-select:hover { border-color: #8b5cf6; }
         .premium-select option { background: #1e1b4b; color: #f1f5f9; }
-        .premium-select optgroup { background: #0f172a; color: #8b5cf6; font-weight: 600; }
         .chain-badge { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1)); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 40px; padding: 8px 16px; font-size: 13px; font-weight: 500; color: #c4b5fd; margin-top: 12px; }
         .premium-input { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 14px 18px; color: #f1f5f9; width: 100%; }
-        .premium-input:focus { outline: none; border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2); }
+        .premium-input:focus { outline: none; border-color: #8b5cf6; }
+        .balance-number { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .tx-row { background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 14px; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .tx-row:hover { background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3); transform: translateX(4px); }
+        .tx-row:hover { background: rgba(139, 92, 246, 0.1); transform: translateX(4px); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .loading-pulse { animation: pulse 1.5s ease-in-out infinite; }
     </style>
 </head>
 <body>
@@ -74,7 +74,7 @@
 
             <div id="autoMode" class="hidden space-y-6">
                 <div class="glass-card p-6 sm:p-8">
-                    <h2 class="text-xl font-bold text-white mb-5">Enter Wallet Address</h2>
+                    <h2 class="text-xl font-bold text-white mb-5">🔍 Enter Wallet Address</h2>
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="text-gray-300 text-sm block mb-2">Select Blockchain</label>
@@ -86,8 +86,6 @@
                                     <option value="solana">🟣 Solana Mainnet</option>
                                     <option value="bitcoin">🟠 Bitcoin Mainnet</option>
                                     <option value="dogecoin">🐕 Dogecoin Mainnet</option>
-                                    <option value="litecoin">⚪ Litecoin Mainnet</option>
-                                    <option value="tron">🟢 Tron Mainnet</option>
                                 </optgroup>
                                 <optgroup label="🧪 Testnet (For MFC Testing)">
                                     <option value="amoy">🔵 Polygon Amoy Testnet (MFC)</option>
@@ -99,18 +97,20 @@
                             <input type="text" id="walletAddress" placeholder="Enter wallet address (0x...)" class="premium-input" value="0xB01caEa8c6C47bbf4F4b4c5080Ca642043359C2E">
                         </div>
                     </div>
-                    <button id="autoFetchBtn" class="btn-premium w-full mt-6">🚀 Calculate Taxes</button>
+                    <button id="autoFetchBtn" class="btn-premium w-full mt-6">🚀 Fetch Balance & Calculate Tax</button>
                 </div>
             </div>
 
+            <!-- Balance Display -->
             <div id="balanceDisplay" class="hidden glass-card p-6 sm:p-8 mt-6">
                 <h2 class="text-xl font-bold text-white mb-3">💰 Wallet Balance</h2>
                 <div class="flex justify-between items-center">
                     <span class="text-gray-300" id="balanceCurrency">BNB Chain</span>
-                    <span class="text-3xl font-bold text-purple-400" id="balanceAmount">Loading...</span>
+                    <span id="balanceAmount" class="balance-number">0 BNB</span>
                 </div>
             </div>
 
+            <!-- Transactions List -->
             <div id="transactionsDisplay" class="hidden glass-card p-6 sm:p-8 mt-6">
                 <h2 class="text-xl font-bold text-white mb-4">📜 Recent Transactions</h2>
                 <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
@@ -118,16 +118,17 @@
                 </div>
             </div>
 
+            <!-- Tax Result -->
             <div id="resultArea" class="hidden glass-card p-6 sm:p-8 mt-6">
                 <h2 class="text-xl font-bold text-white mb-4">📊 Your Tax Estimate</h2>
                 <div id="taxResult" class="space-y-2 text-gray-200"></div>
-                <button id="downloadBtn" class="mt-5 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-xl transition">📄 Download PDF</button>
+                <button id="downloadBtn" class="mt-5 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-xl transition w-full sm:w-auto">📄 Download PDF</button>
             </div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev/api/calculate-tax';
+        const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev';
         let walletAddress = null;
         
         const manualMode = document.getElementById('manualMode');
@@ -184,10 +185,18 @@
             document.getElementById('uploadBtn').disabled = true;
             document.getElementById('uploadBtn').innerHTML = 'Processing...';
             try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ walletAddress, transactionData: transactions }) });
+                const res = await fetch(`${API_URL}/api/calculate-tax`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ walletAddress, transactionData: transactions }) 
+                });
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error);
-                document.getElementById('taxResult').innerHTML = `<p>💰 Total Gain: $${data.taxResult.totalGain}</p><p>📉 Tax (20%): $${data.taxResult.estimatedTax}</p>`;
+                document.getElementById('taxResult').innerHTML = `
+                    <p class="text-lg">💰 <strong>Total Gain:</strong> $${data.taxResult.totalGain}</p>
+                    <p class="text-lg">📉 <strong>Estimated Tax (20%):</strong> $${data.taxResult.estimatedTax}</p>
+                    <p>📄 <strong>Transactions Processed:</strong> ${data.taxResult.transactionsProcessed}</p>
+                `;
                 document.getElementById('resultArea').classList.remove('hidden');
             } catch (err) { alert('Error: ' + err.message); }
             finally { document.getElementById('uploadBtn').disabled = false; document.getElementById('uploadBtn').innerHTML = '📂 Upload CSV'; }
@@ -197,24 +206,62 @@
             const address = document.getElementById('walletAddress').value.trim();
             const chain = chainSelect.value;
             if (!address) return alert('Enter wallet address');
+            
             document.getElementById('autoFetchBtn').disabled = true;
             document.getElementById('autoFetchBtn').innerHTML = 'Loading...';
             document.getElementById('balanceDisplay').classList.remove('hidden');
             document.getElementById('transactionsDisplay').classList.remove('hidden');
             document.getElementById('resultArea').classList.add('hidden');
+            document.getElementById('balanceAmount').innerHTML = '<span class="loading-pulse">Loading...</span>';
+            document.getElementById('transactionsList').innerHTML = '<div class="loading-pulse text-center text-gray-400 py-4">Loading transactions...</div>';
+            
             try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ walletAddress: address, chain, autoFetch: true }) });
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error);
-                document.getElementById('balanceAmount').innerHTML = `Transactions found on ${chain.toUpperCase()}`;
-                document.getElementById('transactionsList').innerHTML = `<div class="text-center text-green-400 py-4">✅ ${data.taxResult.transactionsProcessed || 0} transactions processed</div>`;
-                document.getElementById('taxResult').innerHTML = `<p>💰 Total Gain: $${data.taxResult.totalGain}</p><p>📉 Tax (20%): $${data.taxResult.estimatedTax}</p>`;
-                document.getElementById('resultArea').classList.remove('hidden');
-            } catch (err) { document.getElementById('transactionsList').innerHTML = `<div class="text-center text-red-400 py-4">Error: ${err.message}</div>`; }
-            finally { document.getElementById('autoFetchBtn').disabled = false; document.getElementById('autoFetchBtn').innerHTML = '🚀 Calculate Taxes'; }
-        };
-        
-        document.getElementById('downloadBtn').onclick = () => alert('PDF report coming soon!');
-    </script>
-</body>
-</html>
+                // Fetch wallet data from Worker
+                const walletRes = await fetch(`${API_URL}/api/wallet-data?address=${address}&chain=${chain}`);
+                const walletData = await walletRes.json();
+                
+                if (!walletRes.ok) throw new Error(walletData.error);
+                
+                // Update balance
+                document.getElementById('balanceAmount').innerHTML = `${walletData.balance.toFixed(6)} ${walletData.nativeToken || chain.toUpperCase()}`;
+                document.getElementById('balanceCurrency').innerHTML = chain === 'bsc' ? 'BNB Chain' : chain === 'ethereum' ? 'Ethereum' : chain.charAt(0).toUpperCase() + chain.slice(1);
+                
+                // Update transactions
+                if (walletData.transactions && walletData.transactions.length > 0) {
+                    document.getElementById('transactionsList').innerHTML = walletData.transactions.slice(0, 15).map(tx => `
+                        <div class="tx-row">
+                            <div class="flex justify-between items-center flex-wrap gap-2">
+                                <div>
+                                    <div class="text-white font-medium">${tx.value.toFixed(6)} ${walletData.nativeToken || chain.toUpperCase()}</div>
+                                    <div class="text-gray-400 text-xs">${new Date(tx.timestamp * 1000).toLocaleString()}</div>
+                                </div>
+                                <div class="text-right">
+                                    <a href="${CHAIN_CONFIG[chain]?.explorer || '#'}${tx.hash}" target="_blank" class="text-purple-400 text-xs hover:underline">View on explorer →</a>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">No transactions found for this address</div>';
+                }
+                
+                // Calculate tax (simplified for demo)
+                const taxRes = await fetch(`${API_URL}/api/calculate-tax`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ walletAddress: address, chain, autoFetch: true })
+                });
+                const taxData = await taxRes.json();
+                
+                if (taxData.success) {
+                    document.getElementById('taxResult').innerHTML = `
+                        <p class="text-lg">💰 <strong>Total Gain:</strong> $${taxData.taxResult.totalGain}</p>
+                        <p class="text-lg">📉 <strong>Estimated Tax (20%):</strong> $${taxData.taxResult.estimatedTax}</p>
+                        <p>📄 <strong>Transactions Processed:</strong> ${taxData.taxResult.transactionsProcessed}</p>
+                    `;
+                    document.getElementById('resultArea').classList.remove('hidden');
+                }
+                
+            } catch (err) {
+                document.getElementById('transactionsList').innerHTML = `<div class="text-center text-red-400 py-4">⚠️ Error: ${err.message}</div>`;
+                document.getElementById
