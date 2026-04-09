@@ -3,80 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Crypto Tax Estimator | Professional Crypto Tax Reports</title>
+    <title>CryptoTax | Professional Crypto Tax Estimator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #4c1d95 100%); background-attachment: fixed; }
-        .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .step-card { transition: all 0.3s ease; }
-        .step-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
-        .btn-glow:hover { box-shadow: 0 0 20px rgba(139,92,246,0.5); }
+        body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
+        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(139, 92, 246, 0.2); transition: all 0.3s ease; }
+        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
+        .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
+        .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .feature-card { transition: all 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); }
     </style>
 </head>
-<body class="min-h-screen">
-    <!-- NAVBAR – FIXED SPACING -->
-    <nav class="glass-card fixed w-full z-20 border-b border-white/10">
-        <div class="container mx-auto px-4 sm:px-8 py-3 sm:py-4">
-            <div class="flex flex-wrap items-center justify-between gap-2">
+<body class="min-h-screen text-white">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
+        <div class="container mx-auto px-5 sm:px-8 py-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl sm:text-3xl">💰</span>
-                    <span class="text-white font-bold text-lg sm:text-2xl tracking-tight">CryptoTax</span>
+                    <span class="text-2xl sm:text-3xl animate-pulse">💰</span>
+                    <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
+                    <span class="hidden sm:inline-flex text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full ml-2">BETA</span>
                 </div>
-                <div class="flex flex-wrap items-center gap-3 sm:gap-5">
-                    <a href="index.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Home</a>
-                    <a href="dashboard.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-gray-200 hover:text-white text-sm sm:text-base font-medium transition whitespace-nowrap">Estimator</a>
-                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-3 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg whitespace-nowrap">Claim</a>
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <a href="index.html" class="text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg bg-purple-600/20">Home</a>
+                    <a href="dashboard.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Estimator</a>
+                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-36 pb-16 sm:pb-24">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-white/20">
-                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                <span class="text-white text-xs sm:text-sm font-medium">Live on Polygon Amoy</span>
+    <div class="container mx-auto px-5 sm:px-8 pt-32 sm:pt-36 pb-16">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-5 border border-purple-500/20">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span class="text-purple-300 text-xs font-medium">Professional Crypto Tax Solution</span>
+                </div>
+                <h1 class="text-6xl sm:text-8xl font-extrabold mb-4 tracking-tight">Estimate Your<br><span class="gradient-text">Crypto Taxes</span> in Minutes</h1>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Upload your transaction history or connect any wallet to calculate capital gains taxes instantly. Support for 6+ blockchains.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                    <a href="tax-estimator.html" class="btn-primary px-8 py-3 text-lg">Get Started →</a>
+                    <a href="dashboard.html" class="bg-white/10 hover:bg-white/20 rounded-full px-8 py-3 text-lg font-medium transition">Dashboard</a>
+                </div>
             </div>
-            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white mb-5 leading-tight tracking-tight">
-                Estimate Your Crypto<br>Taxes in <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">2 Minutes</span>
-            </h1>
-            <p class="text-gray-300 text-base sm:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">
-                Upload your transaction history, pay 5 CUT tokens, and get an instant PDF tax report. No spreadsheets, no headaches.
-            </p>
-            <a href="dashboard.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl text-base sm:text-lg shadow-2xl transition-all duration-300 btn-glow">
-                Launch App
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-            </a>
-        </div>
 
-        <!-- STEP CARDS – FULL TEXT, NO CUT-OFF -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 max-w-5xl mx-auto mt-20 sm:mt-28">
-            <div class="glass-card rounded-2xl p-5 step-card">
-                <div class="text-3xl mb-2">1️⃣</div>
-                <h3 class="text-white font-bold text-base sm:text-lg mb-1">Connect Wallet</h3>
-                <p class="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">Connect your MetaMask wallet on Polygon Amoy testnet.</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16">
+                <div class="stats-card"><div class="stats-number">6+</div><div class="text-gray-400 text-sm">Blockchains</div></div>
+                <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm">Calculation</div></div>
+                <div class="stats-card"><div class="stats-number">Free</div><div class="text-gray-400 text-sm">No Hidden Fees</div></div>
+                <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm">Mainnet Data</div></div>
             </div>
-            <div class="glass-card rounded-2xl p-5 step-card">
-                <div class="text-3xl mb-2">2️⃣</div>
-                <h3 class="text-white font-bold text-base sm:text-lg mb-1">Upload CSV</h3>
-                <p class="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">Upload your transaction history from any exchange.</p>
-            </div>
-            <div class="glass-card rounded-2xl p-5 step-card">
-                <div class="text-3xl mb-2">3️⃣</div>
-                <h3 class="text-white font-bold text-base sm:text-lg mb-1">Pay & Download</h3>
-                <p class="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">Pay 5 CUT tokens and download your PDF report.</p>
-            </div>
-        </div>
 
-        <div class="text-center mt-16">
-            <p class="text-gray-400 text-xs sm:text-sm flex items-center justify-center gap-2">
-                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                Secure • Instant • No Signup Required
-            </p>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 feature-card">
+                    <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-2xl mb-4">📂</div>
+                    <h3 class="text-xl font-bold mb-2">CSV Upload</h3>
+                    <p class="text-gray-400 text-sm">Upload your transaction history from any exchange or wallet.</p>
+                </div>
+                <div class="glass-card p-6 feature-card">
+                    <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-2xl mb-4">🔗</div>
+                    <h3 class="text-xl font-bold mb-2">Wallet Connect</h3>
+                    <p class="text-gray-400 text-sm">Connect any wallet address to fetch real-time balance.</p>
+                </div>
+                <div class="glass-card p-6 feature-card">
+                    <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-2xl mb-4">📊</div>
+                    <h3 class="text-xl font-bold mb-2">FIFO Calculation</h3>
+                    <p class="text-gray-400 text-sm">Professional capital gains calculation using FIFO method.</p>
+                </div>
+            </div>
         </div>
     </div>
 </body>
