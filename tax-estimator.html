@@ -14,8 +14,7 @@
         .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
         .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
-        .btn-secondary { background: rgba(255,255,255,0.08); border-radius: 40px; padding: 12px 28px; font-weight: 500; color: white; transition: all 0.3s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+        .btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
         .mode-tab { transition: all 0.3s ease; cursor: pointer; border-radius: 40px; padding: 10px 24px; font-weight: 500; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); }
         .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
         .tx-row { background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 14px; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
@@ -25,6 +24,10 @@
         .loading-pulse { animation: pulse 1.5s ease-in-out infinite; }
         .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
         .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        /* Custom select styling */
+        .network-select option { background: #1e1b4b; color: white; padding: 12px; }
+        .network-select { background: rgba(0,0,0,0.3); border: 1px solid rgba(139,92,246,0.3); border-radius: 16px; padding: 14px; color: white; cursor: pointer; }
+        .network-select:hover { border-color: #8b5cf6; }
     </style>
 </head>
 <body class="min-h-screen text-white">
@@ -95,18 +98,24 @@
                     <h2 class="text-2xl font-bold">Enter Wallet Address</h2>
                     <p class="text-gray-400 text-sm mt-1">Fetch real-time balance and transaction history</p>
                 </div>
-                <select id="chainSelect" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4">
-                    <option value="bnb">🟡 BNB Chain (BSC)</option>
-                    <option value="eth">🔵 Ethereum</option>
-                    <option value="sol">🟣 Solana</option>
-                    <option value="btc">🟠 Bitcoin</option>
-                    <option value="mfc">💜 Polygon Amoy (MFC Token)</option>
+                
+                <!-- Network Selector with Real Icons -->
+                <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
+                <select id="chainSelect" class="network-select w-full mb-4">
+                    <option value="bnb">🟡 BNB Chain (BSC) - Balance + Transactions</option>
+                    <option value="eth">🔵 Ethereum - Balance + Transactions</option>
+                    <option value="sol">🟣 Solana - Balance + Transactions</option>
+                    <option value="btc">🟠 Bitcoin - Balance + Transactions</option>
+                    <option value="mfc">💜 Polygon Amoy - MFC Token Balance</option>
                 </select>
+                
                 <input type="text" id="walletAddress" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4" placeholder="Enter wallet address (0x... or address)">
+                
                 <div class="bg-purple-500/10 rounded-xl p-3 mb-4">
-                    <p class="text-xs text-gray-400">📌 <span class="text-purple-300">BSC Note:</span> Free tier limited to 10k transactions. For full history, use CSV export from BscScan.</p>
+                    <p class="text-xs text-gray-400">📌 <span class="text-purple-300">Note:</span> Free tier may have transaction limits. For full history, use CSV export from block explorer.</p>
                 </div>
-                <button id="fetchWalletBtn" class="btn-primary w-full">🔍 Fetch Data</button>
+                
+                <button id="fetchWalletBtn" class="btn-primary w-full">🔍 Fetch Balance & Transactions</button>
             </div>
 
             <!-- Results Section -->
@@ -245,9 +254,13 @@
                 const balanceRes = await fetch(`${API_URL}/api/${chain}-balance?address=${address}`);
                 const balanceData = await balanceRes.json();
                 
-                // Fetch transactions if supported
+                // Fetch transactions if supported (BTC uses different endpoint)
                 let transactions = [];
-                if (chain !== 'mfc') {
+                if (chain === 'btc') {
+                    const txRes = await fetch(`${API_URL}/api/btc-transactions?address=${address}`);
+                    const txData = await txRes.json();
+                    if (txData.success) transactions = txData.transactions;
+                } else if (chain !== 'mfc') {
                     const txRes = await fetch(`${API_URL}/api/${chain}-transactions?address=${address}`);
                     const txData = await txRes.json();
                     if (txData.success) transactions = txData.transactions;
@@ -262,7 +275,7 @@
                 alert('Error: ' + err.message);
             } finally {
                 document.getElementById('fetchWalletBtn').disabled = false;
-                document.getElementById('fetchWalletBtn').innerHTML = '🔍 Fetch Data';
+                document.getElementById('fetchWalletBtn').innerHTML = '🔍 Fetch Balance & Transactions';
             }
         };
     </script>
