@@ -13,12 +13,11 @@
         .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
         .btn-gradient { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
         .btn-gradient:hover { background: linear-gradient(135deg, #7c3aed, #4f46e5); transform: translateY(-2px); }
-        .file-drop-area { transition: all 0.2s ease; }
-        .file-drop-area:hover { border-color: #8b5cf6; background: rgba(139,92,246,0.1); }
+        .mode-tab { transition: all 0.2s ease; cursor: pointer; }
+        .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; }
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- NAVBAR – FIXED SPACING -->
     <nav class="glass-card fixed w-full z-20 border-b border-white/10">
         <div class="container mx-auto px-4 sm:px-8 py-3 sm:py-4">
             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -38,27 +37,91 @@
 
     <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-36 pb-16 sm:pb-24">
         <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-10">
+            <div class="text-center mb-8">
                 <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-white/20">
                     <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                     <span class="text-white text-xs sm:text-sm font-medium">Live on Polygon Amoy</span>
                 </div>
                 <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-3 tracking-tight">Tax Estimator</h1>
-                <p class="text-gray-300 text-base sm:text-lg">Upload your CSV file to calculate capital gains. Requires 5 CUT tokens.</p>
+                <p class="text-gray-300 text-base sm:text-lg">Upload CSV or paste any wallet address – any blockchain</p>
             </div>
 
-            <div id="walletStatus" class="glass-card rounded-2xl p-6 sm:p-8 mb-8 text-center">
-                <button id="connectBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">🔌 Connect Wallet</button>
+            <!-- Mode Tabs -->
+            <div class="flex justify-center gap-3 mb-8">
+                <div id="manualModeTab" class="mode-tab glass-card px-6 py-2 rounded-full text-white font-semibold border border-white/20 active">📁 Manual CSV</div>
+                <div id="autoModeTab" class="mode-tab glass-card px-6 py-2 rounded-full text-white font-semibold border border-white/20">🤖 Auto Wallet</div>
             </div>
 
-            <div id="uploadArea" class="hidden">
-                <div class="glass-card rounded-2xl p-8 text-center file-drop-area cursor-pointer border-2 border-dashed border-white/20">
-                    <input type="file" id="csvFile" accept=".csv" class="hidden">
-                    <button id="uploadBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">📂 Upload CSV File</button>
-                    <p class="text-gray-400 text-sm mt-4">Format: date,type,amount,price<br>Example: 2024-01-01,buy,0.5,2000</p>
+            <!-- Manual Mode -->
+            <div id="manualMode" class="space-y-6">
+                <div id="walletStatus" class="glass-card rounded-2xl p-6 sm:p-8 text-center">
+                    <button id="connectBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">🔌 Connect Wallet</button>
+                </div>
+                <div id="uploadArea" class="hidden">
+                    <div class="glass-card rounded-2xl p-8 text-center border-2 border-dashed border-white/20">
+                        <input type="file" id="csvFile" accept=".csv" class="hidden">
+                        <button id="uploadBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg">📂 Upload CSV File</button>
+                        <p class="text-gray-400 text-sm mt-4">Format: date,type,amount,price<br>Example: 2024-01-01,buy,0.5,2000</p>
+                    </div>
                 </div>
             </div>
 
+            <!-- Auto Mode -->
+            <div id="autoMode" class="hidden space-y-6">
+                <div class="glass-card rounded-2xl p-6 sm:p-8">
+                    <h2 class="text-xl font-bold text-white mb-4">🔍 Enter Wallet Address</h2>
+                    <div class="flex flex-col gap-4">
+                        <div>
+                            <label class="text-gray-300 text-sm block mb-2">Select Blockchain</label>
+                            <select id="chainSelect" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500">
+                                <optgroup label="EVM Chains">
+                                    <option value="ethereum">Ethereum</option>
+                                    <option value="polygon">Polygon</option>
+                                    <option value="bsc">BNB Chain</option>
+                                    <option value="arbitrum">Arbitrum</option>
+                                    <option value="base">Base</option>
+                                    <option value="optimism">Optimism</option>
+                                    <option value="avalanche">Avalanche</option>
+                                    <option value="fantom">Fantom</option>
+                                    <option value="cronos">Cronos</option>
+                                    <option value="gnosis">Gnosis</option>
+                                    <option value="celo">Celo</option>
+                                    <option value="moonbeam">Moonbeam</option>
+                                    <option value="moonriver">Moonriver</option>
+                                    <option value="aurora">Aurora</option>
+                                    <option value="harmony">Harmony</option>
+                                    <option value="klaytn">Klaytn</option>
+                                    <option value="metis">Metis</option>
+                                    <option value="zksync">zkSync Era</option>
+                                    <option value="linea">Linea</option>
+                                    <option value="scroll">Scroll</option>
+                                    <option value="polygon_zkevm">Polygon zkEVM</option>
+                                    <option value="mantle">Mantle</option>
+                                    <option value="blast">Blast</option>
+                                    <option value="kava">Kava</option>
+                                    <option value="zora">Zora</option>
+                                    <option value="sei">Sei</option>
+                                </optgroup>
+                                <optgroup label="Non-EVM Chains">
+                                    <option value="solana">Solana</option>
+                                    <option value="tron">Tron</option>
+                                    <option value="bitcoin">Bitcoin</option>
+                                    <option value="dogecoin">Dogecoin</option>
+                                    <option value="litecoin">Litecoin</option>
+                                    <option value="dash">Dash</option>
+                                    <option value="near">Near</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="text" id="walletAddress" placeholder="Enter wallet address" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500">
+                        </div>
+                    </div>
+                    <button id="autoFetchBtn" class="btn-gradient text-white font-semibold px-8 py-3 rounded-xl shadow-lg mt-6 w-full">Calculate Taxes (5 MFC required)</button>
+                </div>
+            </div>
+
+            <!-- Result Area -->
             <div id="resultArea" class="hidden glass-card rounded-2xl p-6 sm:p-8 mt-8">
                 <h2 class="text-2xl font-bold text-white mb-4">📊 Your Tax Estimate</h2>
                 <div id="taxResult" class="space-y-2 text-gray-200"></div>
@@ -71,7 +134,25 @@
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev/api/calculate-tax';
         let walletAddress = null;
         let currentTaxResult = null;
-
+        
+        const manualMode = document.getElementById('manualMode');
+        const autoMode = document.getElementById('autoMode');
+        const manualTab = document.getElementById('manualModeTab');
+        const autoTab = document.getElementById('autoModeTab');
+        
+        manualTab.onclick = () => {
+            manualTab.classList.add('active');
+            autoTab.classList.remove('active');
+            manualMode.classList.remove('hidden');
+            autoMode.classList.add('hidden');
+        };
+        autoTab.onclick = () => {
+            autoTab.classList.add('active');
+            manualTab.classList.remove('active');
+            autoMode.classList.remove('hidden');
+            manualMode.classList.add('hidden');
+        };
+        
         document.getElementById('connectBtn').onclick = async () => {
             if (!window.ethereum) return alert('Install MetaMask!');
             const provider = new ethers.BrowserProvider(window.ethereum);
@@ -81,7 +162,7 @@
             document.getElementById('connectBtn').disabled = true;
             document.getElementById('uploadArea').classList.remove('hidden');
         };
-
+        
         document.getElementById('uploadBtn').onclick = () => document.getElementById('csvFile').click();
         document.getElementById('csvFile').onchange = async (e) => {
             const file = e.target.files[0];
@@ -116,6 +197,43 @@
                 document.getElementById('uploadBtn').innerHTML = '📂 Upload CSV File';
             }
         };
+        
+        document.getElementById('autoFetchBtn').onclick = async () => {
+            const address = document.getElementById('walletAddress').value.trim();
+            const chain = document.getElementById('chainSelect').value;
+            if (!address) {
+                alert('Please enter a wallet address');
+                return;
+            }
+            document.getElementById('autoFetchBtn').disabled = true;
+            document.getElementById('autoFetchBtn').innerHTML = '⏳ Fetching transactions...';
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        walletAddress: address, 
+                        chain: chain,
+                        autoFetch: true 
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error);
+                currentTaxResult = data.taxResult;
+                document.getElementById('taxResult').innerHTML = `
+                    <p>💰 <strong>Total Gain:</strong> $${currentTaxResult.totalGain}</p>
+                    <p>📉 <strong>Estimated Tax (20%):</strong> $${currentTaxResult.estimatedTax}</p>
+                    <p>📄 <strong>Transactions Processed:</strong> ${currentTaxResult.transactionsProcessed}</p>
+                `;
+                document.getElementById('resultArea').classList.remove('hidden');
+            } catch (err) {
+                alert(`Error: ${err.message}`);
+            } finally {
+                document.getElementById('autoFetchBtn').disabled = false;
+                document.getElementById('autoFetchBtn').innerHTML = 'Calculate Taxes (5 MFC required)';
+            }
+        };
+        
         document.getElementById('downloadBtn').onclick = () => alert('PDF generation coming soon. Your tax result is ready!');
     </script>
 </body>
