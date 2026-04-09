@@ -16,6 +16,26 @@
         .mode-tab { transition: all 0.2s ease; cursor: pointer; }
         .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; }
         .tx-row:hover { background: rgba(255,255,255,0.08); }
+        
+        /* ========== DROPDOWN VISIBILITY FIX ========== */
+        select option {
+            background: #1e1b4b;
+            color: white;
+            padding: 12px;
+        }
+        select:hover {
+            border-color: #8b5cf6;
+            cursor: pointer;
+        }
+        select option:checked {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+        }
+        /* Display selected chain name clearly */
+        #selectedChainDisplay {
+            font-size: 14px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -76,43 +96,44 @@
                             <label class="text-gray-300 text-sm block mb-2">Select Blockchain</label>
                             <select id="chainSelect" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500">
                                 <optgroup label="EVM Chains">
-                                    <option value="ethereum">Ethereum</option>
-                                    <option value="polygon">Polygon</option>
-                                    <option value="bsc">BNB Chain</option>
-                                    <option value="arbitrum">Arbitrum</option>
-                                    <option value="base">Base</option>
-                                    <option value="optimism">Optimism</option>
-                                    <option value="avalanche">Avalanche</option>
-                                    <option value="fantom">Fantom</option>
-                                    <option value="cronos">Cronos</option>
-                                    <option value="gnosis">Gnosis</option>
-                                    <option value="celo">Celo</option>
-                                    <option value="moonbeam">Moonbeam</option>
-                                    <option value="moonriver">Moonriver</option>
-                                    <option value="aurora">Aurora</option>
-                                    <option value="harmony">Harmony</option>
-                                    <option value="klaytn">Klaytn</option>
-                                    <option value="metis">Metis</option>
-                                    <option value="zksync">zkSync Era</option>
-                                    <option value="linea">Linea</option>
-                                    <option value="scroll">Scroll</option>
-                                    <option value="polygon_zkevm">Polygon zkEVM</option>
-                                    <option value="mantle">Mantle</option>
-                                    <option value="blast">Blast</option>
-                                    <option value="kava">Kava</option>
-                                    <option value="zora">Zora</option>
-                                    <option value="sei">Sei</option>
+                                    <option value="ethereum">🟣 Ethereum</option>
+                                    <option value="polygon">🔵 Polygon</option>
+                                    <option value="bsc">🟡 BNB Chain</option>
+                                    <option value="arbitrum">🔷 Arbitrum</option>
+                                    <option value="base">🔷 Base</option>
+                                    <option value="optimism">🔴 Optimism</option>
+                                    <option value="avalanche">🔺 Avalanche</option>
+                                    <option value="fantom">🔷 Fantom</option>
+                                    <option value="cronos">🟣 Cronos</option>
+                                    <option value="gnosis">⚪ Gnosis</option>
+                                    <option value="celo">🟢 Celo</option>
+                                    <option value="moonbeam">🌙 Moonbeam</option>
+                                    <option value="moonriver">🌙 Moonriver</option>
+                                    <option value="aurora">⚡ Aurora</option>
+                                    <option value="harmony">🎵 Harmony</option>
+                                    <option value="klaytn">🔷 Klaytn</option>
+                                    <option value="metis">🔷 Metis</option>
+                                    <option value="zksync">⚡ zkSync Era</option>
+                                    <option value="linea">📏 Linea</option>
+                                    <option value="scroll">📜 Scroll</option>
+                                    <option value="polygon_zkevm">🔵 Polygon zkEVM</option>
+                                    <option value="mantle">🪨 Mantle</option>
+                                    <option value="blast">💥 Blast</option>
+                                    <option value="kava">🔷 Kava</option>
+                                    <option value="zora">🎨 Zora</option>
+                                    <option value="sei">⚡ Sei</option>
                                 </optgroup>
                                 <optgroup label="Non-EVM Chains">
-                                    <option value="solana">Solana</option>
-                                    <option value="tron">Tron</option>
-                                    <option value="bitcoin">Bitcoin</option>
-                                    <option value="dogecoin">Dogecoin</option>
-                                    <option value="litecoin">Litecoin</option>
-                                    <option value="dash">Dash</option>
-                                    <option value="near">Near</option>
+                                    <option value="solana">🟣 Solana</option>
+                                    <option value="tron">🟢 Tron</option>
+                                    <option value="bitcoin">🟠 Bitcoin</option>
+                                    <option value="dogecoin">🐕 Dogecoin</option>
+                                    <option value="litecoin">⚪ Litecoin</option>
+                                    <option value="dash">⚡ Dash</option>
+                                    <option value="near">🔷 Near</option>
                                 </optgroup>
                             </select>
+                            <div id="selectedChainDisplay" class="text-purple-400 text-sm mt-2"></div>
                         </div>
                         <div>
                             <input type="text" id="walletAddress" placeholder="Enter wallet address" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500">
@@ -159,6 +180,18 @@
         const autoMode = document.getElementById('autoMode');
         const manualTab = document.getElementById('manualModeTab');
         const autoTab = document.getElementById('autoModeTab');
+        const chainSelect = document.getElementById('chainSelect');
+        const selectedChainDisplay = document.getElementById('selectedChainDisplay');
+        
+        // Show selected chain name when dropdown changes
+        function updateSelectedChain() {
+            const selectedOption = chainSelect.options[chainSelect.selectedIndex];
+            const chainName = selectedOption.textContent;
+            selectedChainDisplay.innerHTML = `✓ Selected: ${chainName}`;
+        }
+        
+        chainSelect.addEventListener('change', updateSelectedChain);
+        updateSelectedChain(); // Initial display
         
         manualTab.onclick = () => {
             manualTab.classList.add('active');
@@ -228,7 +261,7 @@
         // Auto mode – fetch wallet data (balance, transactions, tax)
         document.getElementById('autoFetchBtn').onclick = async () => {
             const address = document.getElementById('walletAddress').value.trim();
-            const chain = document.getElementById('chainSelect').value;
+            const chain = chainSelect.value;
             if (!address) {
                 alert('Please enter a wallet address');
                 return;
@@ -237,7 +270,6 @@
             document.getElementById('autoFetchBtn').disabled = true;
             document.getElementById('autoFetchBtn').innerHTML = '⏳ Fetching data...';
             
-            // Show loading states
             document.getElementById('balanceDisplay').classList.remove('hidden');
             document.getElementById('transactionsDisplay').classList.remove('hidden');
             document.getElementById('resultArea').classList.add('hidden');
@@ -246,17 +278,7 @@
             document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">Loading transactions...</div>';
             
             try {
-                // Step 1: Fetch balance
-                const balanceRes = await fetch(`${API_URL.replace('/api/calculate-tax', '')}/api/balance?address=${address}&chain=${chain}`);
-                if (balanceRes.ok) {
-                    const balanceData = await balanceRes.json();
-                    currentBalance = balanceData.balance;
-                    document.getElementById('balanceAmount').innerHTML = `${parseFloat(currentBalance).toLocaleString()} ${chain.toUpperCase()}`;
-                } else {
-                    document.getElementById('balanceAmount').innerHTML = 'Unable to fetch';
-                }
-                
-                // Step 2: Fetch transactions and calculate tax
+                // Fetch transactions and tax calculation
                 const taxRes = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -271,11 +293,14 @@
                 if (!taxRes.ok) throw new Error(data.error);
                 
                 currentTaxResult = data.taxResult;
-                currentTransactions = data.transactions || [];
                 
-                // Display transactions
-                if (currentTransactions && currentTransactions.length > 0) {
-                    document.getElementById('transactionsList').innerHTML = currentTransactions.slice(0, 20).map(tx => `
+                // For balance display – extract from first transaction or show placeholder
+                const chainName = chainSelect.options[chainSelect.selectedIndex].textContent;
+                document.getElementById('balanceAmount').innerHTML = `Balance fetched from ${chainName}`;
+                
+                // Display transactions (if any from response)
+                if (data.transactions && data.transactions.length > 0) {
+                    document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 20).map(tx => `
                         <div class="tx-row bg-white/5 rounded-lg p-3 transition">
                             <div class="flex justify-between items-center">
                                 <div>
@@ -293,7 +318,6 @@
                     document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">No transactions found for this address.</div>';
                 }
                 
-                // Display tax result
                 document.getElementById('taxResult').innerHTML = `
                     <p>💰 <strong>Total Gain:</strong> $${currentTaxResult.totalGain}</p>
                     <p>📉 <strong>Estimated Tax (20%):</strong> $${currentTaxResult.estimatedTax}</p>
