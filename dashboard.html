@@ -105,14 +105,15 @@
     </div>
 
     <script>
-        // ========== PRODUCTION CONFIGURATION ==========
-        const TOKEN_CONTRACT = '0xe7C74768e9AdF945C920967e334FFF40167A126F';   // MFC token
+        // ========== CONFIGURATION ==========
+        const TOKEN_CONTRACT = '0xe7C74768e9AdF945C920967e334FFF40167A126F';
         const ETHERSCAN_API_KEY = 'DDSSHGQWI9C4WAVJI6WVHB86893V8T6MMU';
         const RPC_URL = 'https://lb.drpc.live/polygon-amoy/AlKOOugi5EgeoaJxUsJsaFsKxwDeMRwR8aGVGrar0DFx';
         
         const tokenABI = [
             'function balanceOf(address owner) view returns (uint256)',
-            'function decimals() view returns (uint8)'
+            'function decimals() view returns (uint8)',
+            'event Transfer(address indexed from, address indexed to, uint256 value)'
         ];
         
         let provider = new ethers.JsonRpcProvider(RPC_URL);
@@ -130,28 +131,77 @@
             }
         }
         
-        // Fetch both POL transfers and MFC token transfers
-        async function fetchAllTransactions(address) {
+        // Fetch token transfer events directly from the blockchain using RPC
+        async function fetchTokenTransfers(address) {
             try {
-                // 1. POL transfers
-                const polUrl = `https://api-amoy.polygonscan.com/api?module=account&action=txlist&address=${address}&sort=desc&apikey=${ETHERSCAN_API_KEY}`;
-                const polRes = await fetch(polUrl);
-                const polData = await polRes.json();
-                let polTxs = (polData.status === '1') ? polData.result : [];
-                
-                // 2. MFC token transfers (ERC-20)
-                const tokenUrl = `https://api-amoy.polygonscan.com/api?module=account&action=tokentx&contractaddress=${TOKEN_CONTRACT}&address=${address}&sort=desc&apikey=${ETHERSCAN_API_KEY}`;
-                const tokenRes = await fetch(tokenUrl);
-                const tokenData = await tokenRes.json();
-                let tokenTxs = (tokenData.status === '1') ? tokenData.result : [];
-                
-                // Combine and sort by timestamp (descending)
-                const allTxs = [...polTxs, ...tokenTxs].sort((a, b) => parseInt(b.timeStamp) - parseInt(a.timeStamp));
-                return allTxs.slice(0, 30); // Last 30 transactions
+                const filter = tokenContract.filters.Transfer(null, address);
+                const events = await tokenContract.queryFilter(filter, 0, 'latest');
+                const transfers = [];
+                for (const event of events) {
+                    const block = await provider.getBlock(event.blockNumber);
+                    transfers.push({
+                        from: event.args.from,
+                        to: event.args.to,
+                        value: ethers.formatUnits(event.args.value, 18),
+                        timeStamp: block.timestamp,
+                        tokenSymbol: 'MFC',
+                        tokenDecimal: 18
+                    });
+                }
+                // Also fetch outgoing transfers (from address)
+                const outgoingFilter = tokenContract.filters.Transfer(address, null);
+                const outgoingEvents = await tokenContract.queryFilter(outgoingFilter, 0, 'latest');
+                for (const event of outgoingEvents) {
+                    const block = await provider.getBlock(event.blockNumber);
+                    transfers.push({
+                        from: event.args.from,
+                        to: event.args.to,
+                        value: ethers.formatUnits(event.args.value, 18),
+                        timeStamp: block.timestamp,
+                        tokenSymbol: 'MFC',
+                        tokenDecimal: 18
+                    });
+                }
+                // Remove duplicates (if same event appears in both)
+                const unique = new Map();
+                for (const tx of transfers) {
+                    const key = `${tx.timeStamp}-${tx.from}-${tx.to}-${tx.value}`;
+                    if (!unique.has(key)) unique.set(key, tx);
+                }
+                return Array.from(unique.values());
             } catch (err) {
-                console.error('Transaction fetch error:', err);
+                console.error('Token transfer fetch error:', err);
                 return [];
             }
+        }
+        
+        // Fetch POL transfers from PolygonScan
+        async function fetchPolTransfers(address) {
+            try {
+                const url = `https://api-amoy.polygonscan.com/api?module=account&action=txlist&address=${address}&sort=desc&apikey=${ETHERSCAN_API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.status !== '1') return [];
+                return data.result.map(tx => ({
+                    from: tx.from,
+                    to: tx.to,
+                    value: (parseFloat(tx.value) / 1e18).toFixed(4),
+                    timeStamp: parseInt(tx.timeStamp),
+                    tokenSymbol: 'POL',
+                    tokenDecimal: 18
+                }));
+            } catch (err) {
+                console.error('POL fetch error:', err);
+                return [];
+            }
+        }
+        
+        async function fetchAllTransactions(address) {
+            const tokenTxs = await fetchTokenTransfers(address);
+            const polTxs = await fetchPolTransfers(address);
+            const all = [...tokenTxs, ...polTxs];
+            all.sort((a, b) => b.timeStamp - a.timeStamp);
+            return all.slice(0, 30);
         }
         
         function displayTransactions(transactions, currentAddress) {
@@ -161,22 +211,10 @@
                 return;
             }
             container.innerHTML = transactions.map(tx => {
-                // Determine if it's a token transfer or POL transfer
-                const isToken = tx.hasOwnProperty('tokenSymbol');
-                const date = new Date(parseInt(tx.timeStamp) * 1000).toLocaleString();
-                let amount, symbol, from, to;
-                if (isToken) {
-                    amount = (parseFloat(tx.value) / Math.pow(10, parseInt(tx.tokenDecimal))).toFixed(2);
-                    symbol = tx.tokenSymbol;
-                    from = tx.from;
-                    to = tx.to;
-                } else {
-                    amount = (parseFloat(tx.value) / 1e18).toFixed(4);
-                    symbol = 'POL';
-                    from = tx.from;
-                    to = tx.to;
-                }
-                const isIncoming = to.toLowerCase() === currentAddress.toLowerCase();
+                const date = new Date(tx.timeStamp * 1000).toLocaleString();
+                const amount = parseFloat(tx.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+                const symbol = tx.tokenSymbol;
+                const isIncoming = tx.to.toLowerCase() === currentAddress.toLowerCase();
                 const direction = isIncoming ? '📥 Received' : '📤 Sent';
                 return `
                     <div class="tx-row bg-white/5 rounded-lg p-3 transition">
@@ -186,8 +224,8 @@
                                     ${direction} ${amount} ${symbol}
                                 </div>
                                 <div class="text-gray-400 text-xs mt-1 break-all">
-                                    From: ${from.slice(0,8)}...${from.slice(-6)}<br>
-                                    To: ${to.slice(0,8)}...${to.slice(-6)}
+                                    From: ${tx.from.slice(0,8)}...${tx.from.slice(-6)}<br>
+                                    To: ${tx.to.slice(0,8)}...${tx.to.slice(-6)}
                                 </div>
                             </div>
                             <div class="text-right">
