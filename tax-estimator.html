@@ -264,4 +264,14 @@
                 
             } catch (err) {
                 document.getElementById('transactionsList').innerHTML = `<div class="text-center text-red-400 py-4">⚠️ Error: ${err.message}</div>`;
-                document.getElementById
+                document.getElementById('balanceAmount').innerHTML = '0 BNB';
+            } finally {
+                document.getElementById('autoFetchBtn').disabled = false;
+                document.getElementById('autoFetchBtn').innerHTML = '🚀 Fetch Balance & Calculate Tax';
+            }
+        };
+        
+        document.getElementById('downloadBtn').onclick = () => alert('PDF report coming soon!');
+    </script>
+</body>
+</html>
