@@ -499,6 +499,21 @@
         const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
         const selectedNetworkName = document.getElementById('selectedNetworkName');
         
+        // Helper function to safely format timestamp
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return 'Unknown date';
+            let date;
+            if (typeof timestamp === 'number') {
+                date = new Date(timestamp * 1000);
+            } else if (typeof timestamp === 'string') {
+                date = new Date(timestamp);
+            } else {
+                return 'Invalid date';
+            }
+            if (isNaN(date.getTime())) return 'Invalid date';
+            return date.toLocaleString();
+        }
+        
         // FIFO Tax Calculation Function
         function calculateFIFOTax(transactions) {
             let totalGain = 0;
@@ -549,14 +564,21 @@
         
         function convertToTaxFormat(transactions, nativeToken) {
             return transactions.map(tx => {
-                const date = new Date(tx.timestamp * 1000).toISOString().split('T')[0];
+                let date;
+                if (tx.timestamp) {
+                    date = new Date(tx.timestamp * 1000).toISOString().split('T')[0];
+                } else if (tx.blockTime) {
+                    date = new Date(tx.blockTime * 1000).toISOString().split('T')[0];
+                } else {
+                    date = new Date().toISOString().split('T')[0];
+                }
                 const simulatedPrice = 50000;
                 return {
                     date: date,
                     type: 'buy',
                     amount: tx.value,
                     price: simulatedPrice,
-                    hash: tx.hash
+                    hash: tx.hash || tx.signature
                 };
             });
         }
@@ -585,15 +607,17 @@
                     else if (selectedChain === 'sol') explorerUrl = `https://solscan.io/tx/${tx.signature}`;
                     else if (selectedChain === 'btc') explorerUrl = `https://blockchair.com/bitcoin/transaction/${tx.hash}`;
                     
+                    const txDate = formatTimestamp(tx.timestamp || tx.blockTime);
+                    
                     return `
                         <div class="tx-row">
                             <div class="flex justify-between items-center flex-wrap gap-2">
                                 <div class="flex-1">
                                     <div class="font-mono text-xs text-purple-300 break-all">${tx.hash || tx.signature || 'N/A'}</div>
-                                    <div class="text-gray-500 text-xs mt-1">${new Date(tx.timestamp * 1000).toLocaleString()}</div>
+                                    <div class="text-gray-500 text-xs mt-1">${txDate}</div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-white font-medium">${tx.value.toFixed(6)} ${nativeToken}</div>
+                                    <div class="text-white font-medium">${tx.value ? tx.value.toFixed(6) : '0'} ${nativeToken}</div>
                                     <div class="text-xs ${taxTx.gain >= 0 ? 'text-green-400' : 'text-red-400'}">Gain: $${taxTx.gain || 0}</div>
                                     ${explorerUrl ? `<a href="${explorerUrl}" target="_blank" class="text-purple-400 text-xs hover:underline">View →</a>` : ''}
                                 </div>
