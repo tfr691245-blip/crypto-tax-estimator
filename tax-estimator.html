@@ -9,34 +9,98 @@
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
         body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(139, 92, 246, 0.2); transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
-        .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
-        .btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
-        .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
-        .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         
-        /* ========== PRO SLIDER TOGGLE ========== */
-        .mode-slider-container {
+        /* Glassmorphism 2.0 */
+        .glass-card { 
+            background: rgba(15, 23, 42, 0.5); 
+            backdrop-filter: blur(20px); 
+            border-radius: 32px; 
+            border: 1px solid rgba(139, 92, 246, 0.15); 
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1); 
+        }
+        .glass-card:hover { 
+            border-color: rgba(139, 92, 246, 0.3); 
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* Premium Button */
+        .btn-premium { 
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); 
+            border-radius: 60px; 
+            padding: 14px 32px; 
+            font-weight: 600; 
+            color: white; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            width: 100%; 
+            letter-spacing: 0.3px;
+        }
+        .btn-premium:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+        }
+        .btn-premium:disabled { 
+            opacity: 0.5; 
+            transform: none; 
+            cursor: not-allowed; 
+        }
+        
+        /* Gradient Text */
+        .gradient-text { 
+            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+        }
+        
+        /* Stats Cards */
+        .stats-card { 
+            background: rgba(0,0,0,0.25); 
+            backdrop-filter: blur(10px);
+            border-radius: 24px; 
+            padding: 20px; 
+            text-align: center; 
+            border: 1px solid rgba(139,92,246,0.1);
+            transition: all 0.3s ease;
+        }
+        .stats-card:hover {
+            border-color: rgba(139,92,246,0.3);
+            background: rgba(139,92,246,0.05);
+        }
+        .stats-number { 
+            font-size: 2rem; 
+            font-weight: 800; 
+            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+        }
+        
+        /* ========== PREMIUM SLIDER ========== */
+        .mode-switch {
             display: flex;
             justify-content: center;
             margin-bottom: 32px;
         }
-        .mode-slider {
+        .mode-switch__container {
             position: relative;
             display: inline-flex;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 60px;
-            padding: 4px;
+            background: rgba(0, 0, 0, 0.35);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+            border-radius: 80px;
+            padding: 6px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
         }
-        .mode-slider-btn {
+        .mode-switch__option {
             position: relative;
-            padding: 12px 36px;
+            padding: 12px 40px;
             font-weight: 600;
             font-size: 15px;
             border-radius: 60px;
@@ -45,31 +109,27 @@
             z-index: 2;
             background: transparent;
             color: #94a3b8;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
-        .mode-slider-btn.active {
+        .mode-switch__option.active {
             color: white;
-            text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
         }
-        .mode-slider-btn:hover:not(.active) {
-            color: #c4b5fd;
-        }
-        .mode-slider-glow {
+        .mode-switch__glow {
             position: absolute;
-            top: 4px;
-            bottom: 4px;
-            width: calc(50% - 4px);
+            top: 6px;
+            bottom: 6px;
+            width: calc(50% - 6px);
             background: linear-gradient(135deg, #8b5cf6, #6366f1);
             border-radius: 60px;
             transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 0 20px #8b5cf6, 0 0 5px #6366f1;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
         }
-        .mode-slider-glow.slide-right {
+        .mode-switch__glow.slide-right {
             transform: translateX(100%);
         }
         
         /* ========== NETWORK SELECTOR ========== */
-        .network-selector-wrapper { 
+        .network-wrapper { 
             position: relative; 
             z-index: 10000;
             margin-bottom: 24px; 
@@ -78,40 +138,36 @@
             display: flex; 
             align-items: center; 
             gap: 12px; 
-            background: rgba(0,0,0,0.5); 
-            border: 1px solid rgba(139,92,246,0.4); 
-            border-radius: 60px; 
-            padding: 10px 20px; 
+            background: rgba(0,0,0,0.4); 
+            border: 1px solid rgba(139,92,246,0.35); 
+            border-radius: 80px; 
+            padding: 10px 22px; 
             cursor: pointer; 
             transition: all 0.2s ease; 
             width: fit-content; 
         }
         .network-trigger:hover { 
             border-color: #8b5cf6; 
-            background: rgba(139,92,246,0.15); 
-        }
-        .network-trigger.active { 
-            border-color: #8b5cf6; 
-            background: rgba(139,92,246,0.2); 
+            background: rgba(139,92,246,0.12); 
         }
         .network-dropdown { 
             position: absolute; 
-            top: calc(100% + 8px); 
+            top: calc(100% + 12px); 
             left: 0; 
-            background: rgba(10, 15, 30, 0.98); 
+            background: rgba(8, 12, 25, 0.98); 
             backdrop-filter: blur(24px); 
-            border: 1px solid rgba(139,92,246,0.4); 
-            border-radius: 24px; 
+            border: 1px solid rgba(139,92,246,0.35); 
+            border-radius: 28px; 
             padding: 8px; 
             min-width: 280px; 
-            max-height: 280px;
+            max-height: 300px;
             overflow-y: auto;
             z-index: 10001;
-            box-shadow: 0 25px 40px -12px rgba(0,0,0,0.8); 
+            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.8); 
             opacity: 0; 
             visibility: hidden; 
-            transform: translateY(-10px); 
-            transition: all 0.2s ease;
+            transform: translateY(-12px); 
+            transition: all 0.25s ease;
         }
         .network-dropdown.show { 
             opacity: 1; 
@@ -123,14 +179,14 @@
             align-items: center; 
             gap: 12px; 
             padding: 12px 16px; 
-            border-radius: 16px; 
+            border-radius: 20px; 
             cursor: pointer; 
             transition: all 0.2s ease; 
         }
         .network-option:hover { 
-            background: rgba(139,92,246,0.2); 
+            background: rgba(139,92,246,0.15); 
         }
-        .network-icon-img { 
+        .network-icon { 
             width: 28px; 
             height: 28px; 
             border-radius: 50%; 
@@ -144,29 +200,28 @@
         }
         .network-desc { 
             font-size: 11px; 
-            color: #94a3b8; 
+            color: #64748b; 
         }
         
-        /* Address Input */
-        .address-input { 
+        /* Input Field */
+        .input-field { 
             width: 100%; 
             background: rgba(0,0,0,0.3); 
-            border: 1px solid rgba(139,92,246,0.3); 
-            border-radius: 16px; 
-            padding: 14px 18px; 
+            border: 1px solid rgba(139,92,246,0.25); 
+            border-radius: 20px; 
+            padding: 14px 20px; 
             color: white; 
             font-size: 14px; 
             font-family: monospace; 
-            overflow-x: auto; 
-            white-space: nowrap; 
+            transition: all 0.2s ease;
         }
-        .address-input:focus { 
+        .input-field:focus { 
             outline: none; 
             border-color: #8b5cf6; 
-            box-shadow: 0 0 0 2px rgba(139,92,246,0.2);
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
         }
-        .address-input::placeholder { 
-            color: #64748b; 
+        .input-field::placeholder { 
+            color: #475569; 
             font-family: 'Inter', system-ui; 
         }
         
@@ -179,82 +234,75 @@
         /* Transaction Row */
         .tx-row { 
             background: rgba(255, 255, 255, 0.03); 
-            border-radius: 16px; 
+            border-radius: 20px; 
             padding: 14px; 
-            transition: all 0.3s ease; 
-            border: 1px solid rgba(255, 255, 255, 0.05); 
+            transition: all 0.25s ease; 
+            border: 1px solid rgba(255, 255, 255, 0.03); 
         }
         .tx-row:hover { 
-            background: rgba(139, 92, 246, 0.1); 
-            transform: translateX(4px); 
-        }
-        .hash-link { 
-            color: #8b5cf6; 
-            text-decoration: none; 
-            font-size: 12px; 
-        }
-        .hash-link:hover { 
-            text-decoration: underline; 
+            background: rgba(139, 92, 246, 0.08); 
+            transform: translateX(5px); 
+            border-color: rgba(139,92,246,0.2);
         }
         
-        .balance-value {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #c4b5fd, #8b5cf6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        /* Professional Info Note */
-        .info-note {
-            background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(99,102,241,0.05));
-            border-left: 3px solid #8b5cf6;
-            border-radius: 16px;
-            padding: 14px 18px;
+        /* Professional Info Card */
+        .info-card {
+            background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(99,102,241,0.04));
+            border-radius: 20px;
+            padding: 16px 20px;
             margin-bottom: 20px;
+            border: 1px solid rgba(139,92,246,0.15);
         }
-        .info-note-title {
+        .info-card-title {
             font-size: 13px;
             font-weight: 600;
             color: #c4b5fd;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .info-note-text {
+        .info-card-text {
             font-size: 12px;
             color: #94a3b8;
             line-height: 1.5;
         }
-        .info-note-text a {
-            color: #8b5cf6;
-            text-decoration: none;
-        }
-        .info-note-text a:hover {
-            text-decoration: underline;
+        .info-card-text strong {
+            color: #c4b5fd;
+            font-weight: 600;
         }
         
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 10px; }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
     </style>
 </head>
 <body class="min-h-screen text-white">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
+    <!-- Premium Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-2xl border-b border-white/5">
         <div class="container mx-auto px-5 sm:px-8 py-4">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl sm:text-3xl animate-pulse">💰</span>
-                    <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
-                    <span class="hidden sm:inline-flex text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full ml-2">BETA</span>
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                        <span class="text-lg">💰</span>
+                    </div>
+                    <span class="text-white font-bold text-xl tracking-tight">CryptoTax</span>
+                    <span class="hidden sm:inline-flex text-xs bg-white/5 text-purple-300 px-2 py-1 rounded-full ml-2 border border-white/10">v2.0</span>
                 </div>
                 <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="index.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Home</a>
-                    <a href="dashboard.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg bg-purple-600/20">Estimator</a>
+                    <a href="index.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Home</a>
+                    <a href="dashboard.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-white text-sm transition px-3 py-1.5 rounded-xl bg-purple-600/20">Estimator</a>
                     <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
                 </div>
             </div>
@@ -264,98 +312,97 @@
     <div class="container mx-auto px-5 sm:px-8 pt-24 sm:pt-28 pb-16">
         <div class="max-w-6xl mx-auto">
             <!-- Hero Section -->
-            <div class="text-center mb-12">
-                <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-5 border border-purple-500/20">
-                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span class="text-purple-300 text-xs font-medium">Powered by 6+ Blockchains</span>
+            <div class="text-center mb-14">
+                <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-purple-500/20">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                    <span class="text-purple-300 text-xs font-medium">Multi-Chain Support</span>
                 </div>
-                <h1 class="text-5xl sm:text-7xl font-extrabold mb-4 tracking-tight">Tax Estimator</h1>
-                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Calculate capital gains taxes across multiple blockchains. Upload CSV or fetch wallet data instantly.</p>
+                <h1 class="text-6xl sm:text-7xl font-bold mb-5 tracking-tight">Tax <span class="gradient-text">Estimator</span></h1>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Calculate capital gains across 6+ blockchains with precision. Upload data or fetch wallet insights instantly.</p>
             </div>
 
             <!-- Stats Row -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
-                <div class="stats-card"><div class="stats-number">6+</div><div class="text-gray-400 text-sm">Blockchains</div></div>
-                <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm">Calculation Method</div></div>
-                <div class="stats-card"><div class="stats-number">Free</div><div class="text-gray-400 text-sm">No Hidden Fees</div></div>
-                <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm">Mainnet Data</div></div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
+                <div class="stats-card"><div class="stats-number">6+</div><div class="text-gray-400 text-sm mt-1">Networks</div></div>
+                <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm mt-1">Methodology</div></div>
+                <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm mt-1">On-Chain Data</div></div>
+                <div class="stats-card"><div class="stats-number">Instant</div><div class="text-gray-400 text-sm mt-1">Results</div></div>
             </div>
 
-            <!-- Pro Slider Toggle -->
-            <div class="mode-slider-container">
-                <div class="mode-slider">
-                    <div id="sliderGlow" class="mode-slider-glow"></div>
-                    <div id="csvSliderBtn" class="mode-slider-btn active">📁 Manual CSV</div>
-                    <div id="walletSliderBtn" class="mode-slider-btn">🤖 Auto Wallet</div>
+            <!-- Premium Slider -->
+            <div class="mode-switch">
+                <div class="mode-switch__container">
+                    <div id="sliderGlow" class="mode-switch__glow"></div>
+                    <div id="csvSliderBtn" class="mode-switch__option active">📁 Manual CSV</div>
+                    <div id="walletSliderBtn" class="mode-switch__option">🔗 Auto Wallet</div>
                 </div>
             </div>
 
             <!-- CSV Mode -->
-            <div id="csvMode" class="glass-card p-6 sm:p-8">
+            <div id="csvMode" class="glass-card p-6 sm:p-8 fade-in">
                 <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3">📂</div>
-                    <h2 class="text-2xl font-bold">Upload CSV File</h2>
-                    <p class="text-gray-400 text-sm mt-1">Export your transaction history from any exchange or wallet</p>
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">📂</div>
+                    <h2 class="text-2xl font-bold">CSV Import</h2>
+                    <p class="text-gray-400 text-sm mt-1">Upload your complete transaction history</p>
                 </div>
                 
-                <!-- Info Note for CSV -->
-                <div class="info-note">
-                    <div class="info-note-title">
-                        <span>📋</span> Full Transaction History
+                <div class="info-card">
+                    <div class="info-card-title">
+                        <span>📋</span> Complete Transaction Data
                     </div>
-                    <div class="info-note-text">
-                        CSV upload gives you <strong class="text-purple-300">complete control</strong> over your transaction data. Include all your buys, sells, and trades for accurate tax calculation using FIFO method.
+                    <div class="info-card-text">
+                        CSV upload provides <strong>full visibility</strong> into your entire transaction history. Include all buys, sells, and trades for accurate FIFO-based tax calculations.
                     </div>
                 </div>
                 
-                <input type="file" id="csvFile" accept=".csv" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700">
-                <div class="bg-purple-500/10 rounded-xl p-4 mb-4">
-                    <p class="text-sm text-gray-300"><span class="font-bold text-purple-400">📋 CSV Format:</span> date,type,amount,price</p>
-                    <p class="text-xs text-gray-400 mt-1">Example: 2024-01-01,buy,0.5,20000</p>
+                <input type="file" id="csvFile" accept=".csv" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-purple-600 file:text-white hover:file:bg-purple-700">
+                <div class="bg-purple-500/10 rounded-xl p-4 mb-5">
+                    <p class="text-sm text-gray-300"><span class="font-semibold text-purple-400">CSV Format:</span> date,type,amount,price</p>
+                    <p class="text-xs text-gray-500 mt-1">Example: 2024-01-01,buy,0.5,20000</p>
                 </div>
-                <button id="uploadBtn" class="btn-primary"><span>📊</span> Calculate Tax</button>
+                <button id="uploadBtn" class="btn-premium"><span>📊</span> Calculate Tax</button>
             </div>
 
             <!-- Wallet Mode -->
-            <div id="walletMode" class="glass-card p-6 sm:p-8 hidden">
+            <div id="walletMode" class="glass-card p-6 sm:p-8 hidden fade-in">
                 <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3">🔗</div>
-                    <h2 class="text-2xl font-bold">Enter Wallet Address</h2>
-                    <p class="text-gray-400 text-sm mt-1">Fetch real-time balance and transaction history</p>
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">🔗</div>
+                    <h2 class="text-2xl font-bold">Wallet Connect</h2>
+                    <p class="text-gray-400 text-sm mt-1">Fetch balance and recent activity</p>
                 </div>
                 
                 <!-- Network Selector -->
-                <div class="network-selector-wrapper">
-                    <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
+                <div class="network-wrapper">
+                    <label class="block text-sm text-gray-400 mb-2">Network</label>
                     <div class="relative">
                         <div id="networkTrigger" class="network-trigger">
-                            <img id="selectedNetworkIcon" class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" alt="Bitcoin">
+                            <img id="selectedNetworkIcon" class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" alt="Bitcoin">
                             <span id="selectedNetworkName" class="font-medium">Bitcoin</span>
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="networkDropdown" class="network-dropdown">
                             <div class="network-option" data-chain="bnb" data-name="BNB Chain" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" data-balance="bnb-balance" data-tx="bnb-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png">
                                 <div><div class="network-name">BNB Chain</div><div class="network-desc">Binance Smart Chain</div></div>
                             </div>
                             <div class="network-option" data-chain="eth" data-name="Ethereum" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" data-balance="eth-balance" data-tx="eth-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png">
                                 <div><div class="network-name">Ethereum</div><div class="network-desc">Ethereum Mainnet</div></div>
                             </div>
                             <div class="network-option" data-chain="polygon" data-name="Polygon" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="polygon-balance" data-tx="polygon-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
-                                <div><div class="network-name">Polygon</div><div class="network-desc">Polygon Mainnet (MATIC)</div></div>
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
+                                <div><div class="network-name">Polygon</div><div class="network-desc">Polygon Mainnet</div></div>
                             </div>
                             <div class="network-option" data-chain="sol" data-name="Solana" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" data-balance="sol-balance" data-tx="sol-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png">
                                 <div><div class="network-name">Solana</div><div class="network-desc">Solana Mainnet</div></div>
                             </div>
                             <div class="network-option" data-chain="btc" data-name="Bitcoin" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" data-balance="btc-balance" data-tx="btc-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png">
                                 <div><div class="network-name">Bitcoin</div><div class="network-desc">Bitcoin Mainnet</div></div>
                             </div>
                             <div class="network-option" data-chain="mfc" data-name="Polygon Amoy" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="mfc-balance" data-tx="" data-has-tx="false">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
                                 <div><div class="network-name">Polygon Amoy</div><div class="network-desc">MFC Token (Testnet)</div></div>
                             </div>
                         </div>
@@ -365,60 +412,70 @@
                 <!-- Address Input -->
                 <div class="mt-4 mb-4">
                     <label class="block text-sm text-gray-400 mb-2">Wallet Address</label>
-                    <input type="text" id="walletAddress" class="address-input" placeholder="Enter wallet address (0x... or address)">
+                    <input type="text" id="walletAddress" class="input-field" placeholder="Enter wallet address (0x... or address)">
                 </div>
                 
-                <!-- Professional Info Note - Enhanced -->
-                <div class="info-note">
-                    <div class="info-note-title">
-                        <span>📌</span> About Transaction History
+                <!-- Professional Info Card -->
+                <div class="info-card">
+                    <div class="info-card-title">
+                        <span>📌</span> Transaction Coverage
                     </div>
-                    <div class="info-note-text">
-                        <strong>Auto-fetch shows recent transactions only (limited by free API tiers).</strong><br>
-                        For <strong class="text-purple-300">complete transaction history</strong> including all buys, sells, and trades across your entire wallet history, we recommend using the <strong class="text-purple-300">📁 Manual CSV Upload</strong> mode.<br><br>
-                        Export your full transaction history from your wallet or exchange (BscScan, Etherscan, etc.) as CSV and upload it for 100% accurate tax calculation.
+                    <div class="info-card-text">
+                        Auto-fetch provides <strong>real-time balance and recent activity</strong>. For <strong>complete historical transaction data</strong> including all trades and transfers, switch to <strong>Manual CSV Import</strong> mode.
                     </div>
                 </div>
                 
-                <button id="fetchWalletBtn" class="btn-primary"><span>🔍</span> Fetch Balance & Recent Transactions</button>
+                <button id="fetchWalletBtn" class="btn-premium"><span>🔍</span> Fetch Wallet Data</button>
             </div>
 
             <!-- Results Section -->
-            <div id="results" class="results-section hidden mt-8">
+            <div id="results" class="results-section hidden mt-8 fade-in">
                 <div class="glass-card p-6 mb-6">
                     <div class="flex justify-between items-center">
                         <div>
                             <p class="text-gray-400 text-sm">Wallet Balance</p>
-                            <p id="balanceAmount" class="balance-value">0</p>
-                            <p id="balanceCurrency" class="text-gray-400 text-sm mt-1">Not fetched yet</p>
+                            <p id="balanceAmount" class="text-3xl font-bold gradient-text">0</p>
+                            <p id="balanceCurrency" class="text-gray-400 text-sm mt-1">—</p>
                         </div>
                         <div class="text-right">
                             <p class="text-gray-400 text-sm">Network</p>
-                            <p id="networkName" class="text-white font-semibold">-</p>
+                            <p id="networkName" class="text-white font-semibold">—</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="glass-card p-6 mb-6">
-                    <h3 class="text-xl font-bold mb-4">📊 Tax Estimate</h3>
+                    <h3 class="text-xl font-bold mb-5">📊 Tax Summary</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div><p class="text-gray-400 text-sm">Total Gain</p><p id="totalGain" class="text-xl font-bold text-green-400">$0</p></div>
-                        <div><p class="text-gray-400 text-sm">Total Loss</p><p id="totalLoss" class="text-xl font-bold text-red-400">$0</p></div>
-                        <div><p class="text-gray-400 text-sm">Net Gain</p><p id="netGain" class="text-xl font-bold text-purple-400">$0</p></div>
-                        <div><p class="text-gray-400 text-sm">Estimated Tax (20%)</p><p id="estimatedTax" class="text-xl font-bold text-yellow-400">$0</p></div>
+                        <div class="bg-white/5 rounded-2xl p-3 text-center">
+                            <p class="text-gray-400 text-xs">Total Gain</p>
+                            <p id="totalGain" class="text-xl font-bold text-green-400">$0</p>
+                        </div>
+                        <div class="bg-white/5 rounded-2xl p-3 text-center">
+                            <p class="text-gray-400 text-xs">Total Loss</p>
+                            <p id="totalLoss" class="text-xl font-bold text-red-400">$0</p>
+                        </div>
+                        <div class="bg-white/5 rounded-2xl p-3 text-center">
+                            <p class="text-gray-400 text-xs">Net Gain</p>
+                            <p id="netGain" class="text-xl font-bold text-purple-400">$0</p>
+                        </div>
+                        <div class="bg-white/5 rounded-2xl p-3 text-center">
+                            <p class="text-gray-400 text-xs">Tax (20%)</p>
+                            <p id="estimatedTax" class="text-xl font-bold text-yellow-400">$0</p>
+                        </div>
                     </div>
                 </div>
 
                 <div class="glass-card p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold">📜 Recent Transactions</h3>
-                        <span id="txCount" class="text-purple-400 text-sm bg-purple-500/20 px-3 py-1 rounded-full">0</span>
+                        <h3 class="text-xl font-bold">📜 Activity Log</h3>
+                        <span id="txCount" class="text-purple-400 text-xs bg-purple-500/20 px-3 py-1 rounded-full">0</span>
                     </div>
                     <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
-                        <div class="text-center text-gray-400 py-4">Select a network and enter address, then click Fetch</div>
+                        <div class="text-center text-gray-400 py-6">Select network and enter address</div>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-white/10 text-center">
-                        <p class="text-xs text-gray-500">📌 For complete transaction history, use <strong class="text-purple-400">📁 Manual CSV Upload</strong> mode</p>
+                    <div class="mt-5 pt-4 border-t border-white/10 text-center">
+                        <p class="text-xs text-gray-500">📌 For complete transaction archive, use <strong class="text-purple-400">Manual CSV Import</strong> mode</p>
                     </div>
                 </div>
             </div>
@@ -439,7 +496,7 @@
         const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
         const selectedNetworkName = document.getElementById('selectedNetworkName');
         
-        // Pro Slider
+        // Premium Slider
         const csvSliderBtn = document.getElementById('csvSliderBtn');
         const walletSliderBtn = document.getElementById('walletSliderBtn');
         const sliderGlow = document.getElementById('sliderGlow');
@@ -466,14 +523,14 @@
         
         function clearResults() {
             document.getElementById('balanceAmount').innerHTML = '0';
-            document.getElementById('balanceCurrency').innerHTML = 'Not fetched yet';
-            document.getElementById('networkName').innerHTML = '-';
+            document.getElementById('balanceCurrency').innerHTML = '—';
+            document.getElementById('networkName').innerHTML = '—';
             document.getElementById('totalGain').innerHTML = '$0';
             document.getElementById('totalLoss').innerHTML = '$0';
             document.getElementById('netGain').innerHTML = '$0';
             document.getElementById('estimatedTax').innerHTML = '$0';
             document.getElementById('txCount').innerHTML = '0';
-            document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">Select a network and enter address, then click Fetch</div>';
+            document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">Select network and enter address</div>';
             document.getElementById('results').classList.add('hidden');
         }
         
@@ -528,7 +585,7 @@
             document.getElementById('balanceAmount').innerHTML = `${balance.toFixed(6)} ${nativeToken}`;
             document.getElementById('balanceCurrency').innerHTML = network;
             document.getElementById('networkName').innerHTML = network;
-            document.getElementById('txCount').innerHTML = `${transactions.length} transactions`;
+            document.getElementById('txCount').innerHTML = `${transactions.length} txns`;
             
             if (transactions.length > 0) {
                 document.getElementById('transactionsList').innerHTML = transactions.slice(0, 30).map(tx => {
@@ -544,18 +601,18 @@
                             <div class="flex justify-between items-center flex-wrap gap-2">
                                 <div class="flex-1">
                                     <div class="font-mono text-xs text-purple-300 break-all">${tx.hash || tx.signature || 'N/A'}</div>
-                                    <div class="text-gray-400 text-xs mt-1">${tx.timestamp ? new Date(tx.timestamp * 1000).toLocaleString() : tx.blockTime ? new Date(tx.blockTime * 1000).toLocaleString() : 'Recent'}</div>
+                                    <div class="text-gray-500 text-xs mt-1">${tx.timestamp ? new Date(tx.timestamp * 1000).toLocaleString() : tx.blockTime ? new Date(tx.blockTime * 1000).toLocaleString() : 'Recent'}</div>
                                 </div>
                                 <div class="text-right">
                                     <div class="text-white font-medium">${tx.value ? tx.value.toFixed(6) + ' ' + (nativeToken || 'TOKEN') : 'Transfer'}</div>
-                                    ${explorerUrl ? `<a href="${explorerUrl}" target="_blank" class="hash-link">View on explorer →</a>` : ''}
+                                    ${explorerUrl ? `<a href="${explorerUrl}" target="_blank" class="text-purple-400 text-xs hover:underline">View →</a>` : ''}
                                 </div>
                             </div>
                         </div>
                     `;
                 }).join('');
             } else {
-                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-4">No transactions found for this address</div>';
+                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">No recent activity found</div>';
             }
             
             document.getElementById('results').classList.remove('hidden');
@@ -579,24 +636,24 @@
             const data = await response.json();
             
             if (data.success) {
-                document.getElementById('balanceAmount').innerHTML = 'CSV Processed';
-                document.getElementById('balanceCurrency').innerHTML = 'Upload';
+                document.getElementById('balanceAmount').innerHTML = 'CSV Imported';
+                document.getElementById('balanceCurrency').innerHTML = 'Data Source';
                 document.getElementById('networkName').innerHTML = 'CSV File';
                 document.getElementById('totalGain').innerHTML = `$${data.taxResult.totalGain}`;
                 document.getElementById('totalLoss').innerHTML = `$${data.taxResult.totalLoss}`;
                 document.getElementById('netGain').innerHTML = `$${data.taxResult.netGain}`;
                 document.getElementById('estimatedTax').innerHTML = `$${data.taxResult.estimatedTax}`;
-                document.getElementById('txCount').innerHTML = `${data.transactions.length} transactions`;
+                document.getElementById('txCount').innerHTML = `${data.transactions.length} txns`;
                 document.getElementById('transactionsList').innerHTML = data.transactions.slice(0, 30).map(tx => `
                     <div class="tx-row">
                         <div class="flex justify-between items-center">
                             <div>
                                 <div class="font-medium">${tx.date}</div>
-                                <div class="text-sm ${tx.type === 'buy' ? 'text-green-400' : 'text-red-400'}">${tx.type.toUpperCase()}</div>
+                                <div class="text-sm ${tx.type === 'buy' ? 'text-emerald-400' : 'text-rose-400'}">${tx.type.toUpperCase()}</div>
                             </div>
                             <div class="text-right">
                                 <div>${tx.amount} @ $${tx.price}</div>
-                                <div class="text-sm">Gain: $${tx.gain}</div>
+                                <div class="text-sm ${tx.gain >= 0 ? 'text-emerald-400' : 'text-rose-400'}">Gain: $${tx.gain}</div>
                             </div>
                         </div>
                     </div>
@@ -611,7 +668,7 @@
             if (!address) { alert('Please enter a wallet address'); return; }
             
             if (!validateAddressFormat(address, selectedChain)) {
-                alert(`Address format does not match ${selectedChainName} network.\n\nPlease enter a valid ${selectedChainName} address.`);
+                alert(`Address format does not match ${selectedChainName} network.`);
                 return;
             }
             
@@ -638,7 +695,7 @@
                 alert('Error: ' + err.message);
             } finally {
                 document.getElementById('fetchWalletBtn').disabled = false;
-                document.getElementById('fetchWalletBtn').innerHTML = '<span>🔍</span> Fetch Balance & Recent Transactions';
+                document.getElementById('fetchWalletBtn').innerHTML = '<span>🔍</span> Fetch Wallet Data';
             }
         };
     </script>
