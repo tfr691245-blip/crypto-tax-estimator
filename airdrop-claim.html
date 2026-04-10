@@ -10,45 +10,93 @@
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
         body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(139, 92, 246, 0.2); transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
-        .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
-        .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        
+        .glass-card { 
+            background: rgba(15, 23, 42, 0.5); 
+            backdrop-filter: blur(20px); 
+            border-radius: 32px; 
+            border: 1px solid rgba(139, 92, 246, 0.15); 
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1); 
+        }
+        .glass-card:hover { 
+            border-color: rgba(139, 92, 246, 0.3); 
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn-premium { 
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); 
+            border-radius: 60px; 
+            padding: 14px 32px; 
+            font-weight: 600; 
+            color: white; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            width: 100%;
+        }
+        .btn-premium:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+        }
+        .btn-premium:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+        
+        .gradient-text { 
+            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
     </style>
 </head>
-<body class="min-h-screen text-white flex items-center justify-center">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
+<body class="min-h-screen text-white">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-2xl border-b border-white/5">
         <div class="container mx-auto px-5 sm:px-8 py-4">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl sm:text-3xl animate-pulse">💰</span>
-                    <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
-                    <span class="hidden sm:inline-flex text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full ml-2">BETA</span>
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                        <span class="text-lg">💰</span>
+                    </div>
+                    <span class="text-white font-bold text-xl tracking-tight">CryptoTax</span>
+                    <span class="hidden sm:inline-flex text-xs bg-white/5 text-purple-300 px-2 py-1 rounded-full ml-2 border border-white/10">v2.0</span>
                 </div>
                 <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="index.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Home</a>
-                    <a href="dashboard.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Estimator</a>
-                    <a href="airdrop-claim.html" class="text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg bg-purple-600/20">Claim</a>
+                    <a href="index.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Home</a>
+                    <a href="dashboard.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Estimator</a>
+                    <a href="airdrop-claim.html" class="text-white text-sm transition px-3 py-1.5 rounded-xl bg-purple-600/20">Claim</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-5 pt-28">
-        <div class="max-w-md mx-auto glass-card p-8 text-center">
-            <div class="w-20 h-20 bg-purple-500/20 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-4">🎁</div>
-            <h1 class="text-3xl font-bold mb-2">Claim Free Tokens</h1>
-            <p class="text-gray-400 mb-6">Get 10 MFC tokens to test the tax estimator</p>
-            
-            <div id="walletStatus">
-                <button id="connectBtn" class="btn-primary w-full">🔌 Connect Wallet</button>
-            </div>
-            
-            <div id="claimArea" class="hidden mt-6">
-                <button id="claimBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl w-full transition">🎁 Claim 10 MFC</button>
-                <p id="claimStatus" class="text-sm text-gray-400 mt-3"></p>
+    <div class="container mx-auto px-5 pt-28 pb-16">
+        <div class="max-w-md mx-auto fade-in">
+            <div class="glass-card p-8 text-center">
+                <div class="w-20 h-20 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-5">🎁</div>
+                <h1 class="text-3xl font-bold mb-2">Claim Airdrop</h1>
+                <p class="text-gray-400 mb-6">Get 10 MFC tokens to test the platform</p>
+                
+                <div id="walletStatus">
+                    <button id="connectBtn" class="btn-premium">Connect Wallet</button>
+                </div>
+                
+                <div id="claimArea" class="hidden mt-6">
+                    <button id="claimBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-full w-full transition">Claim 10 MFC</button>
+                    <p id="claimStatus" class="text-sm text-gray-400 mt-3"></p>
+                </div>
             </div>
         </div>
     </div>
@@ -61,15 +109,15 @@
             const provider = new ethers.BrowserProvider(window.ethereum);
             signer = await provider.getSigner();
             walletAddress = await signer.getAddress();
-            document.getElementById('connectBtn').innerHTML = `✅ Connected: ${walletAddress.slice(0,6)}...`;
+            document.getElementById('connectBtn').innerHTML = `✅ ${walletAddress.slice(0,6)}...`;
             document.getElementById('connectBtn').disabled = true;
             document.getElementById('claimArea').classList.remove('hidden');
         };
         
         document.getElementById('claimBtn').onclick = async () => {
             document.getElementById('claimBtn').disabled = true;
-            document.getElementById('claimStatus').innerHTML = 'Claiming...';
-            alert('On testnet, tokens are claimed via the token owner. Contact admin or use faucet.');
+            document.getElementById('claimStatus').innerHTML = 'Processing...';
+            alert('MFC tokens are distributed by the token owner. Please contact support.');
             document.getElementById('claimStatus').innerHTML = 'Manual claim: Contact support';
             document.getElementById('claimBtn').disabled = false;
         };
