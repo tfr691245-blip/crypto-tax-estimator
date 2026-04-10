@@ -23,7 +23,7 @@
         /* ========== FIXED NETWORK SELECTOR - HIGHEST Z-INDEX ========== */
         .network-selector-wrapper { 
             position: relative; 
-            z-index: 1000; 
+            z-index: 10000;  /* HIGHEST - dropdown on top of everything */
             margin-bottom: 24px; 
         }
         .network-trigger { 
@@ -56,7 +56,9 @@
             border-radius: 24px; 
             padding: 8px; 
             min-width: 280px; 
-            z-index: 10000; 
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 10001;  /* EVEN HIGHER when open */
             box-shadow: 0 25px 40px -12px rgba(0,0,0,0.8); 
             opacity: 0; 
             visibility: hidden; 
@@ -120,7 +122,7 @@
             font-family: 'Inter', system-ui; 
         }
         
-        /* Results Section - Normal z-index */
+        /* Results Section - Normal z-index (lower than dropdown) */
         .results-section { 
             position: relative; 
             z-index: 1; 
@@ -147,12 +149,7 @@
             text-decoration: underline; 
         }
         
-        /* Ensure proper stacking context */
-        .relative { 
-            position: relative; 
-        }
-        
-        /* Clear fix for results */
+        /* Balance value */
         .balance-value {
             font-size: 2rem;
             font-weight: 800;
@@ -231,7 +228,7 @@
                     <p class="text-gray-400 text-sm mt-1">Fetch real-time balance and transaction history</p>
                 </div>
                 
-                <!-- Network Selector - HIGHEST Z-INDEX -->
+                <!-- Network Selector - HIGHEST Z-INDEX (dropdown on top of balance) -->
                 <div class="network-selector-wrapper">
                     <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
                     <div class="relative">
@@ -282,7 +279,7 @@
                 <button id="fetchWalletBtn" class="btn-primary"><span>🔍</span> Fetch Balance & Transactions</button>
             </div>
 
-            <!-- Results Section - Normal z-index, hidden until fetch -->
+            <!-- Results Section - Lower z-index (behind dropdown) -->
             <div id="results" class="results-section hidden mt-8">
                 <div class="glass-card p-6 mb-6">
                     <div class="flex justify-between items-center">
@@ -356,15 +353,26 @@
             return true;
         }
         
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!trigger.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+                trigger.classList.remove('active');
+            }
+        });
+        
+        // Close dropdown on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                dropdown.classList.remove('show');
+                trigger.classList.remove('active');
+            }
+        });
+        
         trigger.addEventListener('click', (e) => {
             e.stopPropagation();
             dropdown.classList.toggle('show');
             trigger.classList.toggle('active');
-        });
-        
-        document.addEventListener('click', () => {
-            dropdown.classList.remove('show');
-            trigger.classList.remove('active');
         });
         
         dropdown.querySelectorAll('.network-option').forEach(option => {
@@ -382,6 +390,7 @@
                 // Clear results when network changes
                 clearResults();
                 
+                // Close dropdown after selection
                 dropdown.classList.remove('show');
                 trigger.classList.remove('active');
             });
