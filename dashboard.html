@@ -10,26 +10,70 @@
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
         body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(139, 92, 246, 0.2); transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
-        .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
-        .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        
+        .glass-card { 
+            background: rgba(15, 23, 42, 0.5); 
+            backdrop-filter: blur(20px); 
+            border-radius: 32px; 
+            border: 1px solid rgba(139, 92, 246, 0.15); 
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1); 
+        }
+        .glass-card:hover { 
+            border-color: rgba(139, 92, 246, 0.3); 
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn-premium { 
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); 
+            border-radius: 60px; 
+            padding: 14px 32px; 
+            font-weight: 600; 
+            color: white; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+        }
+        .btn-premium:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+        }
+        
+        .gradient-text { 
+            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
     </style>
 </head>
 <body class="min-h-screen text-white">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-2xl border-b border-white/5">
         <div class="container mx-auto px-5 sm:px-8 py-4">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl sm:text-3xl animate-pulse">💰</span>
-                    <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
-                    <span class="hidden sm:inline-flex text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full ml-2">BETA</span>
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                        <span class="text-lg">💰</span>
+                    </div>
+                    <span class="text-white font-bold text-xl tracking-tight">CryptoTax</span>
+                    <span class="hidden sm:inline-flex text-xs bg-white/5 text-purple-300 px-2 py-1 rounded-full ml-2 border border-white/10">v2.0</span>
                 </div>
                 <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="index.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Home</a>
-                    <a href="dashboard.html" class="text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg bg-purple-600/20">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Estimator</a>
+                    <a href="index.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Home</a>
+                    <a href="dashboard.html" class="text-white text-sm transition px-3 py-1.5 rounded-xl bg-purple-600/20">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Estimator</a>
                     <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
                 </div>
             </div>
@@ -37,29 +81,33 @@
     </nav>
 
     <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-32 pb-16">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-10">
-                <h1 class="text-5xl font-extrabold mb-3 tracking-tight">Dashboard</h1>
-                <p class="text-gray-400 text-lg">View your MFC token balance</p>
+        <div class="max-w-4xl mx-auto text-center fade-in">
+            <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-purple-500/20">
+                <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                <span class="text-purple-300 text-xs font-medium">MFC Token Balance</span>
             </div>
+            <h1 class="text-5xl font-bold mb-3 tracking-tight">Dashboard</h1>
+            <p class="text-gray-400 text-lg mb-8">View your MFC token balance on Polygon Amoy</p>
+        </div>
 
+        <div class="max-w-md mx-auto fade-in">
             <div class="glass-card p-8">
                 <div class="flex flex-col items-center text-center">
-                    <div class="w-20 h-20 bg-purple-500/20 rounded-2xl flex items-center justify-center text-4xl mb-4">💜</div>
-                    <h2 class="text-2xl font-bold mb-2">MFC Token Balance</h2>
-                    <p class="text-gray-400 text-sm mb-6">Polygon Amoy Testnet</p>
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-4xl mb-5">💜</div>
+                    <h2 class="text-2xl font-bold mb-2">MFC Token</h2>
+                    <p class="text-gray-400 text-sm mb-6">Polygon Amoy Network</p>
                     
                     <div id="walletStatus" class="w-full">
-                        <button id="connectBtn" class="btn-primary">🔌 Connect MetaMask</button>
+                        <button id="connectBtn" class="btn-premium w-full">Connect MetaMask</button>
                     </div>
                     
                     <div id="walletInfo" class="hidden w-full mt-6">
-                        <div class="bg-purple-500/10 rounded-xl p-6">
-                            <p class="text-gray-300 text-sm">Connected Wallet</p>
-                            <p id="walletAddress" class="text-white font-mono text-sm break-all"></p>
+                        <div class="bg-white/5 rounded-2xl p-6">
+                            <p class="text-gray-400 text-sm">Connected Wallet</p>
+                            <p id="walletAddress" class="text-white font-mono text-sm break-all mt-1"></p>
                             <div class="mt-4 pt-4 border-t border-white/10">
-                                <p class="text-gray-300 text-sm">MFC Balance</p>
-                                <p id="tokenBalance" class="text-4xl font-bold gradient-text">0 MFC</p>
+                                <p class="text-gray-400 text-sm">MFC Balance</p>
+                                <p id="tokenBalance" class="text-4xl font-bold gradient-text mt-1">0 MFC</p>
                             </div>
                         </div>
                     </div>
@@ -105,7 +153,7 @@
                 document.getElementById('walletStatus').classList.add('hidden');
                 document.getElementById('walletInfo').classList.remove('hidden');
             } catch (err) {
-                alert('Failed to connect: ' + err.message);
+                alert('Connection failed: ' + err.message);
             }
         };
     </script>
