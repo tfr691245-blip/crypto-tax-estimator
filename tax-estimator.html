@@ -14,16 +14,64 @@
         .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
         .btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
-        .mode-tab { transition: all 0.3s ease; cursor: pointer; border-radius: 40px; padding: 10px 24px; font-weight: 500; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .mode-tab.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: transparent; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
         .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
         .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         
-        /* ========== FIXED NETWORK SELECTOR - HIGHEST Z-INDEX ========== */
+        /* ========== PRO SLIDER TOGGLE ========== */
+        .mode-slider-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+        .mode-slider {
+            position: relative;
+            display: inline-flex;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 60px;
+            padding: 4px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+        .mode-slider-btn {
+            position: relative;
+            padding: 12px 36px;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+            background: transparent;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+        }
+        .mode-slider-btn.active {
+            color: white;
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+        .mode-slider-btn:hover:not(.active) {
+            color: #c4b5fd;
+        }
+        .mode-slider-glow {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            width: calc(50% - 4px);
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 60px;
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 0 20px #8b5cf6, 0 0 5px #6366f1;
+        }
+        .mode-slider-glow.slide-right {
+            transform: translateX(100%);
+        }
+        
+        /* ========== NETWORK SELECTOR - HIGHEST Z-INDEX ========== */
         .network-selector-wrapper { 
             position: relative; 
-            z-index: 10000;  /* HIGHEST - dropdown on top of everything */
+            z-index: 10000;
             margin-bottom: 24px; 
         }
         .network-trigger { 
@@ -58,7 +106,7 @@
             min-width: 280px; 
             max-height: 280px;
             overflow-y: auto;
-            z-index: 10001;  /* EVEN HIGHER when open */
+            z-index: 10001;
             box-shadow: 0 25px 40px -12px rgba(0,0,0,0.8); 
             opacity: 0; 
             visibility: hidden; 
@@ -122,7 +170,7 @@
             font-family: 'Inter', system-ui; 
         }
         
-        /* Results Section - Normal z-index (lower than dropdown) */
+        /* Results Section - Lower z-index */
         .results-section { 
             position: relative; 
             z-index: 1; 
@@ -149,7 +197,6 @@
             text-decoration: underline; 
         }
         
-        /* Balance value */
         .balance-value {
             font-size: 2rem;
             font-weight: 800;
@@ -158,6 +205,11 @@
             background-clip: text;
             color: transparent;
         }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen text-white">
@@ -199,10 +251,13 @@
                 <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm">Mainnet Data</div></div>
             </div>
 
-            <!-- Mode Tabs -->
-            <div class="flex justify-center gap-3 mb-8">
-                <div id="csvModeTab" class="mode-tab active">📁 Manual CSV</div>
-                <div id="walletModeTab" class="mode-tab">🤖 Auto Wallet</div>
+            <!-- Pro Slider Toggle -->
+            <div class="mode-slider-container">
+                <div class="mode-slider">
+                    <div id="sliderGlow" class="mode-slider-glow"></div>
+                    <div id="csvSliderBtn" class="mode-slider-btn active">📁 Manual CSV</div>
+                    <div id="walletSliderBtn" class="mode-slider-btn">🤖 Auto Wallet</div>
+                </div>
             </div>
 
             <!-- CSV Mode -->
@@ -228,7 +283,7 @@
                     <p class="text-gray-400 text-sm mt-1">Fetch real-time balance and transaction history</p>
                 </div>
                 
-                <!-- Network Selector - HIGHEST Z-INDEX (dropdown on top of balance) -->
+                <!-- Network Selector -->
                 <div class="network-selector-wrapper">
                     <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
                     <div class="relative">
@@ -279,7 +334,7 @@
                 <button id="fetchWalletBtn" class="btn-primary"><span>🔍</span> Fetch Balance & Transactions</button>
             </div>
 
-            <!-- Results Section - Lower z-index (behind dropdown) -->
+            <!-- Results Section -->
             <div id="results" class="results-section hidden mt-8">
                 <div class="glass-card p-6 mb-6">
                     <div class="flex justify-between items-center">
@@ -332,6 +387,31 @@
         const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
         const selectedNetworkName = document.getElementById('selectedNetworkName');
         
+        // Pro Slider
+        const csvSliderBtn = document.getElementById('csvSliderBtn');
+        const walletSliderBtn = document.getElementById('walletSliderBtn');
+        const sliderGlow = document.getElementById('sliderGlow');
+        const csvMode = document.getElementById('csvMode');
+        const walletMode = document.getElementById('walletMode');
+        
+        csvSliderBtn.onclick = () => {
+            csvSliderBtn.classList.add('active');
+            walletSliderBtn.classList.remove('active');
+            sliderGlow.classList.remove('slide-right');
+            csvMode.classList.remove('hidden');
+            walletMode.classList.add('hidden');
+            clearResults();
+        };
+        
+        walletSliderBtn.onclick = () => {
+            walletSliderBtn.classList.add('active');
+            csvSliderBtn.classList.remove('active');
+            sliderGlow.classList.add('slide-right');
+            csvMode.classList.add('hidden');
+            walletMode.classList.remove('hidden');
+            clearResults();
+        };
+        
         function clearResults() {
             document.getElementById('balanceAmount').innerHTML = '0';
             document.getElementById('balanceCurrency').innerHTML = 'Not fetched yet';
@@ -361,7 +441,6 @@
             }
         });
         
-        // Close dropdown on Escape key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 dropdown.classList.remove('show');
@@ -387,31 +466,12 @@
                 selectedNetworkIcon.src = option.dataset.icon;
                 selectedNetworkName.textContent = selectedChainName;
                 
-                // Clear results when network changes
                 clearResults();
                 
-                // Close dropdown after selection
                 dropdown.classList.remove('show');
                 trigger.classList.remove('active');
             });
         });
-        
-        const csvMode = document.getElementById('csvMode');
-        const walletMode = document.getElementById('walletMode');
-        document.getElementById('csvModeTab').onclick = () => {
-            document.getElementById('csvModeTab').classList.add('active');
-            document.getElementById('walletModeTab').classList.remove('active');
-            csvMode.classList.remove('hidden');
-            walletMode.classList.add('hidden');
-            clearResults();
-        };
-        document.getElementById('walletModeTab').onclick = () => {
-            document.getElementById('walletModeTab').classList.add('active');
-            document.getElementById('csvModeTab').classList.remove('active');
-            csvMode.classList.add('hidden');
-            walletMode.classList.remove('hidden');
-            clearResults();
-        };
         
         function displayResults(balance, nativeToken, network, transactions) {
             document.getElementById('balanceAmount').innerHTML = `${balance.toFixed(6)} ${nativeToken}`;
