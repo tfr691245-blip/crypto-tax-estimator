@@ -3,36 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CryptoTax | Professional Crypto Tax Estimator</title>
+    <title>CryptoTax | Professional Crypto Tax Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
         body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(139, 92, 246, 0.2); transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
-        .btn-primary { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 40px; padding: 12px 28px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
-        .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .stats-card { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; }
-        .stats-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .feature-card { transition: all 0.3s ease; }
-        .feature-card:hover { transform: translateY(-5px); }
+        
+        .glass-card { 
+            background: rgba(15, 23, 42, 0.5); 
+            backdrop-filter: blur(20px); 
+            border-radius: 32px; 
+            border: 1px solid rgba(139, 92, 246, 0.15); 
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1); 
+        }
+        .glass-card:hover { 
+            border-color: rgba(139, 92, 246, 0.3); 
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-premium { 
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); 
+            border-radius: 60px; 
+            padding: 14px 32px; 
+            font-weight: 600; 
+            color: white; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            letter-spacing: 0.3px;
+        }
+        .btn-premium:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+        }
+        
+        .gradient-text { 
+            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+        }
+        
+        .stats-card { 
+            background: rgba(0,0,0,0.25); 
+            backdrop-filter: blur(10px);
+            border-radius: 24px; 
+            padding: 24px 20px; 
+            text-align: center; 
+            border: 1px solid rgba(139,92,246,0.1);
+            transition: all 0.3s ease;
+        }
+        .stats-card:hover {
+            border-color: rgba(139,92,246,0.3);
+            background: rgba(139,92,246,0.05);
+        }
+        .stats-number { 
+            font-size: 2.5rem; 
+            font-weight: 800; 
+            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
     </style>
 </head>
 <body class="min-h-screen text-white">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
+    <!-- Premium Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-2xl border-b border-white/5">
         <div class="container mx-auto px-5 sm:px-8 py-4">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl sm:text-3xl animate-pulse">💰</span>
-                    <span class="text-white font-bold text-xl sm:text-2xl tracking-tight">CryptoTax</span>
-                    <span class="hidden sm:inline-flex text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full ml-2">BETA</span>
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                        <span class="text-lg">💰</span>
+                    </div>
+                    <span class="text-white font-bold text-xl tracking-tight">CryptoTax</span>
+                    <span class="hidden sm:inline-flex text-xs bg-white/5 text-purple-300 px-2 py-1 rounded-full ml-2 border border-white/10">v2.0</span>
                 </div>
                 <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="index.html" class="text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg bg-purple-600/20">Home</a>
-                    <a href="dashboard.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-gray-300 hover:text-white text-sm sm:text-base transition px-3 py-1.5 rounded-lg hover:bg-white/5">Estimator</a>
+                    <a href="index.html" class="text-white text-sm transition px-3 py-1.5 rounded-xl bg-purple-600/20">Home</a>
+                    <a href="dashboard.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Dashboard</a>
+                    <a href="tax-estimator.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Estimator</a>
                     <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
                 </div>
             </div>
@@ -40,42 +112,47 @@
     </nav>
 
     <div class="container mx-auto px-5 sm:px-8 pt-32 sm:pt-36 pb-16">
-        <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-12">
-                <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-5 border border-purple-500/20">
-                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span class="text-purple-300 text-xs font-medium">Professional Crypto Tax Solution</span>
-                </div>
-                <h1 class="text-6xl sm:text-8xl font-extrabold mb-4 tracking-tight">Estimate Your<br><span class="gradient-text">Crypto Taxes</span> in Minutes</h1>
-                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Upload your transaction history or connect any wallet to calculate capital gains taxes instantly. Support for 6+ blockchains.</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                    <a href="tax-estimator.html" class="btn-primary px-8 py-3 text-lg">Get Started →</a>
-                    <a href="dashboard.html" class="bg-white/10 hover:bg-white/20 rounded-full px-8 py-3 text-lg font-medium transition">Dashboard</a>
-                </div>
+        <div class="max-w-5xl mx-auto text-center fade-in">
+            <!-- Hero Badge -->
+            <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-purple-500/20">
+                <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                <span class="text-purple-300 text-xs font-medium">Multi-Chain Support</span>
             </div>
-
+            
+            <!-- Hero Title -->
+            <h1 class="text-6xl sm:text-7xl font-bold mb-5 tracking-tight">Crypto Tax<br><span class="gradient-text">Made Simple</span></h1>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8">Calculate capital gains across 6+ blockchains. Import CSV or connect wallets for instant insights.</p>
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                <a href="tax-estimator.html" class="btn-premium">Get Started →</a>
+                <a href="dashboard.html" class="bg-white/5 hover:bg-white/10 rounded-full px-8 py-3.5 text-sm font-medium transition border border-white/10">View Dashboard</a>
+            </div>
+            
+            <!-- Stats Grid -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16">
-                <div class="stats-card"><div class="stats-number">6+</div><div class="text-gray-400 text-sm">Blockchains</div></div>
-                <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm">Calculation</div></div>
-                <div class="stats-card"><div class="stats-number">Free</div><div class="text-gray-400 text-sm">No Hidden Fees</div></div>
-                <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm">Mainnet Data</div></div>
+                <div class="stats-card"><div class="stats-number">6+</div><div class="text-gray-400 text-sm mt-1">Networks</div></div>
+                <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm mt-1">Methodology</div></div>
+                <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm mt-1">On-Chain</div></div>
+                <div class="stats-card"><div class="stats-number">Instant</div><div class="text-gray-400 text-sm mt-1">Results</div></div>
             </div>
-
-            <div class="grid md:grid-cols-3 gap-6">
+            
+            <!-- Features Grid -->
+            <div class="grid sm:grid-cols-3 gap-6">
                 <div class="glass-card p-6 feature-card">
-                    <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-2xl mb-4">📂</div>
-                    <h3 class="text-xl font-bold mb-2">CSV Upload</h3>
-                    <p class="text-gray-400 text-sm">Upload your transaction history from any exchange or wallet.</p>
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📂</div>
+                    <h3 class="text-lg font-bold mb-2">CSV Import</h3>
+                    <p class="text-gray-400 text-sm">Upload complete transaction history from any exchange or wallet</p>
                 </div>
                 <div class="glass-card p-6 feature-card">
-                    <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-2xl mb-4">🔗</div>
-                    <h3 class="text-xl font-bold mb-2">Wallet Connect</h3>
-                    <p class="text-gray-400 text-sm">Connect any wallet address to fetch real-time balance.</p>
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">🔗</div>
+                    <h3 class="text-lg font-bold mb-2">Wallet Connect</h3>
+                    <p class="text-gray-400 text-sm">Fetch real-time balance and recent activity across networks</p>
                 </div>
                 <div class="glass-card p-6 feature-card">
-                    <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-2xl mb-4">📊</div>
-                    <h3 class="text-xl font-bold mb-2">FIFO Calculation</h3>
-                    <p class="text-gray-400 text-sm">Professional capital gains calculation using FIFO method.</p>
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📊</div>
+                    <h3 class="text-lg font-bold mb-2">FIFO Method</h3>
+                    <p class="text-gray-400 text-sm">Professional capital gains calculation using industry standard</p>
                 </div>
             </div>
         </div>
