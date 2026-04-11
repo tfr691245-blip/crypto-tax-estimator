@@ -278,9 +278,7 @@
         <div class="container mx-auto px-5 sm:px-8 py-4">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                        <span class="text-lg">💰</span>
-                    </div>
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center"><span class="text-lg">💰</span></div>
                     <span class="text-white font-bold text-xl tracking-tight">CryptoTax</span>
                     <span class="hidden sm:inline-flex text-xs bg-white/5 text-purple-300 px-2 py-1 rounded-full ml-2 border border-white/10">v2.0</span>
                 </div>
@@ -320,6 +318,7 @@
                 </div>
             </div>
 
+            <!-- CSV Mode -->
             <div id="csvMode" class="glass-card p-6 sm:p-8 fade-in">
                 <div class="text-center mb-6">
                     <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">📂</div>
@@ -340,11 +339,12 @@
                 <button id="uploadBtn" class="btn-premium"><span>📊</span> Calculate Tax</button>
             </div>
 
+            <!-- Wallet Mode (Auto) -->
             <div id="walletMode" class="glass-card p-6 sm:p-8 hidden fade-in">
                 <div class="text-center mb-6">
                     <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">🔗</div>
                     <h2 class="text-2xl font-bold">Wallet Connect</h2>
-                    <p class="text-gray-400 text-sm mt-1">Fetch balance and calculate taxes automatically</p>
+                    <p class="text-gray-400 text-sm mt-1">Fetch balance and recent transactions</p>
                 </div>
                 
                 <div class="network-wrapper">
@@ -390,13 +390,14 @@
                 </div>
                 
                 <div class="info-card">
-                    <div class="info-card-title"><span>💰</span> Automatic Tax Calculation</div>
-                    <div class="info-card-text">Incoming transfers = <strong>Buy</strong> | Outgoing transfers = <strong>Sell</strong><br>Prices fetched from real-time market data using FIFO method.</div>
+                    <div class="info-card-title"><span>🔍</span> Quick Preview Only</div>
+                    <div class="info-card-text">Shows real-time <strong>balance</strong> and <strong>recent transactions</strong>. For <strong>accurate tax filing</strong> with complete history, use <strong>Manual CSV Upload</strong>.</div>
                 </div>
                 
-                <button id="fetchWalletBtn" class="btn-premium"><span>🔍</span> Fetch & Calculate Taxes</button>
+                <button id="fetchWalletBtn" class="btn-premium"><span>🔍</span> Fetch Balance & Recent Transactions</button>
             </div>
 
+            <!-- Results Section -->
             <div id="results" class="results-section hidden mt-8 fade-in">
                 <div class="glass-card p-6 mb-6">
                     <div class="flex justify-between items-center">
@@ -428,7 +429,7 @@
                         <span id="txCount" class="text-purple-400 text-xs bg-purple-500/20 px-3 py-1 rounded-full">0</span>
                     </div>
                     <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
-                        <div class="text-center text-gray-400 py-6">Select network and enter address</div>
+                        <div class="text-center text-gray-400 py-6">Upload CSV or fetch wallet data</div>
                     </div>
                 </div>
             </div>
@@ -439,23 +440,15 @@
         <div class="max-w-6xl mx-auto">
             <div class="border-t border-white/10 pt-8">
                 <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 mb-4">
-                    <div class="flex items-center justify-center gap-2 mb-3">
-                        <span class="text-amber-400 text-lg">⚖️</span>
-                        <p class="text-amber-300 text-sm font-semibold">Tax Disclaimer</p>
-                    </div>
-                    <p class="text-gray-400 text-xs leading-relaxed text-center">
-                        CryptoTax provides <strong class="text-purple-300">capital gains calculations</strong> using the FIFO (First-In, First-Out) method, 
-                        a globally recognized accounting standard accepted by tax authorities worldwide.
-                    </p>
+                    <div class="flex items-center justify-center gap-2 mb-3"><span class="text-amber-400 text-lg">⚖️</span><p class="text-amber-300 text-sm font-semibold">Tax Disclaimer</p></div>
+                    <p class="text-gray-400 text-xs leading-relaxed text-center">CryptoTax provides <strong class="text-purple-300">capital gains calculations</strong> using the FIFO (First-In, First-Out) method, a globally recognized accounting standard accepted by tax authorities worldwide.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 text-left text-xs text-gray-500 max-w-md mx-auto">
                         <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Calculates net gain/loss from your transactions</span></div>
                         <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Uses IRS-approved FIFO methodology</span></div>
                         <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT calculate country-specific tax rates</span></div>
                         <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT file taxes or provide legal advice</span></div>
                     </div>
-                    <p class="text-gray-500 text-xs mt-3 pt-3 border-t border-white/5 text-center">
-                        Tax laws vary by jurisdiction. <strong class="text-amber-300">Consult a qualified tax professional</strong> in your country for accurate filing requirements.
-                    </p>
+                    <p class="text-gray-500 text-xs mt-3 pt-3 border-t border-white/5 text-center">Tax laws vary by jurisdiction. <strong class="text-amber-300">Consult a qualified tax professional</strong> in your country for accurate filing requirements.</p>
                 </div>
                 <p class="text-gray-600 text-xs text-center">© 2026 CryptoTax | FIFO Method | Real On-Chain Data</p>
             </div>
@@ -476,27 +469,7 @@
         const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
         const selectedNetworkName = document.getElementById('selectedNetworkName');
         
-        // SAFE timestamp formatter - NEVER throws error
-        function safeFormatDate(timestamp) {
-            if (!timestamp) return 'Recent';
-            
-            let date;
-            if (typeof timestamp === 'number') {
-                date = new Date(timestamp * 1000);
-            } else if (typeof timestamp === 'string') {
-                date = new Date(timestamp);
-                if (isNaN(date.getTime())) {
-                    const num = parseInt(timestamp);
-                    if (!isNaN(num)) date = new Date(num * 1000);
-                }
-            } else {
-                return 'Recent';
-            }
-            
-            if (isNaN(date.getTime())) return 'Recent';
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-        }
-        
+        // FIFO Tax Calculation Function
         function calculateFIFOTax(transactions) {
             let totalGain = 0, totalLoss = 0, holdings = [], processedTxs = [];
             const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -529,56 +502,35 @@
             };
         }
         
-        function convertToTaxFormat(transactions, nativeToken) {
-            return transactions.map(tx => ({
-                date: new Date().toISOString().split('T')[0],
-                type: 'buy',
-                amount: tx.value || 0,
-                price: 50000,
-                hash: tx.hash || tx.signature
-            }));
-        }
-        
-        function displayResults(balance, nativeToken, network, rawTransactions) {
+        function displayResults(balance, nativeToken, network, transactions, taxResult) {
             document.getElementById('balanceAmount').innerHTML = `${balance.toFixed(6)} ${nativeToken}`;
             document.getElementById('balanceCurrency').innerHTML = network;
             document.getElementById('networkName').innerHTML = network;
             
-            const taxTransactions = convertToTaxFormat(rawTransactions, nativeToken);
-            const taxResult = calculateFIFOTax(taxTransactions);
-            
-            document.getElementById('totalGain').innerHTML = `$${taxResult.totalGain}`;
-            document.getElementById('totalLoss').innerHTML = `$${taxResult.totalLoss}`;
-            document.getElementById('netGain').innerHTML = `$${taxResult.netGain}`;
-            document.getElementById('estimatedTax').innerHTML = `$${taxResult.estimatedTax}`;
-            document.getElementById('txCount').innerHTML = `${taxResult.transactionsProcessed} txns`;
-            
-            if (rawTransactions.length > 0) {
-                document.getElementById('transactionsList').innerHTML = rawTransactions.slice(0, 30).map((tx, idx) => {
-                    const taxTx = taxResult.transactions[idx] || {};
-                    let explorerUrl = '';
-                    if (selectedChain === 'bnb') explorerUrl = `https://bscscan.com/tx/${tx.hash}`;
-                    else if (selectedChain === 'eth') explorerUrl = `https://etherscan.io/tx/${tx.hash}`;
-                    else if (selectedChain === 'polygon') explorerUrl = `https://polygonscan.com/tx/${tx.hash}`;
-                    else if (selectedChain === 'sol') explorerUrl = `https://solscan.io/tx/${tx.signature}`;
-                    else if (selectedChain === 'btc') explorerUrl = `https://blockchair.com/bitcoin/transaction/${tx.hash}`;
-                    
-                    return `
-                        <div class="tx-row">
-                            <div class="flex justify-between items-center flex-wrap gap-2">
-                                <div class="flex-1">
-                                    <div class="font-mono text-xs text-purple-300 break-all">${tx.hash || tx.signature || 'N/A'}</div>
-                                    <div class="text-gray-500 text-xs mt-1">${safeFormatDate(tx.timestamp || tx.blockTime)}</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-white font-medium">${tx.value ? tx.value.toFixed(6) : '0'} ${nativeToken}</div>
-                                    <div class="text-xs ${taxTx.gain >= 0 ? 'text-green-400' : 'text-red-400'}">Gain: $${taxTx.gain || 0}</div>
-                                    ${explorerUrl ? `<a href="${explorerUrl}" target="_blank" class="text-purple-400 text-xs hover:underline">View →</a>` : ''}
-                                </div>
-                            </div>
+            if (taxResult) {
+                document.getElementById('totalGain').innerHTML = `$${taxResult.totalGain}`;
+                document.getElementById('totalLoss').innerHTML = `$${taxResult.totalLoss}`;
+                document.getElementById('netGain').innerHTML = `$${taxResult.netGain}`;
+                document.getElementById('estimatedTax').innerHTML = `$${taxResult.estimatedTax}`;
+                document.getElementById('txCount').innerHTML = `${taxResult.transactionsProcessed} txns`;
+                document.getElementById('transactionsList').innerHTML = taxResult.transactions.slice(0, 50).map(tx => `
+                    <div class="tx-row">
+                        <div class="flex justify-between items-center">
+                            <div><div class="font-medium">${tx.date}</div><div class="text-sm ${tx.type === 'buy' ? 'text-emerald-400' : 'text-rose-400'}">${tx.type.toUpperCase()}</div></div>
+                            <div class="text-right"><div>${tx.amount} @ $${tx.price}</div><div class="text-sm ${tx.gain >= 0 ? 'text-emerald-400' : 'text-rose-400'}">Gain: $${tx.gain}</div></div>
                         </div>
-                    `;
-                }).join('');
+                    </div>
+                `).join('');
+            } else if (transactions && transactions.length > 0) {
+                document.getElementById('txCount').innerHTML = `${transactions.length} txns`;
+                document.getElementById('transactionsList').innerHTML = transactions.slice(0, 50).map(tx => `
+                    <div class="tx-row">
+                        <div class="flex justify-between items-center flex-wrap gap-2">
+                            <div class="flex-1"><div class="font-mono text-xs text-purple-300 break-all">${tx.hash || tx.signature || 'N/A'}</div><div class="text-gray-500 text-xs mt-1">${new Date(tx.timestamp * 1000).toLocaleString()}</div></div>
+                            <div class="text-right"><div class="text-white font-medium">${tx.value ? tx.value.toFixed(6) : '0'} ${nativeToken}</div></div>
+                        </div>
+                    </div>
+                `).join('');
             } else {
                 document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">No transactions found</div>';
             }
@@ -594,7 +546,7 @@
             document.getElementById('netGain').innerHTML = '$0';
             document.getElementById('estimatedTax').innerHTML = '$0';
             document.getElementById('txCount').innerHTML = '0';
-            document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">Select network and enter address</div>';
+            document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">Upload CSV or fetch wallet data</div>';
             document.getElementById('results').classList.add('hidden');
         }
         
@@ -653,6 +605,7 @@
             });
         });
         
+        // CSV Upload
         document.getElementById('uploadBtn').onclick = async () => {
             const file = document.getElementById('csvFile').files[0];
             if (!file) { alert('Please select a CSV file'); return; }
@@ -663,20 +616,10 @@
                 return { date, type: type?.toLowerCase(), amount: parseFloat(amount), price: parseFloat(price) };
             }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price));
             const taxResult = calculateFIFOTax(transactions);
-            document.getElementById('balanceAmount').innerHTML = 'CSV Imported';
-            document.getElementById('balanceCurrency').innerHTML = 'Data Source';
-            document.getElementById('networkName').innerHTML = 'CSV File';
-            document.getElementById('totalGain').innerHTML = `$${taxResult.totalGain}`;
-            document.getElementById('totalLoss').innerHTML = `$${taxResult.totalLoss}`;
-            document.getElementById('netGain').innerHTML = `$${taxResult.netGain}`;
-            document.getElementById('estimatedTax').innerHTML = `$${taxResult.estimatedTax}`;
-            document.getElementById('txCount').innerHTML = `${taxResult.transactionsProcessed} txns`;
-            document.getElementById('transactionsList').innerHTML = taxResult.transactions.slice(0, 30).map(tx => `
-                <div class="tx-row"><div class="flex justify-between items-center"><div><div class="font-medium">${tx.date}</div><div class="text-sm ${tx.type === 'buy' ? 'text-emerald-400' : 'text-rose-400'}">${tx.type.toUpperCase()}</div></div><div class="text-right"><div>${tx.amount} @ $${tx.price}</div><div class="text-sm ${tx.gain >= 0 ? 'text-emerald-400' : 'text-rose-400'}">Gain: $${tx.gain}</div></div></div></div>
-            `).join('');
-            document.getElementById('results').classList.remove('hidden');
+            displayResults(0, 'CSV', 'CSV File', taxResult.transactions, taxResult);
         };
         
+        // Wallet Fetch (Auto Mode)
         document.getElementById('fetchWalletBtn').onclick = async () => {
             const address = document.getElementById('walletAddress').value.trim();
             if (!address) { alert('Please enter a wallet address'); return; }
@@ -695,12 +638,12 @@
                     if (txData.success && txData.transactions) transactions = txData.transactions;
                 }
                 if (balanceData.success) {
-                    displayResults(balanceData.balance, balanceData.nativeToken, balanceData.network, transactions);
+                    displayResults(balanceData.balance, balanceData.nativeToken, balanceData.network, transactions, null);
                 } else { alert('Error: ' + balanceData.error); }
             } catch (err) { alert('Error: ' + err.message); }
             finally {
                 document.getElementById('fetchWalletBtn').disabled = false;
-                document.getElementById('fetchWalletBtn').innerHTML = '<span>🔍</span> Fetch & Calculate Taxes';
+                document.getElementById('fetchWalletBtn').innerHTML = '<span>🔍</span> Fetch Balance & Recent Transactions';
             }
         };
     </script>
