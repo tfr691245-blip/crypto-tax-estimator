@@ -152,8 +152,8 @@
             border: 1px solid rgba(139,92,246,0.35); 
             border-radius: 28px; 
             padding: 8px; 
-            min-width: 280px; 
-            max-height: 300px;
+            min-width: 320px; 
+            max-height: 400px;
             overflow-y: auto;
             z-index: 10001;
             box-shadow: 0 30px 50px -20px rgba(0,0,0,0.8); 
@@ -297,14 +297,14 @@
             <div class="text-center mb-14">
                 <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-purple-500/20">
                     <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                    <span class="text-purple-300 text-xs font-medium">Multi-Chain Support</span>
+                    <span class="text-purple-300 text-xs font-medium">15+ Blockchains Supported</span>
                 </div>
                 <h1 class="text-6xl sm:text-7xl font-bold mb-5 tracking-tight">Tax <span class="gradient-text">Estimator</span></h1>
-                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Calculate capital gains across 6+ blockchains with precision. Upload data or fetch wallet insights instantly.</p>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Calculate capital gains using CSV upload. Or fetch wallet balance & recent transactions.</p>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
-                <div class="stats-card"><div class="stats-number">6+</div><div class="text-gray-400 text-sm mt-1">Networks</div></div>
+                <div class="stats-card"><div class="stats-number">15+</div><div class="text-gray-400 text-sm mt-1">Networks</div></div>
                 <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm mt-1">Methodology</div></div>
                 <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm mt-1">On-Chain</div></div>
                 <div class="stats-card"><div class="stats-number">Instant</div><div class="text-gray-400 text-sm mt-1">Results</div></div>
@@ -339,7 +339,7 @@
                 <button id="uploadBtn" class="btn-premium"><span>📊</span> Calculate Tax</button>
             </div>
 
-            <!-- Wallet Mode (Auto) -->
+            <!-- Wallet Mode (Auto) - Balance + Recent Transactions ONLY -->
             <div id="walletMode" class="glass-card p-6 sm:p-8 hidden fade-in">
                 <div class="text-center mb-6">
                     <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">🔗</div>
@@ -348,7 +348,7 @@
                 </div>
                 
                 <div class="network-wrapper">
-                    <label class="block text-sm text-gray-400 mb-2">Network</label>
+                    <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
                     <div class="relative">
                         <div id="networkTrigger" class="network-trigger">
                             <img id="selectedNetworkIcon" class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" alt="Bitcoin">
@@ -356,13 +356,17 @@
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="networkDropdown" class="network-dropdown">
-                            <div class="network-option" data-chain="bnb" data-name="BNB Chain" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" data-balance="bnb-balance" data-tx="bnb-transactions" data-has-tx="true">
-                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png">
-                                <div><div class="network-name">BNB Chain</div><div class="network-desc">Binance Smart Chain</div></div>
+                            <div class="network-option" data-chain="btc" data-name="Bitcoin" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" data-balance="btc-balance" data-tx="btc-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png">
+                                <div><div class="network-name">Bitcoin</div><div class="network-desc">Bitcoin Mainnet</div></div>
                             </div>
                             <div class="network-option" data-chain="eth" data-name="Ethereum" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" data-balance="eth-balance" data-tx="eth-transactions" data-has-tx="true">
                                 <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png">
                                 <div><div class="network-name">Ethereum</div><div class="network-desc">Ethereum Mainnet</div></div>
+                            </div>
+                            <div class="network-option" data-chain="bnb" data-name="BNB Chain" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" data-balance="bnb-balance" data-tx="bnb-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png">
+                                <div><div class="network-name">BNB Chain</div><div class="network-desc">Binance Smart Chain</div></div>
                             </div>
                             <div class="network-option" data-chain="polygon" data-name="Polygon" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="polygon-balance" data-tx="polygon-transactions" data-has-tx="true">
                                 <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
@@ -372,9 +376,37 @@
                                 <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png">
                                 <div><div class="network-name">Solana</div><div class="network-desc">Solana Mainnet</div></div>
                             </div>
-                            <div class="network-option" data-chain="btc" data-name="Bitcoin" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" data-balance="btc-balance" data-tx="btc-transactions" data-has-tx="true">
-                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png">
-                                <div><div class="network-name">Bitcoin</div><div class="network-desc">Bitcoin Mainnet</div></div>
+                            <div class="network-option" data-chain="avalanche" data-name="Avalanche" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/avax.png" data-balance="avalanche-balance" data-tx="avalanche-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/avax.png">
+                                <div><div class="network-name">Avalanche</div><div class="network-desc">Avalanche C-Chain</div></div>
+                            </div>
+                            <div class="network-option" data-chain="arbitrum" data-name="Arbitrum" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/arb.png" data-balance="arbitrum-balance" data-tx="arbitrum-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/arb.png">
+                                <div><div class="network-name">Arbitrum</div><div class="network-desc">Arbitrum One</div></div>
+                            </div>
+                            <div class="network-option" data-chain="optimism" data-name="Optimism" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/op.png" data-balance="optimism-balance" data-tx="optimism-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/op.png">
+                                <div><div class="network-name">Optimism</div><div class="network-desc">Optimism Mainnet</div></div>
+                            </div>
+                            <div class="network-option" data-chain="base" data-name="Base" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/base.png" data-balance="base-balance" data-tx="base-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/base.png">
+                                <div><div class="network-name">Base</div><div class="network-desc">Base Mainnet</div></div>
+                            </div>
+                            <div class="network-option" data-chain="fantom" data-name="Fantom" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/ftm.png" data-balance="fantom-balance" data-tx="fantom-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/ftm.png">
+                                <div><div class="network-name">Fantom</div><div class="network-desc">Fantom Opera</div></div>
+                            </div>
+                            <div class="network-option" data-chain="cronos" data-name="Cronos" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/cro.png" data-balance="cronos-balance" data-tx="cronos-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/cro.png">
+                                <div><div class="network-name">Cronos</div><div class="network-desc">Cronos Mainnet</div></div>
+                            </div>
+                            <div class="network-option" data-chain="gnosis" data-name="Gnosis" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/xdai.png" data-balance="gnosis-balance" data-tx="gnosis-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/xdai.png">
+                                <div><div class="network-name">Gnosis</div><div class="network-desc">Gnosis Chain (xDai)</div></div>
+                            </div>
+                            <div class="network-option" data-chain="celo" data-name="Celo" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/celo.png" data-balance="celo-balance" data-tx="celo-transactions" data-has-tx="true">
+                                <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/celo.png">
+                                <div><div class="network-name">Celo</div><div class="network-desc">Celo Mainnet</div></div>
                             </div>
                             <div class="network-option" data-chain="mfc" data-name="Polygon Amoy" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="mfc-balance" data-tx="" data-has-tx="false">
                                 <img class="network-icon" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
@@ -399,6 +431,7 @@
 
             <!-- Results Section -->
             <div id="results" class="results-section hidden mt-8 fade-in">
+                <!-- Balance Card (shown for both modes) -->
                 <div class="glass-card p-6 mb-6">
                     <div class="flex justify-between items-center">
                         <div>
@@ -413,7 +446,8 @@
                     </div>
                 </div>
 
-                <div class="glass-card p-6 mb-6">
+                <!-- Tax Summary (ONLY for CSV mode) -->
+                <div id="taxSummary" class="glass-card p-6 mb-6 hidden">
                     <h3 class="text-xl font-bold mb-5">📊 Tax Summary</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div class="tax-badge"><p class="text-gray-400 text-xs">Total Gain</p><p id="totalGain" class="text-xl font-bold text-green-400">$0</p></div>
@@ -423,6 +457,7 @@
                     </div>
                 </div>
 
+                <!-- Transactions List -->
                 <div class="glass-card p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold">📜 Transaction Log</h3>
@@ -469,7 +504,7 @@
         const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
         const selectedNetworkName = document.getElementById('selectedNetworkName');
         
-        // FIFO Tax Calculation Function
+        // FIFO Tax Calculation Function (for CSV only)
         function calculateFIFOTax(transactions) {
             let totalGain = 0, totalLoss = 0, holdings = [], processedTxs = [];
             const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -502,37 +537,47 @@
             };
         }
         
-        function displayResults(balance, nativeToken, network, transactions, taxResult) {
+        function displayCSVResults(balance, nativeToken, network, transactions, taxResult) {
             document.getElementById('balanceAmount').innerHTML = `${balance.toFixed(6)} ${nativeToken}`;
             document.getElementById('balanceCurrency').innerHTML = network;
             document.getElementById('networkName').innerHTML = network;
             
-            if (taxResult) {
-                document.getElementById('totalGain').innerHTML = `$${taxResult.totalGain}`;
-                document.getElementById('totalLoss').innerHTML = `$${taxResult.totalLoss}`;
-                document.getElementById('netGain').innerHTML = `$${taxResult.netGain}`;
-                document.getElementById('estimatedTax').innerHTML = `$${taxResult.estimatedTax}`;
-                document.getElementById('txCount').innerHTML = `${taxResult.transactionsProcessed} txns`;
-                document.getElementById('transactionsList').innerHTML = taxResult.transactions.slice(0, 50).map(tx => `
-                    <div class="tx-row">
-                        <div class="flex justify-between items-center">
-                            <div><div class="font-medium">${tx.date}</div><div class="text-sm ${tx.type === 'buy' ? 'text-emerald-400' : 'text-rose-400'}">${tx.type.toUpperCase()}</div></div>
-                            <div class="text-right"><div>${tx.amount} @ $${tx.price}</div><div class="text-sm ${tx.gain >= 0 ? 'text-emerald-400' : 'text-rose-400'}">Gain: $${tx.gain}</div></div>
-                        </div>
+            document.getElementById('totalGain').innerHTML = `$${taxResult.totalGain}`;
+            document.getElementById('totalLoss').innerHTML = `$${taxResult.totalLoss}`;
+            document.getElementById('netGain').innerHTML = `$${taxResult.netGain}`;
+            document.getElementById('estimatedTax').innerHTML = `$${taxResult.estimatedTax}`;
+            document.getElementById('txCount').innerHTML = `${taxResult.transactionsProcessed} txns`;
+            document.getElementById('taxSummary').classList.remove('hidden');
+            
+            document.getElementById('transactionsList').innerHTML = taxResult.transactions.slice(0, 50).map(tx => `
+                <div class="tx-row">
+                    <div class="flex justify-between items-center">
+                        <div><div class="font-medium">${tx.date}</div><div class="text-sm ${tx.type === 'buy' ? 'text-emerald-400' : 'text-rose-400'}">${tx.type.toUpperCase()}</div></div>
+                        <div class="text-right"><div>${tx.amount} @ $${tx.price}</div><div class="text-sm ${tx.gain >= 0 ? 'text-emerald-400' : 'text-rose-400'}">Gain: $${tx.gain}</div></div>
                     </div>
-                `).join('');
-            } else if (transactions && transactions.length > 0) {
-                document.getElementById('txCount').innerHTML = `${transactions.length} txns`;
+                </div>
+            `).join('');
+            document.getElementById('results').classList.remove('hidden');
+        }
+        
+        function displayWalletResults(balance, nativeToken, network, transactions) {
+            document.getElementById('balanceAmount').innerHTML = `${balance.toFixed(6)} ${nativeToken}`;
+            document.getElementById('balanceCurrency').innerHTML = network;
+            document.getElementById('networkName').innerHTML = network;
+            document.getElementById('taxSummary').classList.add('hidden');
+            document.getElementById('txCount').innerHTML = `${transactions.length} txns`;
+            
+            if (transactions.length > 0) {
                 document.getElementById('transactionsList').innerHTML = transactions.slice(0, 50).map(tx => `
                     <div class="tx-row">
                         <div class="flex justify-between items-center flex-wrap gap-2">
-                            <div class="flex-1"><div class="font-mono text-xs text-purple-300 break-all">${tx.hash || tx.signature || 'N/A'}</div><div class="text-gray-500 text-xs mt-1">${new Date(tx.timestamp * 1000).toLocaleString()}</div></div>
+                            <div class="flex-1"><div class="font-mono text-xs text-purple-300 break-all">${tx.hash || tx.signature || 'N/A'}</div><div class="text-gray-500 text-xs mt-1">${tx.timestamp ? new Date(tx.timestamp * 1000).toLocaleString() : 'Recent'}</div></div>
                             <div class="text-right"><div class="text-white font-medium">${tx.value ? tx.value.toFixed(6) : '0'} ${nativeToken}</div></div>
                         </div>
                     </div>
                 `).join('');
             } else {
-                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">No transactions found</div>';
+                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">No recent transactions found</div>';
             }
             document.getElementById('results').classList.remove('hidden');
         }
@@ -547,6 +592,7 @@
             document.getElementById('estimatedTax').innerHTML = '$0';
             document.getElementById('txCount').innerHTML = '0';
             document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">Upload CSV or fetch wallet data</div>';
+            document.getElementById('taxSummary').classList.add('hidden');
             document.getElementById('results').classList.add('hidden');
         }
         
@@ -554,8 +600,7 @@
             if (!address) return false;
             if (chain === 'btc') return /^(1|3|bc1|tb1)/i.test(address);
             if (chain === 'sol') return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
-            if (chain === 'eth' || chain === 'bnb' || chain === 'polygon' || chain === 'mfc') return /^0x[a-fA-F0-9]{40}$/.test(address);
-            return true;
+            return /^0x[a-fA-F0-9]{40}$/.test(address);
         }
         
         const csvSliderBtn = document.getElementById('csvSliderBtn');
@@ -616,10 +661,10 @@
                 return { date, type: type?.toLowerCase(), amount: parseFloat(amount), price: parseFloat(price) };
             }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price));
             const taxResult = calculateFIFOTax(transactions);
-            displayResults(0, 'CSV', 'CSV File', taxResult.transactions, taxResult);
+            displayCSVResults(0, 'CSV', 'CSV File', taxResult.transactions, taxResult);
         };
         
-        // Wallet Fetch (Auto Mode)
+        // Wallet Fetch (Auto Mode) - Balance + Recent Transactions ONLY
         document.getElementById('fetchWalletBtn').onclick = async () => {
             const address = document.getElementById('walletAddress').value.trim();
             if (!address) { alert('Please enter a wallet address'); return; }
@@ -638,7 +683,7 @@
                     if (txData.success && txData.transactions) transactions = txData.transactions;
                 }
                 if (balanceData.success) {
-                    displayResults(balanceData.balance, balanceData.nativeToken, balanceData.network, transactions, null);
+                    displayWalletResults(balanceData.balance, balanceData.nativeToken, balanceData.network, transactions);
                 } else { alert('Error: ' + balanceData.error); }
             } catch (err) { alert('Error: ' + err.message); }
             finally {
