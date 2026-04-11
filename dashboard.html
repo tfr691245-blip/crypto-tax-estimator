@@ -10,53 +10,13 @@
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
         body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
-        
-        .glass-card { 
-            background: rgba(15, 23, 42, 0.5); 
-            backdrop-filter: blur(20px); 
-            border-radius: 32px; 
-            border: 1px solid rgba(139, 92, 246, 0.15); 
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1); 
-        }
-        .glass-card:hover { 
-            border-color: rgba(139, 92, 246, 0.3); 
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
-        }
-        
-        .btn-premium { 
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); 
-            border-radius: 60px; 
-            padding: 14px 32px; 
-            font-weight: 600; 
-            color: white; 
-            transition: all 0.3s ease; 
-            cursor: pointer; 
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px; 
-        }
-        .btn-premium:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4);
-            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
-        }
-        
-        .gradient-text { 
-            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            color: transparent; 
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in {
-            animation: fadeInUp 0.5s ease-out;
-        }
+        .glass-card { background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(20px); border-radius: 32px; border: 1px solid rgba(139, 92, 246, 0.15); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1); }
+        .glass-card:hover { border-color: rgba(139, 92, 246, 0.3); box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4); }
+        .btn-premium { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 60px; padding: 14px 32px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25); display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4); background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); }
+        .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeInUp 0.5s ease-out; }
     </style>
 </head>
 <body class="min-h-screen text-white">
@@ -64,9 +24,7 @@
         <div class="container mx-auto px-5 sm:px-8 py-4">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                        <span class="text-lg">💰</span>
-                    </div>
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center"><span class="text-lg">💰</span></div>
                     <span class="text-white font-bold text-xl tracking-tight">CryptoTax</span>
                     <span class="hidden sm:inline-flex text-xs bg-white/5 text-purple-300 px-2 py-1 rounded-full ml-2 border border-white/10">v2.0</span>
                 </div>
@@ -89,18 +47,13 @@
             <h1 class="text-5xl font-bold mb-3 tracking-tight">Dashboard</h1>
             <p class="text-gray-400 text-lg mb-8">View your MFC token balance on Polygon Amoy</p>
         </div>
-
         <div class="max-w-md mx-auto fade-in">
             <div class="glass-card p-8">
                 <div class="flex flex-col items-center text-center">
                     <div class="w-20 h-20 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-4xl mb-5">💜</div>
                     <h2 class="text-2xl font-bold mb-2">MFC Token</h2>
                     <p class="text-gray-400 text-sm mb-6">Polygon Amoy Network</p>
-                    
-                    <div id="walletStatus" class="w-full">
-                        <button id="connectBtn" class="btn-premium w-full">Connect MetaMask</button>
-                    </div>
-                    
+                    <div id="walletStatus" class="w-full"><button id="connectBtn" class="btn-premium w-full">Connect MetaMask</button></div>
                     <div id="walletInfo" class="hidden w-full mt-6">
                         <div class="bg-white/5 rounded-2xl p-6">
                             <p class="text-gray-400 text-sm">Connected Wallet</p>
@@ -116,28 +69,19 @@
         </div>
     </div>
 
-    <!-- Professional Disclaimer Footer -->
     <div class="container mx-auto px-5 sm:px-8 pb-8">
         <div class="max-w-5xl mx-auto">
             <div class="border-t border-white/10 pt-8">
                 <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 mb-4">
-                    <div class="flex items-center justify-center gap-2 mb-3">
-                        <span class="text-amber-400 text-lg">⚖️</span>
-                        <p class="text-amber-300 text-sm font-semibold">Tax Disclaimer</p>
-                    </div>
-                    <p class="text-gray-400 text-xs leading-relaxed text-center">
-                        CryptoTax provides <strong class="text-purple-300">capital gains calculations</strong> using the FIFO (First-In, First-Out) method, 
-                        a globally recognized accounting standard accepted by tax authorities worldwide.
-                    </p>
+                    <div class="flex items-center justify-center gap-2 mb-3"><span class="text-amber-400 text-lg">⚖️</span><p class="text-amber-300 text-sm font-semibold">Tax Disclaimer</p></div>
+                    <p class="text-gray-400 text-xs leading-relaxed text-center">CryptoTax provides <strong class="text-purple-300">capital gains calculations</strong> using the FIFO (First-In, First-Out) method, a globally recognized accounting standard accepted by tax authorities worldwide.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 text-left text-xs text-gray-500 max-w-md mx-auto">
                         <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Calculates net gain/loss from your transactions</span></div>
                         <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Uses IRS-approved FIFO methodology</span></div>
                         <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT calculate country-specific tax rates</span></div>
                         <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT file taxes or provide legal advice</span></div>
                     </div>
-                    <p class="text-gray-500 text-xs mt-3 pt-3 border-t border-white/5 text-center">
-                        Tax laws vary by jurisdiction. <strong class="text-amber-300">Consult a qualified tax professional</strong> in your country for accurate filing requirements.
-                    </p>
+                    <p class="text-gray-500 text-xs mt-3 pt-3 border-t border-white/5 text-center">Tax laws vary by jurisdiction. <strong class="text-amber-300">Consult a qualified tax professional</strong> in your country for accurate filing requirements.</p>
                 </div>
                 <p class="text-gray-600 text-xs text-center">© 2026 CryptoTax | FIFO Method | Real On-Chain Data</p>
             </div>
@@ -147,9 +91,7 @@
     <script>
         const TOKEN_CONTRACT = '0xe7C74768e9AdF945C920967e334FFF40167A126F';
         const RPC_URL = 'https://lb.drpc.live/polygon-amoy/AlKOOugi5EgeoaJxUsJsaFsKxwDeMRwR8aGVGrar0DFx';
-        
         const tokenABI = ['function balanceOf(address owner) view returns (uint256)', 'function decimals() view returns (uint8)'];
-        
         let provider = new ethers.JsonRpcProvider(RPC_URL);
         let tokenContract = new ethers.Contract(TOKEN_CONTRACT, tokenABI, provider);
         
@@ -159,30 +101,21 @@
                 const decimals = await tokenContract.decimals();
                 const balance = ethers.formatUnits(balanceRaw, decimals);
                 return parseFloat(balance);
-            } catch (err) {
-                console.error(err);
-                return null;
-            }
+            } catch (err) { console.error(err); return null; }
         }
         
         document.getElementById('connectBtn').onclick = async () => {
-            if (!window.ethereum) {
-                alert('Please install MetaMask!');
-                return;
-            }
+            if (!window.ethereum) { alert('Please install MetaMask!'); return; }
             try {
                 const metamaskProvider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await metamaskProvider.getSigner();
                 const address = await signer.getAddress();
                 const balance = await fetchMFCBalance(address);
-                
                 document.getElementById('walletAddress').innerText = address;
                 document.getElementById('tokenBalance').innerHTML = `${balance.toLocaleString()} MFC`;
                 document.getElementById('walletStatus').classList.add('hidden');
                 document.getElementById('walletInfo').classList.remove('hidden');
-            } catch (err) {
-                alert('Connection failed: ' + err.message);
-            }
+            } catch (err) { alert('Connection failed: ' + err.message); }
         };
     </script>
 </body>
