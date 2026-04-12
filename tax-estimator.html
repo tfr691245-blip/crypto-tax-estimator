@@ -430,7 +430,7 @@
     <script>
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev';
         
-        // ALL COINS WITH WORKING CryptoLogos.cc URLs (Gemini's solution)
+        // ALL COINS USING CRYPTOLOGOS.CC (as you instructed)
         const networks = [
             { chain: 'btc', name: 'Bitcoin', desc: 'Bitcoin Mainnet', icon: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png', balance: 'btc-balance', tx: 'btc-transactions', hasTx: true },
             { chain: 'eth', name: 'Ethereum', desc: 'Ethereum Mainnet', icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png', balance: 'eth-balance', tx: 'eth-transactions', hasTx: true },
@@ -458,7 +458,7 @@
         function buildDropdown() {
             portal.innerHTML = networks.map(net => `
                 <div class="network-option" data-chain="${net.chain}" data-name="${net.name}" data-desc="${net.desc}" data-icon="${net.icon}" data-balance="${net.balance}" data-tx="${net.tx}" data-has-tx="${net.hasTx}">
-                    <img class="network-icon-img" src="${net.icon}" alt="${net.name}" onerror="this.style.display='none'">
+                    <img class="network-icon-img" src="${net.icon}" alt="${net.name}">
                     <div><div class="network-name">${net.name}</div><div class="network-desc">${net.desc}</div></div>
                 </div>
             `).join('');
