@@ -122,7 +122,6 @@
             transform: translateX(100%);
         }
         
-        /* NETWORK SELECTOR - RELATIVE POSITIONING */
         .network-wrapper { 
             position: relative; 
             margin-bottom: 24px; 
@@ -144,7 +143,6 @@
             background: rgba(139,92,246,0.15); 
         }
         
-        /* DROPDOWN - FIXED POSITIONING (NEVER HIDDEN) */
         .network-dropdown-portal {
             position: fixed;
             background: rgba(8, 12, 25, 0.98);
@@ -182,8 +180,6 @@
             height: 28px; 
             border-radius: 50%; 
             object-fit: contain; 
-            background: rgba(255,255,255,0.1); 
-            padding: 2px; 
         }
         .network-name { 
             font-weight: 500; 
@@ -350,7 +346,7 @@
                     <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
                     <div class="relative">
                         <div id="networkTrigger" class="network-trigger">
-                            <img id="selectedNetworkIcon" class="network-icon-img" src="https://assets.trustwallet.com/blockchains/bitcoin/info/logo.png" alt="Bitcoin">
+                            <img id="selectedNetworkIcon" class="network-icon-img" src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="Bitcoin">
                             <span id="selectedNetworkName" class="network-name">Bitcoin</span>
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
@@ -434,22 +430,22 @@
     <script>
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev';
         
-        // Network configurations with Trust Wallet image URLs (100% working)
+        // ALL COINS WITH WORKING CryptoLogos.cc URLs (Gemini's solution)
         const networks = [
-            { chain: 'btc', name: 'Bitcoin', desc: 'Bitcoin Mainnet', icon: 'https://assets.trustwallet.com/blockchains/bitcoin/info/logo.png', balance: 'btc-balance', tx: 'btc-transactions', hasTx: true },
-            { chain: 'eth', name: 'Ethereum', desc: 'Ethereum Mainnet', icon: 'https://assets.trustwallet.com/blockchains/ethereum/info/logo.png', balance: 'eth-balance', tx: 'eth-transactions', hasTx: true },
-            { chain: 'bnb', name: 'BNB Chain', desc: 'Binance Smart Chain', icon: 'https://assets.trustwallet.com/blockchains/smartchain/info/logo.png', balance: 'bnb-balance', tx: 'bnb-transactions', hasTx: true },
-            { chain: 'polygon', name: 'Polygon', desc: 'Polygon Mainnet', icon: 'https://assets.trustwallet.com/blockchains/polygon/info/logo.png', balance: 'polygon-balance', tx: 'polygon-transactions', hasTx: true },
-            { chain: 'sol', name: 'Solana', desc: 'Solana Mainnet', icon: 'https://assets.trustwallet.com/blockchains/solana/info/logo.png', balance: 'sol-balance', tx: 'sol-transactions', hasTx: true },
-            { chain: 'avalanche', name: 'Avalanche', desc: 'Avalanche C-Chain', icon: 'https://assets.trustwallet.com/blockchains/avalanchec/info/logo.png', balance: 'avalanche-balance', tx: 'avalanche-transactions', hasTx: true },
-            { chain: 'arbitrum', name: 'Arbitrum', desc: 'Arbitrum One', icon: 'https://assets.trustwallet.com/blockchains/arbitrum/info/logo.png', balance: 'arbitrum-balance', tx: 'arbitrum-transactions', hasTx: true },
-            { chain: 'optimism', name: 'Optimism', desc: 'Optimism Mainnet', icon: 'https://assets.trustwallet.com/blockchains/optimism/info/logo.png', balance: 'optimism-balance', tx: 'optimism-transactions', hasTx: true },
-            { chain: 'base', name: 'Base', desc: 'Base Mainnet', icon: 'https://assets.trustwallet.com/blockchains/base/info/logo.png', balance: 'base-balance', tx: 'base-transactions', hasTx: true },
-            { chain: 'fantom', name: 'Fantom', desc: 'Fantom Opera', icon: 'https://assets.trustwallet.com/blockchains/fantom/info/logo.png', balance: 'fantom-balance', tx: 'fantom-transactions', hasTx: true },
-            { chain: 'cronos', name: 'Cronos', desc: 'Cronos Mainnet', icon: 'https://assets.trustwallet.com/blockchains/cronos/info/logo.png', balance: 'cronos-balance', tx: 'cronos-transactions', hasTx: true },
-            { chain: 'gnosis', name: 'Gnosis', desc: 'Gnosis Chain (xDai)', icon: 'https://assets.trustwallet.com/blockchains/gnosis/info/logo.png', balance: 'gnosis-balance', tx: 'gnosis-transactions', hasTx: true },
-            { chain: 'celo', name: 'Celo', desc: 'Celo Mainnet', icon: 'https://assets.trustwallet.com/blockchains/celo/info/logo.png', balance: 'celo-balance', tx: 'celo-transactions', hasTx: true },
-            { chain: 'mfc', name: 'Polygon Amoy', desc: 'MFC Token (Testnet)', icon: 'https://assets.trustwallet.com/blockchains/polygon/info/logo.png', balance: 'mfc-balance', tx: '', hasTx: false }
+            { chain: 'btc', name: 'Bitcoin', desc: 'Bitcoin Mainnet', icon: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png', balance: 'btc-balance', tx: 'btc-transactions', hasTx: true },
+            { chain: 'eth', name: 'Ethereum', desc: 'Ethereum Mainnet', icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png', balance: 'eth-balance', tx: 'eth-transactions', hasTx: true },
+            { chain: 'bnb', name: 'BNB Chain', desc: 'Binance Smart Chain', icon: 'https://cryptologos.cc/logos/bnb-bnb-logo.png', balance: 'bnb-balance', tx: 'bnb-transactions', hasTx: true },
+            { chain: 'polygon', name: 'Polygon', desc: 'Polygon Mainnet', icon: 'https://cryptologos.cc/logos/polygon-matic-logo.png', balance: 'polygon-balance', tx: 'polygon-transactions', hasTx: true },
+            { chain: 'sol', name: 'Solana', desc: 'Solana Mainnet', icon: 'https://cryptologos.cc/logos/solana-sol-logo.png', balance: 'sol-balance', tx: 'sol-transactions', hasTx: true },
+            { chain: 'avalanche', name: 'Avalanche', desc: 'Avalanche C-Chain', icon: 'https://cryptologos.cc/logos/avalanche-avax-logo.png', balance: 'avalanche-balance', tx: 'avalanche-transactions', hasTx: true },
+            { chain: 'arbitrum', name: 'Arbitrum', desc: 'Arbitrum One', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png', balance: 'arbitrum-balance', tx: 'arbitrum-transactions', hasTx: true },
+            { chain: 'optimism', name: 'Optimism', desc: 'Optimism Mainnet', icon: 'https://cryptologos.cc/logos/optimism-op-logo.png', balance: 'optimism-balance', tx: 'optimism-transactions', hasTx: true },
+            { chain: 'base', name: 'Base', desc: 'Base Mainnet', icon: 'https://cryptologos.cc/logos/base-base-logo.png', balance: 'base-balance', tx: 'base-transactions', hasTx: true },
+            { chain: 'fantom', name: 'Fantom', desc: 'Fantom Opera', icon: 'https://cryptologos.cc/logos/fantom-ftm-logo.png', balance: 'fantom-balance', tx: 'fantom-transactions', hasTx: true },
+            { chain: 'cronos', name: 'Cronos', desc: 'Cronos Mainnet', icon: 'https://cryptologos.cc/logos/cronos-cro-logo.png', balance: 'cronos-balance', tx: 'cronos-transactions', hasTx: true },
+            { chain: 'gnosis', name: 'Gnosis', desc: 'Gnosis Chain (xDai)', icon: 'https://cryptologos.cc/logos/gnosis-gno-logo.png', balance: 'gnosis-balance', tx: 'gnosis-transactions', hasTx: true },
+            { chain: 'celo', name: 'Celo', desc: 'Celo Mainnet', icon: 'https://cryptologos.cc/logos/celo-celo-logo.png', balance: 'celo-balance', tx: 'celo-transactions', hasTx: true },
+            { chain: 'mfc', name: 'Polygon Amoy', desc: 'MFC Token (Testnet)', icon: 'https://cryptologos.cc/logos/polygon-matic-logo.png', balance: 'mfc-balance', tx: '', hasTx: false }
         ];
         
         let selectedNetwork = networks[0];
@@ -459,16 +455,14 @@
         const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
         const selectedNetworkName = document.getElementById('selectedNetworkName');
         
-        // Build dropdown content
         function buildDropdown() {
             portal.innerHTML = networks.map(net => `
                 <div class="network-option" data-chain="${net.chain}" data-name="${net.name}" data-desc="${net.desc}" data-icon="${net.icon}" data-balance="${net.balance}" data-tx="${net.tx}" data-has-tx="${net.hasTx}">
-                    <img class="network-icon-img" src="${net.icon}" alt="${net.name}" onerror="this.src='https://assets.trustwallet.com/blockchains/ethereum/info/logo.png'">
+                    <img class="network-icon-img" src="${net.icon}" alt="${net.name}" onerror="this.style.display='none'">
                     <div><div class="network-name">${net.name}</div><div class="network-desc">${net.desc}</div></div>
                 </div>
             `).join('');
             
-            // Add click handlers
             document.querySelectorAll('.network-option').forEach(opt => {
                 opt.addEventListener('click', (e) => {
                     e.stopPropagation();
