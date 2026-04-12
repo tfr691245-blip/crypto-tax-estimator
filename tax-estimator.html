@@ -60,6 +60,14 @@
             border: 1px solid #1e2538;
         }
 
+        /* Normal coin style (default box) */
+        .coin-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        /* ONLY Base and OP get circle shape */
         .coin-circle {
             width: 32px;
             height: 32px;
@@ -153,36 +161,44 @@
         </div>
 
         <div class="network-grid">
+            <!-- Polygon (normal box) -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/matic.png" alt="Polygon">
+                <img class="coin-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/matic.png" alt="Polygon">
                 <span class="network-name">Polygon PoS<span class="micro-dot"></span></span>
             </div>
+            <!-- Avalanche (normal box) -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/avax.png" alt="Avalanche">
+                <img class="coin-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/avax.png" alt="Avalanche">
                 <span class="network-name">Avalanche C-Chain<span class="micro-dot"></span></span>
             </div>
+            <!-- Arbitrum (normal box) -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/arb.png" alt="Arbitrum">
+                <img class="coin-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/arb.png" alt="Arbitrum">
                 <span class="network-name">Arbitrum One<span class="micro-dot"></span></span>
             </div>
+            <!-- Optimism (CIRCLE - only this one) -->
             <div class="network-item">
                 <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/op.png" alt="Optimism">
                 <span class="network-name">Optimism Mainnet<span class="micro-dot"></span></span>
             </div>
+            <!-- Base (CIRCLE - only this one) -->
             <div class="network-item">
                 <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/base.png" alt="Base">
                 <span class="network-name">Base Mainnet<span class="micro-dot"></span></span>
             </div>
+            <!-- Fantom (normal box) -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/ftm.png" alt="Fantom">
+                <img class="coin-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/ftm.png" alt="Fantom">
                 <span class="network-name">Fantom Opera<span class="micro-dot"></span></span>
             </div>
+            <!-- Cronos (normal box) -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/cro.png" alt="Cronos">
+                <img class="coin-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/cro.png" alt="Cronos">
                 <span class="network-name">Cronos Mainnet<span class="micro-dot"></span></span>
             </div>
+            <!-- Gnosis (normal box) -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/gno.png" alt="Gnosis">
+                <img class="coin-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/gno.png" alt="Gnosis">
                 <span class="network-name">Gnosis Chain<span class="micro-dot"></span></span>
             </div>
         </div>
