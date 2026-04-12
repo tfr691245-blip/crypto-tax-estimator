@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRYPTOTAX | Nexus Multi-Chain Engine</title>
+    <title>CRYPTOTAX | Nexus</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             background: #0a0c15;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,37 +21,27 @@
             padding: 2rem;
         }
 
-        /* Original UI card - no color changes */
         .container {
             background: #0f111a;
             border-radius: 24px;
             padding: 28px 32px;
             max-width: 880px;
             width: 100%;
-            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        /* Header - unique naming */
         .header h1 {
             font-size: 22px;
             font-weight: 600;
             color: #ffffff;
-            letter-spacing: -0.3px;
-        }
-
-        .header h1 span {
-            color: #3b82f6;
         }
 
         .header .sub {
             font-size: 13px;
             color: #6b7280;
-            margin-top: 6px;
-            letter-spacing: 0.2px;
+            margin-top: 4px;
         }
 
-        /* Network grid - 2 rows x 4 cols, original box style */
         .network-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -59,7 +49,6 @@
             margin: 28px 0 24px 0;
         }
 
-        /* Original box shape - no circle boxes, only coin images are circles */
         .network-item {
             background: #131722;
             border-radius: 14px;
@@ -69,25 +58,13 @@
             justify-content: center;
             gap: 10px;
             border: 1px solid #1e2538;
-            transition: all 0.2s ease;
-            cursor: default;
         }
 
-        .network-item:hover {
-            border-color: #2d3748;
-            background: #161c2a;
-        }
-
-        /* Circle coin image */
         .coin-circle {
             width: 32px;
             height: 32px;
             border-radius: 50%;
             object-fit: contain;
-            background: #0f111a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .network-name {
@@ -96,7 +73,6 @@
             color: #e2e8f0;
         }
 
-        /* Micro dot after name */
         .micro-dot {
             display: inline-block;
             width: 6px;
@@ -105,10 +81,8 @@
             border-radius: 50%;
             margin-left: 6px;
             vertical-align: middle;
-            box-shadow: 0 0 4px #10b981;
         }
 
-        /* Address input - original */
         .address-section {
             margin: 20px 0 18px 0;
         }
@@ -128,16 +102,9 @@
             padding: 14px 16px;
             color: #ffffff;
             font-size: 14px;
-            font-family: monospace;
             outline: none;
-            transition: border 0.2s;
         }
 
-        .address-input:focus {
-            border-color: #3b82f6;
-        }
-
-        /* CSV + Balance options - clean inline */
         .action-options {
             display: flex;
             gap: 24px;
@@ -150,22 +117,10 @@
             border-radius: 40px;
             padding: 8px 20px;
             font-size: 13px;
-            font-weight: 500;
             color: #cbd5e1;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
         }
 
-        .action-btn:hover {
-            border-color: #3b82f6;
-            color: #3b82f6;
-            background: rgba(59, 130, 246, 0.05);
-        }
-
-        /* Recent transaction - original */
         .recent-section {
             border-top: 1px solid #1a1f2e;
             padding-top: 20px;
@@ -175,8 +130,6 @@
         .recent-title {
             font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
             color: #6b7280;
             margin-bottom: 12px;
         }
@@ -189,84 +142,61 @@
             display: inline-block;
             padding: 8px 14px;
             border-radius: 12px;
-            border: 1px solid #1e2538;
-            letter-spacing: 0.3px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header: unique naming (no v2.0, no childish) -->
         <div class="header">
-            <h1>CRYPTOTAX <span>| Nexus Multi-Chain Engine</span></h1>
-            <div class="sub">Enterprise Tax Intelligence</div>
+            <h1>CRYPTOTAX | Nexus</h1>
+            <div class="sub">Enterprise Multi-Chain Tax Platform</div>
         </div>
 
-        <!-- Network grid: boxes unchanged, coins as circles (GitHub images) -->
         <div class="network-grid">
-            <!-- Polygon -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/0x0000000000000000000000000000000000000000/logo.png?raw=true" 
-                     onerror="this.src='https://cryptologos.cc/logos/polygon-matic-logo.png'" alt="Polygon">
+                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/matic.png" alt="Polygon">
                 <span class="network-name">Polygon PoS<span class="micro-dot"></span></span>
             </div>
-            <!-- Avalanche -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/ava-labs/bridge-token-list/main/assets/avax.png" 
-                     onerror="this.src='https://cryptologos.cc/logos/avalanche-avax-logo.png'" alt="Avalanche">
-                <span class="network-name">Avalanche<span class="micro-dot"></span></span>
+                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/avax.png" alt="Avalanche">
+                <span class="network-name">Avalanche C-Chain<span class="micro-dot"></span></span>
             </div>
-            <!-- Arbitrum -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/OffchainLabs/arbitrum-token-list/master/assets/ARB.svg" 
-                     onerror="this.src='https://cryptologos.cc/logos/arbitrum-arb-logo.png'" alt="Arbitrum">
-                <span class="network-name">Arbitrum<span class="micro-dot"></span></span>
+                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/arb.png" alt="Arbitrum">
+                <span class="network-name">Arbitrum One<span class="micro-dot"></span></span>
             </div>
-            <!-- Optimism -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/svg/OP%20Token%20Icon.svg" 
-                     onerror="this.src='https://cryptologos.cc/logos/optimism-op-logo.png'" alt="Optimism">
-                <span class="network-name">Optimism<span class="micro-dot"></span></span>
+                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/op.png" alt="Optimism">
+                <span class="network-name">Optimism Mainnet<span class="micro-dot"></span></span>
             </div>
-            <!-- Base -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/base-org/brand-kit/main/logo/base-logomark-blue.svg" 
-                     onerror="this.src='https://icons.llamao.fi/icons/chains/rsz_base.jpg'" alt="Base">
-                <span class="network-name">Base<span class="micro-dot"></span></span>
+                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/base.png" alt="Base">
+                <span class="network-name">Base Mainnet<span class="micro-dot"></span></span>
             </div>
-            <!-- Fantom -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/Fantom-Foundation/fantom-token-list/main/assets/ftm.png" 
-                     onerror="this.src='https://cryptologos.cc/logos/fantom-ftm-logo.png'" alt="Fantom">
-                <span class="network-name">Fantom<span class="micro-dot"></span></span>
+                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/ftm.png" alt="Fantom">
+                <span class="network-name">Fantom Opera<span class="micro-dot"></span></span>
             </div>
-            <!-- Cronos -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/cronos-labs/brand-assets/main/cro-icon.png" 
-                     onerror="this.src='https://cryptologos.cc/logos/cronos-cro-logo.png'" alt="Cronos">
-                <span class="network-name">Cronos<span class="micro-dot"></span></span>
+                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/cro.png" alt="Cronos">
+                <span class="network-name">Cronos Mainnet<span class="micro-dot"></span></span>
             </div>
-            <!-- Gnosis -->
             <div class="network-item">
-                <img class="coin-circle" src="https://raw.githubusercontent.com/gnosischain/brand-kit/main/logo/gno-icon.png" 
-                     onerror="this.src='https://cryptologos.cc/logos/gnosis-gno-logo.png'" alt="Gnosis">
-                <span class="network-name">Gnosis<span class="micro-dot"></span></span>
+                <img class="coin-circle" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/icon/gno.png" alt="Gnosis">
+                <span class="network-name">Gnosis Chain<span class="micro-dot"></span></span>
             </div>
         </div>
 
-        <!-- Enter Base address (original) -->
         <div class="address-section">
             <div class="address-label">Enter Base address</div>
-            <input type="text" class="address-input" placeholder="0x... or ENS">
+            <input type="text" class="address-input" placeholder="0x...">
         </div>
 
-        <!-- CSV + Balance Sync (clean options) -->
         <div class="action-options">
-            <button class="action-btn" id="csvBtn">📁 CSV Ledger</button>
-            <button class="action-btn" id="balanceBtn">⚡ Balance Sync</button>
+            <button class="action-btn">📁 CSV Import</button>
+            <button class="action-btn">⚡ Balance Check</button>
         </div>
 
-        <!-- Recent transaction (original) -->
         <div class="recent-section">
             <div class="recent-title">RECENT TRANSACTION</div>
             <div class="tx-hash">0x7b3c8d9e2a1f4b5c6d7e8f9a0b1c2d3e4f5a6b7c</div>
@@ -274,14 +204,8 @@
     </div>
 
     <script>
-        // Simple interactions for CSV and Balance (alert placeholders)
-        document.getElementById('csvBtn').addEventListener('click', () => {
-            alert('📁 CSV Ledger: Import your transaction history for tax calculation.');
-        });
-
-        document.getElementById('balanceBtn').addEventListener('click', () => {
-            alert('⚡ Balance Sync: Fetch on-chain balances for the entered address.');
-        });
+        document.querySelectorAll('.action-btn')[0].onclick = () => alert('CSV Import');
+        document.querySelectorAll('.action-btn')[1].onclick = () => alert('Balance Check');
     </script>
 </body>
 </html>
