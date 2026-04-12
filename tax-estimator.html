@@ -346,7 +346,7 @@
                     <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
                     <div class="relative">
                         <div id="networkTrigger" class="network-trigger">
-                            <img id="selectedNetworkIcon" class="network-icon-img" src="/public/images/btc.png" alt="Bitcoin">
+                            <img id="selectedNetworkIcon" class="network-icon-img" src="/images/btc.png" alt="Bitcoin">
                             <span id="selectedNetworkName" class="network-name">Bitcoin</span>
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
@@ -430,22 +430,22 @@
     <script>
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev';
         
-        // ALL COINS WITH LOCAL IMAGES (uploaded to /public/images/)
+        // ALL COINS WITH CORRECT LOCAL IMAGE PATHS (/images/)
         const networks = [
-            { chain: 'btc', name: 'Bitcoin', desc: 'Bitcoin Mainnet', icon: '/public/images/btc.png', balance: 'btc-balance', tx: 'btc-transactions', hasTx: true },
-            { chain: 'eth', name: 'Ethereum', desc: 'Ethereum Mainnet', icon: '/public/images/eth.png', balance: 'eth-balance', tx: 'eth-transactions', hasTx: true },
-            { chain: 'bnb', name: 'BNB Chain', desc: 'Binance Smart Chain', icon: '/public/images/bnb.png', balance: 'bnb-balance', tx: 'bnb-transactions', hasTx: true },
-            { chain: 'polygon', name: 'Polygon', desc: 'Polygon Mainnet', icon: '/public/images/poly.png', balance: 'polygon-balance', tx: 'polygon-transactions', hasTx: true },
-            { chain: 'sol', name: 'Solana', desc: 'Solana Mainnet', icon: '/public/images/sol.png', balance: 'sol-balance', tx: 'sol-transactions', hasTx: true },
-            { chain: 'avalanche', name: 'Avalanche', desc: 'Avalanche C-Chain', icon: '/public/images/avax.png', balance: 'avalanche-balance', tx: 'avalanche-transactions', hasTx: true },
-            { chain: 'arbitrum', name: 'Arbitrum', desc: 'Arbitrum One', icon: '/public/images/arb.png', balance: 'arbitrum-balance', tx: 'arbitrum-transactions', hasTx: true },
-            { chain: 'optimism', name: 'Optimism', desc: 'Optimism Mainnet', icon: '/public/images/op.png', balance: 'optimism-balance', tx: 'optimism-transactions', hasTx: true },
-            { chain: 'base', name: 'Base', desc: 'Base Mainnet', icon: '/public/images/base.png', balance: 'base-balance', tx: 'base-transactions', hasTx: true },
-            { chain: 'fantom', name: 'Fantom', desc: 'Fantom Opera', icon: '/public/images/ftm.png', balance: 'fantom-balance', tx: 'fantom-transactions', hasTx: true },
-            { chain: 'cronos', name: 'Cronos', desc: 'Cronos Mainnet', icon: '/public/images/cro.png', balance: 'cronos-balance', tx: 'cronos-transactions', hasTx: true },
-            { chain: 'gnosis', name: 'Gnosis', desc: 'Gnosis Chain (xDai)', icon: '/public/images/gno.png', balance: 'gnosis-balance', tx: 'gnosis-transactions', hasTx: true },
-            { chain: 'celo', name: 'Celo', desc: 'Celo Mainnet', icon: '/public/images/celo.png', balance: 'celo-balance', tx: 'celo-transactions', hasTx: true },
-            { chain: 'mfc', name: 'Polygon Amoy', desc: 'MFC Token (Testnet)', icon: '/public/images/poly.png', balance: 'mfc-balance', tx: '', hasTx: false }
+            { chain: 'btc', name: 'Bitcoin', desc: 'Bitcoin Mainnet', icon: '/images/btc.png', balance: 'btc-balance', tx: 'btc-transactions', hasTx: true },
+            { chain: 'eth', name: 'Ethereum', desc: 'Ethereum Mainnet', icon: '/images/eth.png', balance: 'eth-balance', tx: 'eth-transactions', hasTx: true },
+            { chain: 'bnb', name: 'BNB Chain', desc: 'Binance Smart Chain', icon: '/images/bnb.png', balance: 'bnb-balance', tx: 'bnb-transactions', hasTx: true },
+            { chain: 'polygon', name: 'Polygon', desc: 'Polygon Mainnet', icon: '/images/poly.png', balance: 'polygon-balance', tx: 'polygon-transactions', hasTx: true },
+            { chain: 'sol', name: 'Solana', desc: 'Solana Mainnet', icon: '/images/sol.png', balance: 'sol-balance', tx: 'sol-transactions', hasTx: true },
+            { chain: 'avalanche', name: 'Avalanche', desc: 'Avalanche C-Chain', icon: '/images/avax.png', balance: 'avalanche-balance', tx: 'avalanche-transactions', hasTx: true },
+            { chain: 'arbitrum', name: 'Arbitrum', desc: 'Arbitrum One', icon: '/images/arb.png', balance: 'arbitrum-balance', tx: 'arbitrum-transactions', hasTx: true },
+            { chain: 'optimism', name: 'Optimism', desc: 'Optimism Mainnet', icon: '/images/op.png', balance: 'optimism-balance', tx: 'optimism-transactions', hasTx: true },
+            { chain: 'base', name: 'Base', desc: 'Base Mainnet', icon: '/images/base.png', balance: 'base-balance', tx: 'base-transactions', hasTx: true },
+            { chain: 'fantom', name: 'Fantom', desc: 'Fantom Opera', icon: '/images/ftm.png', balance: 'fantom-balance', tx: 'fantom-transactions', hasTx: true },
+            { chain: 'cronos', name: 'Cronos', desc: 'Cronos Mainnet', icon: '/images/cro.png', balance: 'cronos-balance', tx: 'cronos-transactions', hasTx: true },
+            { chain: 'gnosis', name: 'Gnosis', desc: 'Gnosis Chain (xDai)', icon: '/images/gno.png', balance: 'gnosis-balance', tx: 'gnosis-transactions', hasTx: true },
+            { chain: 'celo', name: 'Celo', desc: 'Celo Mainnet', icon: '/images/celo.png', balance: 'celo-balance', tx: 'celo-transactions', hasTx: true },
+            { chain: 'mfc', name: 'Polygon Amoy', desc: 'MFC Token (Testnet)', icon: '/images/poly.png', balance: 'mfc-balance', tx: '', hasTx: false }
         ];
         
         let selectedNetwork = networks[0];
