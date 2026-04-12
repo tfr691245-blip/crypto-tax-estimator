@@ -367,7 +367,7 @@
     </div>
 
     <div class="main-grid">
-        <!-- Left Panel: 13 Blockchains -->
+        <!-- Left Panel: 13 Blockchains with Local Images -->
         <div class="left-panel">
             <div class="panel-header">SELECT BLOCKCHAIN</div>
             <div class="blockchain-list" id="blockchainList"></div>
@@ -416,21 +416,22 @@
 </div>
 
 <script>
-    // ============ 13 BLOCKCHAINS CONFIGURATION ============
+    // ============ 13 BLOCKCHAINS CONFIGURATION WITH LOCAL IMAGES ============
+    // All images from your GitHub repo at /images/ folder
     const BLOCKCHAINS = [
-        { name: "Bitcoin", symbol: "BTC", icon: "₿", network: "Bitcoin Mainnet", type: "bitcoin", color: "#F7931A" },
-        { name: "Ethereum", symbol: "ETH", icon: "Ξ", network: "Ethereum Mainnet", type: "evm", color: "#627EEA" },
-        { name: "Binance Smart Chain", symbol: "BNB", icon: "🟡", network: "BSC Mainnet", type: "evm", color: "#F3BA2F" },
-        { name: "Solana", symbol: "SOL", icon: "◎", network: "Solana Mainnet", type: "solana", color: "#00FFA3" },
-        { name: "Optimism", symbol: "OP", icon: "🔷", network: "Optimism Mainnet", type: "evm", color: "#FF0420" },
-        { name: "Base", symbol: "ETH", icon: "🔵", network: "Base Mainnet", type: "evm", color: "#0052FF" },
-        { name: "Fantom", symbol: "FTM", icon: "🎭", network: "Fantom Opera", type: "evm", color: "#1969FF" },
-        { name: "Cronos", symbol: "CRO", icon: "⚡", network: "Cronos Mainnet", type: "evm", color: "#0A2C2C" },
-        { name: "Gnosis", symbol: "xDAI", icon: "🦉", network: "Gnosis Chain", type: "evm", color: "#04795B" },
-        { name: "Celo", symbol: "CELO", icon: "🌱", network: "Celo Mainnet", type: "evm", color: "#35D07F" },
-        { name: "Polygon", symbol: "MATIC", icon: "🟣", network: "Polygon PoS", type: "evm", color: "#8247E5" },
-        { name: "Avalanche", symbol: "AVAX", icon: "❄️", network: "Avalanche C-Chain", type: "evm", color: "#E84142" },
-        { name: "Arbitrum", symbol: "ETH", icon: "🔴", network: "Arbitrum One", type: "evm", color: "#28A0F0" }
+        { name: "Bitcoin", symbol: "BTC", icon: "/images/btc.png", network: "Bitcoin Mainnet", type: "bitcoin", color: "#F7931A" },
+        { name: "Ethereum", symbol: "ETH", icon: "/images/eth.png", network: "Ethereum Mainnet", type: "evm", color: "#627EEA" },
+        { name: "Binance Smart Chain", symbol: "BNB", icon: "/images/bnb.png", network: "BSC Mainnet", type: "evm", color: "#F3BA2F" },
+        { name: "Solana", symbol: "SOL", icon: "/images/sol.png", network: "Solana Mainnet", type: "solana", color: "#00FFA3" },
+        { name: "Polygon", symbol: "MATIC", icon: "/images/poly.png", network: "Polygon PoS", type: "evm", color: "#8247E5" },
+        { name: "Avalanche", symbol: "AVAX", icon: "/images/avax.png", network: "Avalanche C-Chain", type: "evm", color: "#E84142" },
+        { name: "Arbitrum", symbol: "ETH", icon: "/images/arb.png", network: "Arbitrum One", type: "evm", color: "#28A0F0" },
+        { name: "Optimism", symbol: "OP", icon: "/images/op.png", network: "Optimism Mainnet", type: "evm", color: "#FF0420" },
+        { name: "Base", symbol: "ETH", icon: "/images/base.png", network: "Base Mainnet", type: "evm", color: "#0052FF" },
+        { name: "Fantom", symbol: "FTM", icon: "/images/ftm.png", network: "Fantom Opera", type: "evm", color: "#1969FF" },
+        { name: "Cronos", symbol: "CRO", icon: "/images/cro.png", network: "Cronos Mainnet", type: "evm", color: "#0A2C2C" },
+        { name: "Gnosis", symbol: "xDAI", icon: "/images/gno.png", network: "Gnosis Chain", type: "evm", color: "#04795B" },
+        { name: "Celo", symbol: "CELO", icon: "/images/celo.png", network: "Celo Mainnet", type: "evm", color: "#35D07F" }
     ];
 
     let currentChain = BLOCKCHAINS[0];
@@ -461,7 +462,6 @@
         const balanceSat = funded - spent;
         const balanceBTC = balanceSat / 100000000;
         
-        // Get recent transactions
         const txsResponse = await fetch(`https://mempool.space/api/address/${address}/txs`);
         const txsData = await txsResponse.json();
         const transactions = txsData.slice(0, 10).map(tx => ({
@@ -479,7 +479,6 @@
         const rpcUrl = RPC_URLS[chainName];
         if (!rpcUrl) throw new Error(`No RPC for ${chainName}`);
         
-        // Get balance
         const balanceResponse = await fetch(rpcUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -495,19 +494,7 @@
         const balanceWei = parseInt(balanceData.result, 16);
         const balanceETH = balanceWei / 1e18;
         
-        // Try to get recent transactions (via limited explorer API)
-        let transactions = [];
-        try {
-            const explorerUrls = {
-                "Ethereum": `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&sort=desc&apikey=YourApiKeyToken`,
-                "Binance Smart Chain": `https://api.bscscan.com/api?module=account&action=txlist&address=${address}&sort=desc&apikey=YourApiKeyToken`,
-                "Polygon": `https://api.polygonscan.com/api?module=account&action=txlist&address=${address}&sort=desc&apikey=YourApiKeyToken`
-            };
-            // Skip explorer if no API key - just show RPC balance
-            transactions = [];
-        } catch(e) { transactions = []; }
-        
-        return { balance: balanceETH.toFixed(8), transactions };
+        return { balance: balanceETH.toFixed(8), transactions: [] };
     }
 
     // ============ SOLANA API ============
@@ -555,11 +542,17 @@
             document.getElementById('balanceValue').innerHTML = parseFloat(result.balance).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 8 });
             document.getElementById('balanceSymbol').innerHTML = currentChain.symbol;
             
-            // Update USD value (mock price - in production use CoinGecko API)
-            const mockPrices = { BTC: 65000, ETH: 3200, BNB: 580, SOL: 140 };
-            const price = mockPrices[currentChain.symbol] || 1;
-            const usdValue = parseFloat(result.balance) * price;
-            document.getElementById('balanceUSD').innerHTML = `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
+            // USD value (using CoinGecko API)
+            try {
+                const priceResponse = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${currentChain.name.toLowerCase()}&vs_currencies=usd`);
+                const priceData = await priceResponse.json();
+                const coinId = currentChain.name.toLowerCase();
+                const price = priceData[coinId]?.usd || 1;
+                const usdValue = parseFloat(result.balance) * price;
+                document.getElementById('balanceUSD').innerHTML = `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
+            } catch {
+                document.getElementById('balanceUSD').innerHTML = `$0.00 USD`;
+            }
             
             // Update transaction table
             const txBody = document.getElementById('txBody');
@@ -587,12 +580,13 @@
         }
     }
 
-    // ============ RENDER BLOCKCHAIN LIST (13 chains) ============
+    // ============ RENDER BLOCKCHAIN LIST WITH LOCAL IMAGES ============
     function renderBlockchainList() {
         const container = document.getElementById('blockchainList');
         container.innerHTML = BLOCKCHAINS.map(chain => `
-            <div class="blockchain-item ${currentChain.name === chain.name ? 'active' : ''}" data-chain='${JSON.stringify(chain)}'>
-                <div class="chain-icon-placeholder" style="background: ${chain.color}20; color: ${chain.color};">${chain.icon}</div>
+            <div class="blockchain-item ${currentChain.name === chain.name ? 'active' : ''}" data-name="${chain.name}" data-symbol="${chain.symbol}" data-icon="${chain.icon}" data-network="${chain.network}" data-type="${chain.type}" data-color="${chain.color}">
+                <img class="chain-icon-img" src="${chain.icon}" alt="${chain.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="chain-icon-placeholder" style="background: ${chain.color}20; color: ${chain.color}; display: none;">${chain.name.charAt(0)}</div>
                 <div class="chain-info">
                     <div class="chain-name">${chain.name}</div>
                     <div class="chain-network">${chain.network}</div>
@@ -604,14 +598,18 @@
         // Add click handlers
         document.querySelectorAll('.blockchain-item').forEach(el => {
             el.addEventListener('click', () => {
-                const chainData = JSON.parse(el.getAttribute('data-chain'));
-                currentChain = chainData;
-                renderBlockchainList(); // Re-render to update active state
-                document.getElementById('balanceSymbol').innerHTML = chainData.symbol;
-                document.getElementById('balanceValue').innerHTML = '0.00000000';
-                document.getElementById('balanceUSD').innerHTML = '$0.00 USD';
-                document.getElementById('addressNote').innerHTML = '';
-                document.getElementById('addressInput').placeholder = `Enter ${chainData.name} address`;
+                const chainData = BLOCKCHAINS.find(c => c.name === el.getAttribute('data-name'));
+                if (chainData) {
+                    currentChain = chainData;
+                    renderBlockchainList();
+                    document.getElementById('balanceSymbol').innerHTML = chainData.symbol;
+                    document.getElementById('balanceValue').innerHTML = '0.00000000';
+                    document.getElementById('balanceUSD').innerHTML = '$0.00 USD';
+                    document.getElementById('addressNote').innerHTML = '';
+                    document.getElementById('addressInput').placeholder = `Enter ${chainData.name} address`;
+                    document.getElementById('txBody').innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6C729B;">Select a chain and enter address</td></tr>';
+                    document.getElementById('txCount').innerHTML = '0 transactions';
+                }
             });
         });
     }
@@ -620,7 +618,8 @@
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.innerHTML = `⚠️ ${msg}`;
-        document.querySelector('.right-panel').insertBefore(errorDiv, document.querySelector('.right-panel').firstChild);
+        const rightPanel = document.querySelector('.right-panel');
+        rightPanel.insertBefore(errorDiv, rightPanel.firstChild);
         setTimeout(() => errorDiv.remove(), 5000);
     }
 
