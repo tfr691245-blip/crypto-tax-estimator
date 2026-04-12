@@ -122,10 +122,10 @@
             transform: translateX(100%);
         }
         
-        /* NETWORK SELECTOR - HIGHEST Z-INDEX FIX */
+        /* ========== FIXED NETWORK SELECTOR - HIGHEST Z-INDEX ========== */
         .network-wrapper { 
             position: relative; 
-            z-index: 10000;
+            z-index: 9999;
             margin-bottom: 24px; 
         }
         .network-trigger { 
@@ -156,7 +156,7 @@
             min-width: 280px; 
             max-height: 400px;
             overflow-y: auto;
-            z-index: 10001;
+            z-index: 10000;
             box-shadow: 0 30px 50px -20px rgba(0,0,0,0.8); 
             opacity: 0; 
             visibility: hidden; 
@@ -198,6 +198,12 @@
             color: #64748b; 
         }
         
+        /* RESULTS SECTION - NORMAL Z-INDEX */
+        .results-section { 
+            position: relative; 
+            z-index: 1; 
+        }
+        
         .input-field { 
             width: 100%; 
             background: rgba(0,0,0,0.3); 
@@ -213,12 +219,6 @@
             outline: none; 
             border-color: #8b5cf6; 
             box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
-        }
-        
-        /* RESULTS SECTION - LOWER Z-INDEX */
-        .results-section { 
-            position: relative; 
-            z-index: 1; 
         }
         
         .tx-row { 
@@ -506,7 +506,6 @@
         const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
         const selectedNetworkName = document.getElementById('selectedNetworkName');
         
-        // FIFO Tax Calculation Function (for CSV only)
         function calculateFIFOTax(transactions) {
             let totalGain = 0, totalLoss = 0, holdings = [], processedTxs = [];
             const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
