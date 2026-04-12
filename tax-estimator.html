@@ -137,12 +137,17 @@
             }
         }
 
-        /* Left Panel */
+        /* Left Panel - Hidden by default in CSV mode */
         .left-panel {
             background: #0D0F17;
             border-radius: 24px;
             border: 1px solid #1A1E2C;
             overflow: hidden;
+            display: none;  /* Hidden by default (CSV mode) */
+        }
+
+        .left-panel.visible {
+            display: block;  /* Show only in Wallet mode */
         }
 
         .panel-header {
@@ -396,7 +401,7 @@
     </div>
 
     <div class="main-grid">
-        <!-- Left Panel -->
+        <!-- Left Panel - Blockchain Selection (HIDDEN in CSV mode, VISIBLE in Wallet mode) -->
         <div class="left-panel" id="blockchainPanel">
             <div class="panel-header">SELECT BLOCKCHAIN</div>
             <div class="blockchain-list" id="blockchainList"></div>
@@ -753,13 +758,13 @@
         if (mode === 'csv') {
             csvDiv.classList.remove('hidden');
             walletDiv.classList.add('hidden');
-            blockchainPanel.classList.add('hidden');
+            blockchainPanel.classList.remove('visible');
             csvBtn.classList.add('active');
             walletBtn.classList.remove('active');
         } else {
             csvDiv.classList.add('hidden');
             walletDiv.classList.remove('hidden');
-            blockchainPanel.classList.remove('hidden');
+            blockchainPanel.classList.add('visible');
             walletBtn.classList.add('active');
             csvBtn.classList.remove('active');
         }
@@ -781,10 +786,14 @@
     document.getElementById('addressInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') fetchWalletData();
     });
+    
+    // Set initial state: CSV mode = blockchain panel hidden
+    document.getElementById('blockchainPanel').classList.remove('visible');
+    
     updateTimestamp();
     setInterval(updateTimestamp, 1000);
     
-    console.log('✅ CryptoTax Enterprise - CSV + Wallet Mode | 13 Blockchains');
+    console.log('✅ CryptoTax Enterprise - CSV mode (blockchain hidden) | Wallet mode (blockchain visible)');
 </script>
 </body>
 </html>
