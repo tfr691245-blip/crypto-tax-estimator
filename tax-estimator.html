@@ -122,10 +122,9 @@
             transform: translateX(100%);
         }
         
-        /* ========== FIXED NETWORK SELECTOR - HIGHEST Z-INDEX ========== */
+        /* NETWORK SELECTOR - RELATIVE POSITIONING */
         .network-wrapper { 
             position: relative; 
-            z-index: 9999;
             margin-bottom: 24px; 
         }
         .network-trigger { 
@@ -144,29 +143,27 @@
             border-color: #8b5cf6; 
             background: rgba(139,92,246,0.15); 
         }
-        .network-dropdown { 
-            position: absolute; 
-            top: calc(100% + 8px); 
-            left: 0; 
-            background: rgba(8, 12, 25, 0.98); 
-            backdrop-filter: blur(24px); 
-            border: 1px solid rgba(139,92,246,0.4); 
-            border-radius: 24px; 
-            padding: 8px; 
-            min-width: 280px; 
+        
+        /* DROPDOWN - FIXED POSITIONING (NEVER HIDDEN) */
+        .network-dropdown-portal {
+            position: fixed;
+            background: rgba(8, 12, 25, 0.98);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(139,92,246,0.4);
+            border-radius: 24px;
+            padding: 8px;
+            min-width: 280px;
             max-height: 400px;
             overflow-y: auto;
-            z-index: 10000;
-            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.8); 
-            opacity: 0; 
-            visibility: hidden; 
-            transform: translateY(-10px); 
-            transition: all 0.25s ease;
+            z-index: 99999;
+            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
         }
-        .network-dropdown.show { 
-            opacity: 1; 
-            visibility: visible; 
-            transform: translateY(0); 
+        .network-dropdown-portal.show {
+            opacity: 1;
+            visibility: visible;
         }
         .network-option { 
             display: flex; 
@@ -198,12 +195,6 @@
             color: #64748b; 
         }
         
-        /* RESULTS SECTION - NORMAL Z-INDEX */
-        .results-section { 
-            position: relative; 
-            z-index: 1; 
-        }
-        
         .input-field { 
             width: 100%; 
             background: rgba(0,0,0,0.3); 
@@ -219,6 +210,11 @@
             outline: none; 
             border-color: #8b5cf6; 
             box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+        }
+        
+        .results-section { 
+            position: relative; 
+            z-index: 1; 
         }
         
         .tx-row { 
@@ -354,68 +350,11 @@
                     <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
                     <div class="relative">
                         <div id="networkTrigger" class="network-trigger">
-                            <img id="selectedNetworkIcon" class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" alt="Bitcoin">
+                            <img id="selectedNetworkIcon" class="network-icon-img" src="https://assets.trustwallet.com/blockchains/bitcoin/info/logo.png" alt="Bitcoin">
                             <span id="selectedNetworkName" class="network-name">Bitcoin</span>
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
-                        <div id="networkDropdown" class="network-dropdown">
-                            <div class="network-option" data-chain="btc" data-name="Bitcoin" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" data-balance="btc-balance" data-tx="btc-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png">
-                                <div><div class="network-name">Bitcoin</div><div class="network-desc">Bitcoin Mainnet</div></div>
-                            </div>
-                            <div class="network-option" data-chain="eth" data-name="Ethereum" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" data-balance="eth-balance" data-tx="eth-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png">
-                                <div><div class="network-name">Ethereum</div><div class="network-desc">Ethereum Mainnet</div></div>
-                            </div>
-                            <div class="network-option" data-chain="bnb" data-name="BNB Chain" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" data-balance="bnb-balance" data-tx="bnb-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png">
-                                <div><div class="network-name">BNB Chain</div><div class="network-desc">Binance Smart Chain</div></div>
-                            </div>
-                            <div class="network-option" data-chain="polygon" data-name="Polygon" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="polygon-balance" data-tx="polygon-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
-                                <div><div class="network-name">Polygon</div><div class="network-desc">Polygon Mainnet</div></div>
-                            </div>
-                            <div class="network-option" data-chain="sol" data-name="Solana" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" data-balance="sol-balance" data-tx="sol-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png">
-                                <div><div class="network-name">Solana</div><div class="network-desc">Solana Mainnet</div></div>
-                            </div>
-                            <div class="network-option" data-chain="avalanche" data-name="Avalanche" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/avax.png" data-balance="avalanche-balance" data-tx="avalanche-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/avax.png">
-                                <div><div class="network-name">Avalanche</div><div class="network-desc">Avalanche C-Chain</div></div>
-                            </div>
-                            <div class="network-option" data-chain="arbitrum" data-name="Arbitrum" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/arb.png" data-balance="arbitrum-balance" data-tx="arbitrum-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/arb.png">
-                                <div><div class="network-name">Arbitrum</div><div class="network-desc">Arbitrum One</div></div>
-                            </div>
-                            <div class="network-option" data-chain="optimism" data-name="Optimism" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/op.png" data-balance="optimism-balance" data-tx="optimism-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/op.png">
-                                <div><div class="network-name">Optimism</div><div class="network-desc">Optimism Mainnet</div></div>
-                            </div>
-                            <div class="network-option" data-chain="base" data-name="Base" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/base.png" data-balance="base-balance" data-tx="base-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/base.png">
-                                <div><div class="network-name">Base</div><div class="network-desc">Base Mainnet</div></div>
-                            </div>
-                            <div class="network-option" data-chain="fantom" data-name="Fantom" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/ftm.png" data-balance="fantom-balance" data-tx="fantom-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/ftm.png">
-                                <div><div class="network-name">Fantom</div><div class="network-desc">Fantom Opera</div></div>
-                            </div>
-                            <div class="network-option" data-chain="cronos" data-name="Cronos" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/cro.png" data-balance="cronos-balance" data-tx="cronos-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/cro.png">
-                                <div><div class="network-name">Cronos</div><div class="network-desc">Cronos Mainnet</div></div>
-                            </div>
-                            <div class="network-option" data-chain="gnosis" data-name="Gnosis" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/xdai.png" data-balance="gnosis-balance" data-tx="gnosis-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/xdai.png">
-                                <div><div class="network-name">Gnosis</div><div class="network-desc">Gnosis Chain (xDai)</div></div>
-                            </div>
-                            <div class="network-option" data-chain="celo" data-name="Celo" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/celo.png" data-balance="celo-balance" data-tx="celo-transactions" data-has-tx="true">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/celo.png">
-                                <div><div class="network-name">Celo</div><div class="network-desc">Celo Mainnet</div></div>
-                            </div>
-                            <div class="network-option" data-chain="mfc" data-name="Polygon Amoy" data-icon="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png" data-balance="mfc-balance" data-tx="" data-has-tx="false">
-                                <img class="network-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/matic.png">
-                                <div><div class="network-name">Polygon Amoy</div><div class="network-desc">MFC Token (Testnet)</div></div>
-                            </div>
-                        </div>
+                        <div id="networkDropdownPortal" class="network-dropdown-portal"></div>
                     </div>
                 </div>
                 
@@ -495,16 +434,93 @@
     <script>
         const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev';
         
-        let selectedChain = 'btc';
-        let selectedChainName = 'Bitcoin';
-        let selectedBalanceEndpoint = 'btc-balance';
-        let selectedTxEndpoint = 'btc-transactions';
-        let selectedHasTx = true;
+        // Network configurations with Trust Wallet image URLs (100% working)
+        const networks = [
+            { chain: 'btc', name: 'Bitcoin', desc: 'Bitcoin Mainnet', icon: 'https://assets.trustwallet.com/blockchains/bitcoin/info/logo.png', balance: 'btc-balance', tx: 'btc-transactions', hasTx: true },
+            { chain: 'eth', name: 'Ethereum', desc: 'Ethereum Mainnet', icon: 'https://assets.trustwallet.com/blockchains/ethereum/info/logo.png', balance: 'eth-balance', tx: 'eth-transactions', hasTx: true },
+            { chain: 'bnb', name: 'BNB Chain', desc: 'Binance Smart Chain', icon: 'https://assets.trustwallet.com/blockchains/smartchain/info/logo.png', balance: 'bnb-balance', tx: 'bnb-transactions', hasTx: true },
+            { chain: 'polygon', name: 'Polygon', desc: 'Polygon Mainnet', icon: 'https://assets.trustwallet.com/blockchains/polygon/info/logo.png', balance: 'polygon-balance', tx: 'polygon-transactions', hasTx: true },
+            { chain: 'sol', name: 'Solana', desc: 'Solana Mainnet', icon: 'https://assets.trustwallet.com/blockchains/solana/info/logo.png', balance: 'sol-balance', tx: 'sol-transactions', hasTx: true },
+            { chain: 'avalanche', name: 'Avalanche', desc: 'Avalanche C-Chain', icon: 'https://assets.trustwallet.com/blockchains/avalanchec/info/logo.png', balance: 'avalanche-balance', tx: 'avalanche-transactions', hasTx: true },
+            { chain: 'arbitrum', name: 'Arbitrum', desc: 'Arbitrum One', icon: 'https://assets.trustwallet.com/blockchains/arbitrum/info/logo.png', balance: 'arbitrum-balance', tx: 'arbitrum-transactions', hasTx: true },
+            { chain: 'optimism', name: 'Optimism', desc: 'Optimism Mainnet', icon: 'https://assets.trustwallet.com/blockchains/optimism/info/logo.png', balance: 'optimism-balance', tx: 'optimism-transactions', hasTx: true },
+            { chain: 'base', name: 'Base', desc: 'Base Mainnet', icon: 'https://assets.trustwallet.com/blockchains/base/info/logo.png', balance: 'base-balance', tx: 'base-transactions', hasTx: true },
+            { chain: 'fantom', name: 'Fantom', desc: 'Fantom Opera', icon: 'https://assets.trustwallet.com/blockchains/fantom/info/logo.png', balance: 'fantom-balance', tx: 'fantom-transactions', hasTx: true },
+            { chain: 'cronos', name: 'Cronos', desc: 'Cronos Mainnet', icon: 'https://assets.trustwallet.com/blockchains/cronos/info/logo.png', balance: 'cronos-balance', tx: 'cronos-transactions', hasTx: true },
+            { chain: 'gnosis', name: 'Gnosis', desc: 'Gnosis Chain (xDai)', icon: 'https://assets.trustwallet.com/blockchains/gnosis/info/logo.png', balance: 'gnosis-balance', tx: 'gnosis-transactions', hasTx: true },
+            { chain: 'celo', name: 'Celo', desc: 'Celo Mainnet', icon: 'https://assets.trustwallet.com/blockchains/celo/info/logo.png', balance: 'celo-balance', tx: 'celo-transactions', hasTx: true },
+            { chain: 'mfc', name: 'Polygon Amoy', desc: 'MFC Token (Testnet)', icon: 'https://assets.trustwallet.com/blockchains/polygon/info/logo.png', balance: 'mfc-balance', tx: '', hasTx: false }
+        ];
+        
+        let selectedNetwork = networks[0];
         
         const trigger = document.getElementById('networkTrigger');
-        const dropdown = document.getElementById('networkDropdown');
+        const portal = document.getElementById('networkDropdownPortal');
         const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
         const selectedNetworkName = document.getElementById('selectedNetworkName');
+        
+        // Build dropdown content
+        function buildDropdown() {
+            portal.innerHTML = networks.map(net => `
+                <div class="network-option" data-chain="${net.chain}" data-name="${net.name}" data-desc="${net.desc}" data-icon="${net.icon}" data-balance="${net.balance}" data-tx="${net.tx}" data-has-tx="${net.hasTx}">
+                    <img class="network-icon-img" src="${net.icon}" alt="${net.name}" onerror="this.src='https://assets.trustwallet.com/blockchains/ethereum/info/logo.png'">
+                    <div><div class="network-name">${net.name}</div><div class="network-desc">${net.desc}</div></div>
+                </div>
+            `).join('');
+            
+            // Add click handlers
+            document.querySelectorAll('.network-option').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const chain = opt.dataset.chain;
+                    const newNetwork = networks.find(n => n.chain === chain);
+                    if (newNetwork) {
+                        selectedNetwork = newNetwork;
+                        selectedNetworkIcon.src = newNetwork.icon;
+                        selectedNetworkName.textContent = newNetwork.name;
+                        clearResults();
+                        hideDropdown();
+                    }
+                });
+            });
+        }
+        
+        function showDropdown() {
+            const rect = trigger.getBoundingClientRect();
+            portal.style.top = (rect.bottom + 8) + 'px';
+            portal.style.left = rect.left + 'px';
+            portal.classList.add('show');
+            trigger.classList.add('active');
+        }
+        
+        function hideDropdown() {
+            portal.classList.remove('show');
+            trigger.classList.remove('active');
+        }
+        
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (portal.classList.contains('show')) {
+                hideDropdown();
+            } else {
+                showDropdown();
+            }
+        });
+        
+        document.addEventListener('click', function(event) {
+            if (!trigger.contains(event.target) && !portal.contains(event.target)) {
+                hideDropdown();
+            }
+        });
+        
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') { hideDropdown(); }
+        });
+        
+        window.addEventListener('scroll', hideDropdown);
+        window.addEventListener('resize', hideDropdown);
+        
+        buildDropdown();
         
         function calculateFIFOTax(transactions) {
             let totalGain = 0, totalLoss = 0, holdings = [], processedTxs = [];
@@ -622,38 +638,6 @@
             walletMode.classList.remove('hidden'); clearResults();
         };
         
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!trigger.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.remove('show');
-                trigger.classList.remove('active');
-            }
-        });
-        
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') { dropdown.classList.remove('show'); trigger.classList.remove('active'); }
-        });
-        
-        trigger.addEventListener('click', (e) => {
-            e.stopPropagation(); dropdown.classList.toggle('show'); trigger.classList.toggle('active');
-        });
-        
-        dropdown.querySelectorAll('.network-option').forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.stopPropagation();
-                selectedChain = option.dataset.chain;
-                selectedChainName = option.dataset.name;
-                selectedBalanceEndpoint = option.dataset.balance;
-                selectedTxEndpoint = option.dataset.tx;
-                selectedHasTx = option.dataset.hasTx === 'true';
-                selectedNetworkIcon.src = option.dataset.icon;
-                selectedNetworkName.textContent = selectedChainName;
-                clearResults();
-                dropdown.classList.remove('show'); trigger.classList.remove('active');
-            });
-        });
-        
-        // CSV Upload
         document.getElementById('uploadBtn').onclick = async () => {
             const file = document.getElementById('csvFile').files[0];
             if (!file) { alert('Please select a CSV file'); return; }
@@ -667,21 +651,20 @@
             displayCSVResults(0, 'CSV', 'CSV File', taxResult.transactions, taxResult);
         };
         
-        // Wallet Fetch (Auto Mode)
         document.getElementById('fetchWalletBtn').onclick = async () => {
             const address = document.getElementById('walletAddress').value.trim();
             if (!address) { alert('Please enter a wallet address'); return; }
-            if (!validateAddressFormat(address, selectedChain)) {
-                alert(`Address format does not match ${selectedChainName} network.`); return;
+            if (!validateAddressFormat(address, selectedNetwork.chain)) {
+                alert(`Address format does not match ${selectedNetwork.name} network.`); return;
             }
             document.getElementById('fetchWalletBtn').disabled = true;
             document.getElementById('fetchWalletBtn').innerHTML = '<span>⏳</span> Loading...';
             try {
-                const balanceRes = await fetch(`${API_URL}/api/${selectedBalanceEndpoint}?address=${address}`);
+                const balanceRes = await fetch(`${API_URL}/api/${selectedNetwork.balance}?address=${address}`);
                 const balanceData = await balanceRes.json();
                 let transactions = [];
-                if (selectedHasTx && selectedTxEndpoint) {
-                    const txRes = await fetch(`${API_URL}/api/${selectedTxEndpoint}?address=${address}`);
+                if (selectedNetwork.hasTx && selectedNetwork.tx) {
+                    const txRes = await fetch(`${API_URL}/api/${selectedNetwork.tx}?address=${address}`);
                     const txData = await txRes.json();
                     if (txData.success && txData.transactions) transactions = txData.transactions;
                 }
