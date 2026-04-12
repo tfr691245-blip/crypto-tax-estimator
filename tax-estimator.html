@@ -3,691 +3,759 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CryptoTax | Professional Crypto Tax Estimator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>CryptoTax v2.0 - Smart Multi-API System</title>
     <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
-        
-        .glass-card { 
-            background: rgba(15, 23, 42, 0.5); 
-            backdrop-filter: blur(20px); 
-            border-radius: 32px; 
-            border: 1px solid rgba(139, 92, 246, 0.15); 
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1); 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .glass-card:hover { 
-            border-color: rgba(139, 92, 246, 0.3); 
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
-            transform: translateY(-2px);
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #0B0F1C;
+            padding: 16px;
+            min-height: 100vh;
+            color: #FFFFFF;
         }
-        
-        .btn-premium { 
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); 
-            border-radius: 60px; 
-            padding: 14px 32px; 
-            font-weight: 600; 
-            color: white; 
-            transition: all 0.3s ease; 
-            cursor: pointer; 
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px; 
-            width: 100%; 
+
+        .app-card {
+            max-width: 560px;
+            margin: 0 auto;
+            background: #13172A;
+            border-radius: 32px;
+            padding: 24px 20px 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
         }
-        .btn-premium:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4);
-            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(98deg, #F7931A 0%, #FFD166 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 4px;
         }
-        .btn-premium:disabled { 
-            opacity: 0.5; 
-            transform: none; 
-            cursor: not-allowed; 
+
+        .badge {
+            display: inline-block;
+            background: rgba(247, 147, 26, 0.2);
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 8px;
+            vertical-align: middle;
+            color: #F7931A;
         }
-        
-        .gradient-text { 
-            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            color: transparent; 
+
+        .tagline {
+            font-size: 13px;
+            color: #8E94B3;
+            margin-bottom: 24px;
+            border-left: 3px solid #F7931A;
+            padding-left: 12px;
         }
-        
-        .stats-card { 
-            background: rgba(0,0,0,0.25); 
-            backdrop-filter: blur(10px);
-            border-radius: 24px; 
-            padding: 20px; 
-            text-align: center; 
-            border: 1px solid rgba(139,92,246,0.1);
-            transition: all 0.3s ease;
+
+        .address-input-section {
+            margin-bottom: 20px;
         }
-        .stats-card:hover {
-            border-color: rgba(139,92,246,0.3);
-            background: rgba(139,92,246,0.05);
+
+        .address-label {
+            font-size: 13px;
+            color: #A0A6C5;
+            margin-bottom: 8px;
+            display: block;
         }
-        .stats-number { 
-            font-size: 2rem; 
-            font-weight: 800; 
-            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            color: transparent; 
-        }
-        
-        .mode-switch {
+
+        .address-input-wrapper {
             display: flex;
-            justify-content: center;
-            margin-bottom: 32px;
+            gap: 10px;
         }
-        .mode-switch__container {
-            position: relative;
-            display: inline-flex;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(20px);
-            border-radius: 80px;
-            padding: 6px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-        .mode-switch__option {
-            position: relative;
-            padding: 12px 40px;
-            font-weight: 600;
-            font-size: 15px;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 2;
-            background: transparent;
-            color: #94a3b8;
-            letter-spacing: 0.3px;
-        }
-        .mode-switch__option.active {
+
+        .address-input {
+            flex: 1;
+            background: #0F1324;
+            border: 1px solid #2A2F4F;
+            border-radius: 16px;
+            padding: 14px 16px;
             color: white;
+            font-family: monospace;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
         }
-        .mode-switch__glow {
-            position: absolute;
-            top: 6px;
-            bottom: 6px;
-            width: calc(50% - 6px);
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
-            border-radius: 60px;
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+
+        .address-input:focus {
+            border-color: #F7931A;
         }
-        .mode-switch__glow.slide-right {
-            transform: translateX(100%);
+
+        .selector-wrapper {
+            position: relative;
+            margin-bottom: 24px;
+            z-index: 10;
         }
-        
-        /* FIXED NETWORK SELECTOR - WORKING 100% */
-        .network-wrapper { 
-            position: relative; 
-            margin-bottom: 24px; 
+
+        .selector-button {
+            background: #1E233F;
+            border: 1px solid #2A2F4F;
+            border-radius: 20px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
         }
-        .network-trigger { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            background: rgba(0,0,0,0.5); 
-            border: 1px solid rgba(139,92,246,0.4); 
-            border-radius: 80px; 
-            padding: 10px 22px; 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
-            width: fit-content; 
+
+        .selector-button:hover {
+            background: #252B4A;
+            border-color: #F7931A;
         }
-        .network-trigger:hover, .network-trigger.active { 
-            border-color: #8b5cf6; 
-            background: rgba(139,92,246,0.15); 
-        }
-        
-        /* DROPDOWN - FIXED POSITIONING */
-        .network-dropdown {
+
+        .blockchain-dropdown {
             position: absolute;
             top: 100%;
             left: 0;
-            margin-top: 8px;
-            background: rgba(8, 12, 25, 0.98);
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(139,92,246,0.4);
-            border-radius: 24px;
-            padding: 8px;
-            min-width: 280px;
-            max-height: 400px;
-            overflow-y: auto;
-            z-index: 99999;
-            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.8);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s ease;
-        }
-        .network-dropdown.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        .network-option { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            padding: 10px 14px; 
-            border-radius: 16px; 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
-        }
-        .network-option:hover { 
-            background: rgba(139,92,246,0.15); 
-        }
-        .network-icon-img { 
-            width: 28px; 
-            height: 28px; 
-            border-radius: 50%; 
-            object-fit: contain; 
-        }
-        .network-name { 
-            font-weight: 500; 
-            color: white; 
-            font-size: 14px;
-        }
-        .network-desc { 
-            font-size: 10px; 
-            color: #64748b; 
-        }
-        
-        .input-field { 
-            width: 100%; 
-            background: rgba(0,0,0,0.3); 
-            border: 1px solid rgba(139,92,246,0.25); 
-            border-radius: 20px; 
-            padding: 14px 20px; 
-            color: white; 
-            font-size: 14px; 
-            font-family: monospace; 
-            transition: all 0.2s ease;
-        }
-        .input-field:focus { 
-            outline: none; 
-            border-color: #8b5cf6; 
-            box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
-        }
-        
-        .results-section { 
-            position: relative; 
-            z-index: 1; 
-        }
-        
-        .tx-row { 
-            background: rgba(255, 255, 255, 0.03); 
-            border-radius: 20px; 
-            padding: 14px; 
-            transition: all 0.25s ease; 
-            border: 1px solid rgba(255, 255, 255, 0.03); 
-        }
-        .tx-row:hover { 
-            background: rgba(139, 92, 246, 0.08); 
-            transform: translateX(5px); 
-            border-color: rgba(139,92,246,0.2);
-        }
-        
-        .info-card {
-            background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(99,102,241,0.04));
+            right: 0;
+            background: #1A1E38;
+            border: 1px solid #2F3559;
             border-radius: 20px;
-            padding: 16px 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(139,92,246,0.15);
+            margin-top: 8px;
+            overflow: hidden;
+            z-index: 9999;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            max-height: 320px;
+            overflow-y: auto;
         }
-        .info-card-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #c4b5fd;
-            margin-bottom: 8px;
+
+        .dropdown-item {
+            padding: 14px 18px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .info-card-text {
+
+        .dropdown-item:hover {
+            background: #2A2F55;
+        }
+
+        .chain-name {
+            font-weight: 600;
+        }
+
+        .chain-network {
+            font-size: 11px;
+            color: #8E94B3;
+            display: block;
+        }
+
+        .wallet-section {
+            position: relative;
+            z-index: 1;
+            background: #0F1324;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #252A48;
+        }
+
+        .wallet-header {
+            font-size: 14px;
+            color: #A0A6C5;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .api-source {
+            font-size: 10px;
+            background: #1A1E38;
+            padding: 4px 8px;
+            border-radius: 12px;
+            color: #8E94B3;
+        }
+
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .balance-amount {
+            font-size: 36px;
+            font-weight: 700;
+            font-family: monospace;
+            letter-spacing: -0.5px;
+            word-break: break-all;
+        }
+
+        .balance-symbol {
+            font-size: 18px;
+            color: #F7931A;
+            font-weight: 600;
+        }
+
+        .address-note {
             font-size: 12px;
-            color: #94a3b8;
-            line-height: 1.5;
+            color: #6C729B;
+            margin-top: 12px;
+            font-family: monospace;
+            background: #0B0E1A;
+            padding: 8px 12px;
+            border-radius: 14px;
+            word-break: break-all;
         }
-        
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 10px; }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .tx-info {
+            margin-top: 12px;
+            font-size: 11px;
+            color: #4A5075;
+            display: flex;
+            gap: 16px;
         }
-        .fade-in {
-            animation: fadeInUp 0.5s ease-out;
-        }
-        
-        .tax-badge {
-            background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(99,102,241,0.1));
+
+        .warning-box {
+            background: rgba(247, 147, 26, 0.12);
+            border-left: 4px solid #F7931A;
+            padding: 14px 16px;
             border-radius: 16px;
-            padding: 12px;
-            text-align: center;
+            font-size: 13px;
+            margin-bottom: 24px;
+            color: #FFD9A5;
+        }
+
+        .fetch-btn {
+            width: 100%;
+            background: #F7931A;
+            border: none;
+            padding: 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 16px;
+            color: #0B0F1C;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .fetch-btn:active {
+            transform: scale(0.97);
+            background: #E07C0A;
+        }
+
+        .fetch-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .network-info {
+            background: #0F1324;
+            border-radius: 20px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .footer-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #6C729B;
+            padding-top: 8px;
+            border-top: 1px solid #252A48;
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.15);
+            border-left: 4px solid #FF4444;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            color: #FFAAAA;
+            display: none;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .app-card { padding: 18px 16px 24px; }
+            .balance-amount { font-size: 28px; }
+            .address-input-wrapper { flex-direction: column; }
+        }
+
+        .hidden-dropdown {
+            display: none;
+        }
+
+        .success-check {
+            color: #4CAF50;
+            margin-left: 8px;
         }
     </style>
 </head>
-<body class="min-h-screen text-white">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-2xl border-b border-white/5">
-        <div class="container mx-auto px-5 sm:px-8 py-4">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center"><span class="text-lg">💰</span></div>
-                    <span class="text-white font-bold text-xl tracking-tight">CryptoTax</span>
-                    <span class="hidden sm:inline-flex text-xs bg-white/5 text-purple-300 px-2 py-1 rounded-full ml-2 border border-white/10">v2.0</span>
-                </div>
-                <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="index.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Home</a>
-                    <a href="dashboard.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-white text-sm transition px-3 py-1.5 rounded-xl bg-purple-600/20">Estimator</a>
-                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
-                </div>
-            </div>
+<body>
+<div class="app-card">
+    <div class="logo">
+        CryptoTax v2.0
+        <span class="badge">SMART API</span>
+    </div>
+    <div class="tagline">Multi-layer API fallback • Real-time blockchain data</div>
+
+    <div class="address-input-section">
+        <label class="address-label">Wallet Address</label>
+        <div class="address-input-wrapper">
+            <input type="text" class="address-input" id="addressInput" 
+                   placeholder="Enter BTC address or 0x... EVM address">
         </div>
-    </nav>
+    </div>
 
-    <div class="container mx-auto px-5 sm:px-8 pt-24 sm:pt-28 pb-16">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-14">
-                <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-purple-500/20">
-                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                    <span class="text-purple-300 text-xs font-medium">15+ Blockchains Supported</span>
-                </div>
-                <h1 class="text-6xl sm:text-7xl font-bold mb-5 tracking-tight">Tax <span class="gradient-text">Estimator</span></h1>
-                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Calculate capital gains using CSV upload. Or fetch wallet balance & recent transactions.</p>
+    <div class="selector-wrapper">
+        <div class="selector-button" id="selectorButton">
+            <span class="selected-chain">
+                <span class="chain-icon" id="selectedIcon">₿</span>
+                <span id="selectedChainName">Bitcoin</span>
+            </span>
+            <span>▼</span>
+        </div>
+        <div class="blockchain-dropdown hidden-dropdown" id="blockchainDropdown">
+            <div class="dropdown-item" data-chain="Bitcoin" data-symbol="BTC" data-icon="₿">
+                <div><span class="chain-icon">₿</span></div>
+                <div><span class="chain-name">Bitcoin</span><span class="chain-network"> Bitcoin Mainnet</span></div>
             </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
-                <div class="stats-card"><div class="stats-number">15+</div><div class="text-gray-400 text-sm mt-1">Networks</div></div>
-                <div class="stats-card"><div class="stats-number">FIFO</div><div class="text-gray-400 text-sm mt-1">Methodology</div></div>
-                <div class="stats-card"><div class="stats-number">Real</div><div class="text-gray-400 text-sm mt-1">On-Chain</div></div>
-                <div class="stats-card"><div class="stats-number">Instant</div><div class="text-gray-400 text-sm mt-1">Results</div></div>
+            <div class="dropdown-item" data-chain="Optimism" data-symbol="ETH" data-icon="🔷">
+                <div><span class="chain-icon">🔷</span></div>
+                <div><span class="chain-name">Optimism</span><span class="chain-network"> Optimism Mainnet</span></div>
             </div>
-
-            <div class="mode-switch">
-                <div class="mode-switch__container">
-                    <div id="sliderGlow" class="mode-switch__glow"></div>
-                    <div id="csvSliderBtn" class="mode-switch__option active">📁 Manual CSV</div>
-                    <div id="walletSliderBtn" class="mode-switch__option">🔗 Auto Wallet</div>
-                </div>
+            <div class="dropdown-item" data-chain="Base" data-symbol="ETH" data-icon="🔵">
+                <div><span class="chain-icon">🔵</span></div>
+                <div><span class="chain-name">Base</span><span class="chain-network"> Base Mainnet</span></div>
             </div>
-
-            <!-- CSV Mode -->
-            <div id="csvMode" class="glass-card p-6 sm:p-8 fade-in">
-                <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">📂</div>
-                    <h2 class="text-2xl font-bold">CSV Import</h2>
-                    <p class="text-gray-400 text-sm mt-1">Upload your complete transaction history</p>
-                </div>
-                
-                <div class="info-card">
-                    <div class="info-card-title"><span>📋</span> Complete Transaction Data</div>
-                    <div class="info-card-text">CSV upload provides <strong>full visibility</strong> into your entire transaction history. Include all buys, sells, and trades for accurate FIFO-based tax calculations.</div>
-                </div>
-                
-                <input type="file" id="csvFile" accept=".csv" class="w-full bg-black/30 border border-purple-500/30 rounded-xl p-3 mb-4 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-purple-600 file:text-white hover:file:bg-purple-700">
-                <div class="bg-purple-500/10 rounded-xl p-4 mb-5">
-                    <p class="text-sm text-gray-300"><span class="font-semibold text-purple-400">CSV Format:</span> date,type,amount,price</p>
-                    <p class="text-xs text-gray-500 mt-1">Example: 2024-01-01,buy,0.5,20000</p>
-                </div>
-                <button id="uploadBtn" class="btn-premium"><span>📊</span> Calculate Tax</button>
+            <div class="dropdown-item" data-chain="Fantom" data-symbol="FTM" data-icon="🎭">
+                <div><span class="chain-icon">🎭</span></div>
+                <div><span class="chain-name">Fantom</span><span class="chain-network"> Fantom Opera</span></div>
             </div>
-
-            <!-- Wallet Mode (Auto) -->
-            <div id="walletMode" class="glass-card p-6 sm:p-8 hidden fade-in">
-                <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">🔗</div>
-                    <h2 class="text-2xl font-bold">Wallet Connect</h2>
-                    <p class="text-gray-400 text-sm mt-1">Fetch balance and recent transactions</p>
-                </div>
-                
-                <div class="network-wrapper">
-                    <label class="block text-sm text-gray-400 mb-2">Select Blockchain</label>
-                    <div class="relative">
-                        <div id="networkTrigger" class="network-trigger">
-                            <img id="selectedNetworkIcon" class="network-icon-img" src="/images/btc.png" alt="Bitcoin">
-                            <span id="selectedNetworkName" class="network-name">Bitcoin</span>
-                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </div>
-                        <div id="networkDropdown" class="network-dropdown"></div>
-                    </div>
-                </div>
-                
-                <div class="mt-4 mb-4">
-                    <label class="block text-sm text-gray-400 mb-2">Wallet Address</label>
-                    <input type="text" id="walletAddress" class="input-field" placeholder="Enter wallet address (0x... or address)">
-                </div>
-                
-                <div class="info-card">
-                    <div class="info-card-title"><span>🔍</span> Quick Preview Only</div>
-                    <div class="info-card-text">Shows real-time <strong>balance</strong> and <strong>recent transactions</strong>. For <strong>accurate tax filing</strong> with complete history, use <strong>Manual CSV Upload</strong>.</div>
-                </div>
-                
-                <button id="fetchWalletBtn" class="btn-premium"><span>🔍</span> Fetch Balance & Recent Transactions</button>
+            <div class="dropdown-item" data-chain="Cronos" data-symbol="CRO" data-icon="⚡">
+                <div><span class="chain-icon">⚡</span></div>
+                <div><span class="chain-name">Cronos</span><span class="chain-network"> Cronos Mainnet</span></div>
             </div>
-
-            <!-- Results Section -->
-            <div id="results" class="results-section hidden mt-8 fade-in">
-                <div class="glass-card p-6 mb-6">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-gray-400 text-sm">Wallet Balance</p>
-                            <p id="balanceAmount" class="text-3xl font-bold gradient-text">0</p>
-                            <p id="balanceCurrency" class="text-gray-400 text-sm mt-1">—</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-gray-400 text-sm">Network</p>
-                            <p id="networkName" class="text-white font-semibold">—</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tax Summary (ONLY for CSV mode) -->
-                <div id="taxSummary" class="glass-card p-6 mb-6 hidden">
-                    <h3 class="text-xl font-bold mb-5">📊 Tax Summary</h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div class="tax-badge"><p class="text-gray-400 text-xs">Total Gain</p><p id="totalGain" class="text-xl font-bold text-green-400">$0</p></div>
-                        <div class="tax-badge"><p class="text-gray-400 text-xs">Total Loss</p><p id="totalLoss" class="text-xl font-bold text-red-400">$0</p></div>
-                        <div class="tax-badge"><p class="text-gray-400 text-xs">Net Gain</p><p id="netGain" class="text-xl font-bold text-purple-400">$0</p></div>
-                        <div class="tax-badge"><p class="text-gray-400 text-xs">Tax (20%)</p><p id="estimatedTax" class="text-xl font-bold text-yellow-400">$0</p></div>
-                    </div>
-                </div>
-
-                <!-- Transactions List -->
-                <div class="glass-card p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold">📜 Transaction Log</h3>
-                        <span id="txCount" class="text-purple-400 text-xs bg-purple-500/20 px-3 py-1 rounded-full">0</span>
-                    </div>
-                    <div id="transactionsList" class="space-y-2 max-h-96 overflow-y-auto">
-                        <div class="text-center text-gray-400 py-6">Upload CSV or fetch wallet data</div>
-                    </div>
-                </div>
+            <div class="dropdown-item" data-chain="Gnosis" data-symbol="xDAI" data-icon="🦉">
+                <div><span class="chain-icon">🦉</span></div>
+                <div><span class="chain-name">Gnosis</span><span class="chain-network"> Gnosis Chain</span></div>
+            </div>
+            <div class="dropdown-item" data-chain="Celo" data-symbol="CELO" data-icon="🌱">
+                <div><span class="chain-icon">🌱</span></div>
+                <div><span class="chain-name">Celo</span><span class="chain-network"> Celo Mainnet</span></div>
             </div>
         </div>
     </div>
 
-    <div class="container mx-auto px-5 sm:px-8 pb-8">
-        <div class="max-w-6xl mx-auto">
-            <div class="border-t border-white/10 pt-8">
-                <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 mb-4">
-                    <div class="flex items-center justify-center gap-2 mb-3"><span class="text-amber-400 text-lg">⚖️</span><p class="text-amber-300 text-sm font-semibold">Tax Disclaimer</p></div>
-                    <p class="text-gray-400 text-xs leading-relaxed text-center">CryptoTax provides <strong class="text-purple-300">capital gains calculations</strong> using the FIFO (First-In, First-Out) method, a globally recognized accounting standard accepted by tax authorities worldwide.</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 text-left text-xs text-gray-500 max-w-md mx-auto">
-                        <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Calculates net gain/loss from your transactions</span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Uses IRS-approved FIFO methodology</span></div>
-                        <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT calculate country-specific tax rates</span></div>
-                        <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT file taxes or provide legal advice</span></div>
-                    </div>
-                    <p class="text-gray-500 text-xs mt-3 pt-3 border-t border-white/5 text-center">Tax laws vary by jurisdiction. <strong class="text-amber-300">Consult a qualified tax professional</strong> in your country for accurate filing requirements.</p>
-                </div>
-                <p class="text-gray-600 text-xs text-center">© 2026 CryptoTax | FIFO Method | Real On-Chain Data</p>
-            </div>
+    <div class="wallet-section" id="walletTable">
+        <div class="wallet-header">
+            <span>💰 WALLET BALANCE</span>
+            <span class="api-source" id="apiSource">Ready</span>
         </div>
+        <div class="balance-row">
+            <span class="balance-amount" id="balanceValue">—</span>
+            <span class="balance-symbol" id="balanceSymbol">BTC</span>
+        </div>
+        <div class="address-note" id="addressDisplay">Enter an address above</div>
+        <div class="tx-info" id="txInfo"></div>
     </div>
 
-    <script>
-        const API_URL = 'https://tax-api.pyypl2005-4b6.workers.dev';
+    <div class="error-message" id="errorMessage"></div>
+
+    <div class="warning-box">
+        ⚡ <strong>Smart API System Active:</strong> Auto-fallback between Mempool, Blockchair, Blockchain.com (BTC) & RPC/Explorer APIs (EVM)
+    </div>
+
+    <button class="fetch-btn" id="fetchBtn">⟳ Smart Fetch (Auto Fallback)</button>
+
+    <div class="network-info">
+        <span>🌐 Network</span>
+        <strong id="networkName">Bitcoin</strong>
+    </div>
+
+    <div class="footer-stats">
+        <span>82°F ☀️ Mostly cloudy</span>
+        <span id="liveTime"></span>
+        <span id="liveDate"></span>
+    </div>
+</div>
+
+<script>
+    // ============ SMART FALLBACK SYSTEM ============
+    
+    let currentChain = 'Bitcoin';
+    let currentSymbol = 'BTC';
+    let lastApiUsed = '';
+    
+    // ============ BITCOIN APIs (No keys needed) ============
+    
+    // API 1: Mempool.space (Fastest, most reliable)
+    async function fetchBitcoinMempool(address) {
+        const response = await fetch(`https://mempool.space/api/address/${address}`);
+        if (!response.ok) throw new Error(`Mempool: ${response.status}`);
+        const data = await response.json();
+        const funded = data.chain_stats?.funded_txo_sum || 0;
+        const spent = data.chain_stats?.spent_txo_sum || 0;
+        const balanceSatoshis = funded - spent;
+        return {
+            balance: (balanceSatoshis / 100000000).toFixed(8),
+            txCount: data.chain_stats?.tx_count || 0,
+            source: 'Mempool.space 🚀'
+        };
+    }
+    
+    // API 2: Blockchair (No key, good backup)
+    async function fetchBitcoinBlockchair(address) {
+        const response = await fetch(`https://api.blockchair.com/bitcoin/dashboards/address/${address}`);
+        if (!response.ok) throw new Error(`Blockchair: ${response.status}`);
+        const data = await response.json();
+        if (!data.data[address]) throw new Error('Address not found');
+        const balanceSatoshis = data.data[address].address?.balance || 0;
+        return {
+            balance: (balanceSatoshis / 100000000).toFixed(8),
+            txCount: data.data[address].address?.transaction_count || 0,
+            source: 'Blockchair.com 🔷'
+        };
+    }
+    
+    // API 3: Blockchain.com (Final fallback)
+    async function fetchBitcoinBlockchainCom(address) {
+        const response = await fetch(`https://blockchain.info/balance?active=${address}`);
+        if (!response.ok) throw new Error(`Blockchain.com: ${response.status}`);
+        const data = await response.json();
+        if (!data[address]) throw new Error('Address not found');
+        const balanceSatoshis = data[address].final_balance;
+        return {
+            balance: (balanceSatoshis / 100000000).toFixed(8),
+            txCount: data[address].n_tx || 0,
+            source: 'Blockchain.com 📦'
+        };
+    }
+    
+    // Smart Bitcoin fetcher with fallback chain
+    async function smartFetchBitcoin(address) {
+        const errors = [];
         
-        // ALL COINS WITH CORRECT LOCAL IMAGE PATHS
-        const networks = [
-            { chain: 'btc', name: 'Bitcoin', desc: 'Bitcoin Mainnet', icon: '/images/btc.png', balance: 'btc-balance', tx: 'btc-transactions', hasTx: true },
-            { chain: 'eth', name: 'Ethereum', desc: 'Ethereum Mainnet', icon: '/images/eth.png', balance: 'eth-balance', tx: 'eth-transactions', hasTx: true },
-            { chain: 'bnb', name: 'BNB Chain', desc: 'Binance Smart Chain', icon: '/images/bnb.png', balance: 'bnb-balance', tx: 'bnb-transactions', hasTx: true },
-            { chain: 'polygon', name: 'Polygon', desc: 'Polygon Mainnet', icon: '/images/poly.png', balance: 'polygon-balance', tx: 'polygon-transactions', hasTx: true },
-            { chain: 'sol', name: 'Solana', desc: 'Solana Mainnet', icon: '/images/sol.png', balance: 'sol-balance', tx: 'sol-transactions', hasTx: true },
-            { chain: 'avalanche', name: 'Avalanche', desc: 'Avalanche C-Chain', icon: '/images/avax.png', balance: 'avalanche-balance', tx: 'avalanche-transactions', hasTx: true },
-            { chain: 'arbitrum', name: 'Arbitrum', desc: 'Arbitrum One', icon: '/images/arb.png', balance: 'arbitrum-balance', tx: 'arbitrum-transactions', hasTx: true },
-            { chain: 'optimism', name: 'Optimism', desc: 'Optimism Mainnet', icon: '/images/op.png', balance: 'optimism-balance', tx: 'optimism-transactions', hasTx: true },
-            { chain: 'base', name: 'Base', desc: 'Base Mainnet', icon: '/images/base.png', balance: 'base-balance', tx: 'base-transactions', hasTx: true },
-            { chain: 'fantom', name: 'Fantom', desc: 'Fantom Opera', icon: '/images/ftm.png', balance: 'fantom-balance', tx: 'fantom-transactions', hasTx: true },
-            { chain: 'cronos', name: 'Cronos', desc: 'Cronos Mainnet', icon: '/images/cro.png', balance: 'cronos-balance', tx: 'cronos-transactions', hasTx: true },
-            { chain: 'gnosis', name: 'Gnosis', desc: 'Gnosis Chain (xDai)', icon: '/images/gno.png', balance: 'gnosis-balance', tx: 'gnosis-transactions', hasTx: true },
-            { chain: 'celo', name: 'Celo', desc: 'Celo Mainnet', icon: '/images/celo.png', balance: 'celo-balance', tx: 'celo-transactions', hasTx: true },
-            { chain: 'mfc', name: 'Polygon Amoy', desc: 'MFC Token (Testnet)', icon: '/images/poly.png', balance: 'mfc-balance', tx: '', hasTx: false }
-        ];
+        // Try Mempool first
+        try {
+            const result = await fetchBitcoinMempool(address);
+            lastApiUsed = result.source;
+            return result;
+        } catch (e) {
+            errors.push(`Mempool: ${e.message}`);
+            console.warn('Mempool failed, trying Blockchair...');
+        }
         
-        let selectedNetwork = networks[0];
+        // Try Blockchair second
+        try {
+            const result = await fetchBitcoinBlockchair(address);
+            lastApiUsed = result.source;
+            return result;
+        } catch (e) {
+            errors.push(`Blockchair: ${e.message}`);
+            console.warn('Blockchair failed, trying Blockchain.com...');
+        }
         
-        const trigger = document.getElementById('networkTrigger');
-        const dropdown = document.getElementById('networkDropdown');
-        const selectedNetworkIcon = document.getElementById('selectedNetworkIcon');
-        const selectedNetworkName = document.getElementById('selectedNetworkName');
+        // Try Blockchain.com third
+        try {
+            const result = await fetchBitcoinBlockchainCom(address);
+            lastApiUsed = result.source;
+            return result;
+        } catch (e) {
+            errors.push(`Blockchain.com: ${e.message}`);
+        }
         
-        function buildDropdown() {
-            dropdown.innerHTML = networks.map(net => `
-                <div class="network-option" data-chain="${net.chain}" data-name="${net.name}" data-desc="${net.desc}" data-icon="${net.icon}" data-balance="${net.balance}" data-tx="${net.tx}" data-has-tx="${net.hasTx}">
-                    <img class="network-icon-img" src="${net.icon}" alt="${net.name}" onerror="this.style.display='none'">
-                    <div><div class="network-name">${net.name}</div><div class="network-desc">${net.desc}</div></div>
-                </div>
-            `).join('');
+        throw new Error(`All APIs failed: ${errors.join(' | ')}`);
+    }
+    
+    // ============ EVM CHAIN APIs (Smart fallback) ============
+    
+    // RPC endpoints for each chain (public, no key needed)
+    const RPC_ENDPOINTS = {
+        'Optimism': 'https://mainnet.optimism.io',
+        'Base': 'https://mainnet.base.org',
+        'Fantom': 'https://rpc.ftm.tools',
+        'Cronos': 'https://evm.cronos.org',
+        'Gnosis': 'https://rpc.gnosischain.com',
+        'Celo': 'https://forno.celo.org'
+    };
+    
+    // Explorer APIs (free tier, may need key but works without for basic)
+    const EXPLORER_APIS = {
+        'Optimism': 'https://api-optimistic.etherscan.io/api',
+        'Base': 'https://api.basescan.org/api',
+        'Fantom': 'https://api.ftmscan.com/api',
+        'Cronos': 'https://api.cronoscan.com/api',
+        'Gnosis': 'https://api.gnosisscan.io/api',
+        'Celo': 'https://api.celoscan.io/api'
+    };
+    
+    // Method 1: Direct RPC call (no API key, just pure blockchain node)
+    async function fetchEVMRPC(chain, address) {
+        const rpcUrl = RPC_ENDPOINTS[chain];
+        if (!rpcUrl) throw new Error(`No RPC for ${chain}`);
+        
+        const response = await fetch(rpcUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                method: 'eth_getBalance',
+                params: [address, 'latest'],
+                id: 1
+            })
+        });
+        
+        if (!response.ok) throw new Error(`RPC HTTP ${response.status}`);
+        const data = await response.json();
+        
+        if (data.error) throw new Error(`RPC Error: ${data.error.message}`);
+        
+        const balanceWei = parseInt(data.result, 16);
+        const balanceFormatted = (balanceWei / 1e18).toFixed(6);
+        
+        return {
+            balance: balanceFormatted,
+            txCount: '?',
+            source: `RPC Direct (${rpcUrl.split('/')[2]}) ⚡`
+        };
+    }
+    
+    // Method 2: Explorer API (backup)
+    async function fetchEVMExplorer(chain, address) {
+        const explorerUrl = EXPLORER_APIS[chain];
+        if (!explorerUrl) throw new Error(`No explorer for ${chain}`);
+        
+        // Try without API key first (some work with limited rate)
+        const url = `${explorerUrl}?module=account&action=balance&address=${address}&tag=latest`;
+        
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Explorer HTTP ${response.status}`);
+        const data = await response.json();
+        
+        if (data.status !== '1') {
+            throw new Error(data.message || 'Explorer API error');
+        }
+        
+        const balanceWei = data.result;
+        const balanceFormatted = (parseInt(balanceWei) / 1e18).toFixed(6);
+        
+        return {
+            balance: balanceFormatted,
+            txCount: '?',
+            source: `${chain} Explorer 🔍`
+        };
+    }
+    
+    // Smart EVM fetcher with fallback
+    async function smartFetchEVM(chain, address) {
+        const errors = [];
+        
+        // Try RPC first (no API key, direct to blockchain)
+        try {
+            const result = await fetchEVMRPC(chain, address);
+            lastApiUsed = result.source;
+            return result;
+        } catch (e) {
+            errors.push(`RPC: ${e.message}`);
+            console.warn(`RPC failed for ${chain}, trying explorer...`);
+        }
+        
+        // Try Explorer API second
+        try {
+            const result = await fetchEVMExplorer(chain, address);
+            lastApiUsed = result.source;
+            return result;
+        } catch (e) {
+            errors.push(`Explorer: ${e.message}`);
+        }
+        
+        throw new Error(`All EVM APIs failed: ${errors.join(' | ')}`);
+    }
+    
+    // ============ MAIN SMART FETCH FUNCTION ============
+    async function smartFetchBalance() {
+        const addressInput = document.getElementById('addressInput');
+        const address = addressInput.value.trim();
+        const addressDisplay = document.getElementById('addressDisplay');
+        const apiSourceSpan = document.getElementById('apiSource');
+        const txInfoSpan = document.getElementById('txInfo');
+        
+        if (!address) {
+            showError('Please enter a wallet address');
+            return;
+        }
+        
+        // Basic validation
+        if (currentChain === 'Bitcoin') {
+            if (!address.match(/^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,62}$/)) {
+                showError('Invalid Bitcoin address format');
+                return;
+            }
+        } else {
+            if (!address.match(/^0x[a-fA-F0-9]{40}$/)) {
+                showError('Invalid EVM address format (must be 0x...)');
+                return;
+            }
+        }
+        
+        setLoading(true);
+        apiSourceSpan.innerText = 'Fetching...';
+        
+        try {
+            let result;
             
-            document.querySelectorAll('.network-option').forEach(opt => {
-                opt.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const chain = opt.dataset.chain;
-                    const newNetwork = networks.find(n => n.chain === chain);
-                    if (newNetwork) {
-                        selectedNetwork = newNetwork;
-                        selectedNetworkIcon.src = newNetwork.icon;
-                        selectedNetworkName.textContent = newNetwork.name;
-                        clearResults();
-                        hideDropdown();
-                    }
-                });
-            });
-        }
-        
-        function showDropdown() {
-            dropdown.classList.add('show');
-            trigger.classList.add('active');
-        }
-        
-        function hideDropdown() {
-            dropdown.classList.remove('show');
-            trigger.classList.remove('active');
-        }
-        
-        function toggleDropdown(e) {
-            e.stopPropagation();
-            if (dropdown.classList.contains('show')) {
-                hideDropdown();
+            if (currentChain === 'Bitcoin') {
+                result = await smartFetchBitcoin(address);
+                apiSourceSpan.innerText = `✓ ${result.source}`;
+                updateBalanceDisplay(result.balance, currentSymbol);
+                addressDisplay.innerHTML = `${address.substring(0, 12)}...${address.substring(address.length - 8)} (${currentChain})`;
+                txInfoSpan.innerHTML = `📝 ${result.txCount} transactions found`;
             } else {
-                showDropdown();
+                result = await smartFetchEVM(currentChain, address);
+                apiSourceSpan.innerText = `✓ ${result.source}`;
+                updateBalanceDisplay(result.balance, currentSymbol);
+                addressDisplay.innerHTML = `${address.substring(0, 10)}...${address.substring(address.length - 6)} (${currentChain})`;
+                txInfoSpan.innerHTML = `⛓️ Native balance only (use explorer for tx history)`;
             }
+            
+            // Add timestamp to API source
+            const now = new Date();
+            apiSourceSpan.innerHTML += ` <span style="font-size:9px">${now.toLocaleTimeString()}</span>`;
+            
+        } catch (error) {
+            console.error('Smart fetch error:', error);
+            showError(`All APIs failed: ${error.message}`);
+            updateBalanceDisplay('Error', currentSymbol);
+            addressDisplay.innerHTML = `Failed to fetch ${currentChain} balance`;
+            apiSourceSpan.innerText = '⚠️ All APIs failed';
+            txInfoSpan.innerHTML = '';
+        } finally {
+            setLoading(false);
         }
-        
-        trigger.addEventListener('click', toggleDropdown);
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!trigger.contains(event.target) && !dropdown.contains(event.target)) {
-                hideDropdown();
-            }
-        });
-        
-        // Close dropdown on Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                hideDropdown();
-            }
-        });
-        
-        // Close dropdown on scroll
-        window.addEventListener('scroll', function() {
-            hideDropdown();
-        });
-        
-        // Close dropdown on resize
-        window.addEventListener('resize', function() {
-            hideDropdown();
-        });
-        
-        buildDropdown();
-        
-        function calculateFIFOTax(transactions) {
-            let totalGain = 0, totalLoss = 0, holdings = [], processedTxs = [];
-            const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            for (const tx of sorted) {
-                if (tx.type === 'buy') {
-                    holdings.push({ amount: tx.amount, costBasis: tx.price, date: tx.date });
-                    processedTxs.push({ ...tx, gain: 0 });
-                } else if (tx.type === 'sell') {
-                    let remaining = tx.amount, totalCost = 0;
-                    while (remaining > 0 && holdings.length > 0) {
-                        const oldest = holdings[0];
-                        const sellAmount = Math.min(remaining, oldest.amount);
-                        totalCost += sellAmount * oldest.costBasis;
-                        oldest.amount -= sellAmount;
-                        remaining -= sellAmount;
-                        if (oldest.amount === 0) holdings.shift();
-                    }
-                    const gain = (tx.amount * tx.price) - totalCost;
-                    if (gain > 0) totalGain += gain;
-                    else totalLoss += Math.abs(gain);
-                    processedTxs.push({ ...tx, gain: gain });
-                }
-            }
-            const netGain = totalGain - totalLoss;
-            return {
-                totalGain: totalGain.toFixed(2), totalLoss: totalLoss.toFixed(2),
-                netGain: netGain.toFixed(2), estimatedTax: (netGain * 0.2).toFixed(2),
-                transactionsProcessed: transactions.length, transactions: processedTxs
-            };
+    }
+    
+    // ============ UI HELPERS ============
+    function showError(message) {
+        const errorDiv = document.getElementById('errorMessage');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 6000);
+    }
+    
+    function setLoading(isLoading) {
+        const btn = document.getElementById('fetchBtn');
+        if (isLoading) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Smart Fetching (trying APIs)...';
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = '⟳ Smart Fetch (Auto Fallback)';
         }
-        
-        function displayCSVResults(balance, nativeToken, network, transactions, taxResult) {
-            document.getElementById('balanceAmount').innerHTML = `${balance.toFixed(6)} ${nativeToken}`;
-            document.getElementById('balanceCurrency').innerHTML = network;
-            document.getElementById('networkName').innerHTML = network;
-            
-            document.getElementById('totalGain').innerHTML = `$${taxResult.totalGain}`;
-            document.getElementById('totalLoss').innerHTML = `$${taxResult.totalLoss}`;
-            document.getElementById('netGain').innerHTML = `$${taxResult.netGain}`;
-            document.getElementById('estimatedTax').innerHTML = `$${taxResult.estimatedTax}`;
-            document.getElementById('txCount').innerHTML = `${taxResult.transactionsProcessed} txns`;
-            document.getElementById('taxSummary').classList.remove('hidden');
-            
-            document.getElementById('transactionsList').innerHTML = taxResult.transactions.slice(0, 50).map(tx => `
-                <div class="tx-row">
-                    <div class="flex justify-between items-center">
-                        <div><div class="font-medium">${tx.date}</div><div class="text-sm ${tx.type === 'buy' ? 'text-emerald-400' : 'text-rose-400'}">${tx.type.toUpperCase()}</div></div>
-                        <div class="text-right"><div>${tx.amount} @ $${tx.price}</div><div class="text-sm ${tx.gain >= 0 ? 'text-emerald-400' : 'text-rose-400'}">Gain: $${tx.gain}</div></div>
-                    </div>
-                </div>
-            `).join('');
-            document.getElementById('results').classList.remove('hidden');
+    }
+    
+    function updateBalanceDisplay(balance, symbol) {
+        document.getElementById('balanceValue').innerText = balance;
+        document.getElementById('balanceSymbol').innerText = symbol;
+    }
+    
+    // ============ BLOCKCHAIN SELECTOR (Z-INDEX FIX) ============
+    const selectorBtn = document.getElementById('selectorButton');
+    const dropdown = document.getElementById('blockchainDropdown');
+    
+    selectorBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden-dropdown');
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!selectorBtn.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden-dropdown');
         }
-        
-        function displayWalletResults(balance, nativeToken, network, transactions) {
-            document.getElementById('balanceAmount').innerHTML = `${balance.toFixed(6)} ${nativeToken}`;
-            document.getElementById('balanceCurrency').innerHTML = network;
-            document.getElementById('networkName').innerHTML = network;
-            document.getElementById('taxSummary').classList.add('hidden');
-            document.getElementById('txCount').innerHTML = `${transactions.length} txns`;
+    });
+    
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const chain = item.getAttribute('data-chain');
+            const symbol = item.getAttribute('data-symbol');
+            const icon = item.getAttribute('data-icon');
             
-            if (transactions.length > 0) {
-                document.getElementById('transactionsList').innerHTML = transactions.slice(0, 50).map(tx => `
-                    <div class="tx-row">
-                        <div class="flex justify-between items-center flex-wrap gap-2">
-                            <div class="flex-1"><div class="font-mono text-xs text-purple-300 break-all">${tx.hash || tx.signature || 'N/A'}</div><div class="text-gray-500 text-xs mt-1">${tx.timestamp ? new Date(tx.timestamp * 1000).toLocaleString() : 'Recent'}</div></div>
-                            <div class="text-right"><div class="text-white font-medium">${tx.value ? tx.value.toFixed(6) : '0'} ${nativeToken}</div></div>
-                        </div>
-                    </div>
-                `).join('');
+            currentChain = chain;
+            currentSymbol = symbol;
+            
+            document.getElementById('selectedChainName').innerText = chain;
+            document.getElementById('selectedIcon').innerText = icon;
+            document.getElementById('networkName').innerText = chain;
+            document.getElementById('balanceSymbol').innerText = symbol;
+            document.getElementById('apiSource').innerText = 'Ready';
+            
+            const addressInput = document.getElementById('addressInput');
+            if (currentChain === 'Bitcoin') {
+                addressInput.placeholder = 'Enter BTC address (bc1..., 1..., 3...)';
             } else {
-                document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">No recent transactions found</div>';
+                addressInput.placeholder = `Enter ${chain} address (0x...)`;
             }
-            document.getElementById('results').classList.remove('hidden');
-        }
-        
-        function clearResults() {
-            document.getElementById('balanceAmount').innerHTML = '0';
-            document.getElementById('balanceCurrency').innerHTML = '—';
-            document.getElementById('networkName').innerHTML = '—';
-            document.getElementById('totalGain').innerHTML = '$0';
-            document.getElementById('totalLoss').innerHTML = '$0';
-            document.getElementById('netGain').innerHTML = '$0';
-            document.getElementById('estimatedTax').innerHTML = '$0';
-            document.getElementById('txCount').innerHTML = '0';
-            document.getElementById('transactionsList').innerHTML = '<div class="text-center text-gray-400 py-6">Upload CSV or fetch wallet data</div>';
-            document.getElementById('taxSummary').classList.add('hidden');
-            document.getElementById('results').classList.add('hidden');
-        }
-        
-        function validateAddressFormat(address, chain) {
-            if (!address) return false;
-            if (chain === 'btc') return /^(1|3|bc1|tb1)/i.test(address);
-            if (chain === 'sol') return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
-            return /^0x[a-fA-F0-9]{40}$/.test(address);
-        }
-        
-        const csvSliderBtn = document.getElementById('csvSliderBtn');
-        const walletSliderBtn = document.getElementById('walletSliderBtn');
-        const sliderGlow = document.getElementById('sliderGlow');
-        const csvMode = document.getElementById('csvMode');
-        const walletMode = document.getElementById('walletMode');
-        
-        csvSliderBtn.onclick = () => {
-            csvSliderBtn.classList.add('active'); walletSliderBtn.classList.remove('active');
-            sliderGlow.classList.remove('slide-right'); csvMode.classList.remove('hidden');
-            walletMode.classList.add('hidden'); clearResults();
-        };
-        
-        walletSliderBtn.onclick = () => {
-            walletSliderBtn.classList.add('active'); csvSliderBtn.classList.remove('active');
-            sliderGlow.classList.add('slide-right'); csvMode.classList.add('hidden');
-            walletMode.classList.remove('hidden'); clearResults();
-        };
-        
-        document.getElementById('uploadBtn').onclick = async () => {
-            const file = document.getElementById('csvFile').files[0];
-            if (!file) { alert('Please select a CSV file'); return; }
-            const text = await file.text();
-            const lines = text.trim().split('\n');
-            const transactions = lines.slice(1).map(line => {
-                const [date, type, amount, price] = line.split(',');
-                return { date, type: type?.toLowerCase(), amount: parseFloat(amount), price: parseFloat(price) };
-            }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price));
-            const taxResult = calculateFIFOTax(transactions);
-            displayCSVResults(0, 'CSV', 'CSV File', taxResult.transactions, taxResult);
-        };
-        
-        document.getElementById('fetchWalletBtn').onclick = async () => {
-            const address = document.getElementById('walletAddress').value.trim();
-            if (!address) { alert('Please enter a wallet address'); return; }
-            if (!validateAddressFormat(address, selectedNetwork.chain)) {
-                alert(`Address format does not match ${selectedNetwork.name} network.`); return;
-            }
-            document.getElementById('fetchWalletBtn').disabled = true;
-            document.getElementById('fetchWalletBtn').innerHTML = '<span>⏳</span> Loading...';
-            try {
-                const balanceRes = await fetch(`${API_URL}/api/${selectedNetwork.balance}?address=${address}`);
-                const balanceData = await balanceRes.json();
-                let transactions = [];
-                if (selectedNetwork.hasTx && selectedNetwork.tx) {
-                    const txRes = await fetch(`${API_URL}/api/${selectedNetwork.tx}?address=${address}`);
-                    const txData = await txRes.json();
-                    if (txData.success && txData.transactions) transactions = txData.transactions;
-                }
-                if (balanceData.success) {
-                    displayWalletResults(balanceData.balance, balanceData.nativeToken, balanceData.network, transactions);
-                } else { alert('Error: ' + balanceData.error); }
-            } catch (err) { alert('Error: ' + err.message); }
-            finally {
-                document.getElementById('fetchWalletBtn').disabled = false;
-                document.getElementById('fetchWalletBtn').innerHTML = '<span>🔍</span> Fetch Balance & Recent Transactions';
-            }
-        };
-    </script>
+            
+            dropdown.classList.add('hidden-dropdown');
+        });
+    });
+    
+    document.getElementById('fetchBtn').addEventListener('click', smartFetchBalance);
+    document.getElementById('addressInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') smartFetchBalance();
+    });
+    
+    // ============ TIME UPDATE ============
+    function updateTime() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        document.getElementById('liveTime').innerHTML = `${hours}:${minutes} ${ampm}`;
+        document.getElementById('liveDate').innerHTML = `${now.getMonth()+1}/${now.getDate()}/${now.getFullYear()}`;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+    
+    // Test addresses for users
+    console.log('%c🚀 CryptoTax v2.0 - Smart Multi-API System Active', 'color: #F7931A; font-size: 14px');
+    console.log('%cBitcoin test: bc1q34aq5drpuwy3wgl9lhup9892qp6svr8ldzyy7c', 'color: #8E94B3');
+    console.log('%cEthereum test: 0x9b991b98f6c7cb053625b88e6fdfde3150aaa00f', 'color: #8E94B3');
+</script>
 </body>
 </html>
