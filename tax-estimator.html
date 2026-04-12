@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CryptoTax v2.0 | Enterprise Multi-Chain Tax Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRYPTOTAX | Nexus Multi-Chain Engine</title>
     <style>
         * {
             margin: 0;
@@ -12,642 +12,276 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #05070A;
-            color: #E8EDF5;
-            line-height: 1.5;
-        }
-
-        /* Professional Layout */
-        .app-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        /* Header */
-        .header {
+            background: #0a0c15;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            flex-wrap: wrap;
-            gap: 16px;
+            min-height: 100vh;
+            padding: 2rem;
         }
 
-        .logo-section h1 {
-            font-size: 28px;
+        /* Original UI card - no color changes */
+        .container {
+            background: #0f111a;
+            border-radius: 24px;
+            padding: 28px 32px;
+            max-width: 880px;
+            width: 100%;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Header - unique naming */
+        .header h1 {
+            font-size: 22px;
             font-weight: 600;
+            color: #ffffff;
             letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #FFFFFF 0%, #B0B8D0 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
         }
 
-        .logo-section p {
+        .header h1 span {
+            color: #3b82f6;
+        }
+
+        .header .sub {
             font-size: 13px;
-            color: #6C729B;
-            margin-top: 4px;
+            color: #6b7280;
+            margin-top: 6px;
+            letter-spacing: 0.2px;
         }
 
-        .version-badge {
-            background: rgba(247, 147, 26, 0.15);
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-size: 12px;
-            color: #F7931A;
-            font-weight: 500;
-        }
-
-        /* Main Grid */
-        .main-grid {
+        /* Network grid - 2 rows x 4 cols, original box style */
+        .network-grid {
             display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 24px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 28px 0 24px 0;
         }
 
-        @media (max-width: 900px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Left Panel - Blockchain Selection */
-        .left-panel {
-            background: #0D0F17;
-            border-radius: 20px;
-            border: 1px solid #1A1E2C;
-            overflow: hidden;
-        }
-
-        .panel-header {
-            padding: 20px;
-            border-bottom: 1px solid #1A1E2C;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8E94B3;
-            background: #090B12;
-        }
-
-        .blockchain-list {
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .blockchain-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 16px 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border-bottom: 1px solid #1A1E2C;
-            position: relative;
-        }
-
-        .blockchain-item:hover {
-            background: #131725;
-        }
-
-        .blockchain-item.active {
-            background: linear-gradient(90deg, #1A2038 0%, #0D0F17 100%);
-            border-left: 3px solid #F7931A;
-        }
-
-        .chain-icon-img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-        }
-
-        .chain-icon-placeholder {
-            width: 32px;
-            height: 32px;
-            background: #1A1E2C;
-            border-radius: 50%;
+        /* Original box shape - no circle boxes, only coin images are circles */
+        .network-item {
+            background: #131722;
+            border-radius: 14px;
+            padding: 12px 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            gap: 10px;
+            border: 1px solid #1e2538;
+            transition: all 0.2s ease;
+            cursor: default;
         }
 
-        .chain-info {
-            flex: 1;
+        .network-item:hover {
+            border-color: #2d3748;
+            background: #161c2a;
         }
 
-        .chain-name {
-            font-weight: 600;
-            font-size: 15px;
+        /* Circle coin image */
+        .coin-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: #0f111a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .chain-network {
-            font-size: 11px;
-            color: #6C729B;
-            margin-top: 2px;
-        }
-
-        .chain-balance-small {
+        .network-name {
             font-size: 13px;
-            font-family: monospace;
-            color: #F7931A;
-        }
-
-        /* Right Panel */
-        .right-panel {
-            background: #0D0F17;
-            border-radius: 20px;
-            border: 1px solid #1A1E2C;
-            overflow: hidden;
-        }
-
-        /* Wallet Section */
-        .wallet-section {
-            padding: 24px;
-            border-bottom: 1px solid #1A1E2C;
-        }
-
-        .wallet-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #6C729B;
-            margin-bottom: 16px;
-        }
-
-        .balance-display {
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .balance-number {
-            font-size: 48px;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: -1px;
-        }
-
-        .balance-symbol {
-            font-size: 24px;
             font-weight: 500;
-            color: #F7931A;
+            color: #e2e8f0;
         }
 
-        .balance-usd {
-            font-size: 18px;
-            color: #6C729B;
-            margin-left: auto;
+        /* Micro dot after name */
+        .micro-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #10b981;
+            border-radius: 50%;
+            margin-left: 6px;
+            vertical-align: middle;
+            box-shadow: 0 0 4px #10b981;
         }
 
-        .address-input-area {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        /* Address input - original */
+        .address-section {
+            margin: 20px 0 18px 0;
+        }
+
+        .address-label {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 8px;
+            display: block;
         }
 
         .address-input {
-            flex: 1;
-            background: #05070A;
-            border: 1px solid #2A2F4F;
-            border-radius: 12px;
+            width: 100%;
+            background: #0b0e14;
+            border: 1px solid #1e2538;
+            border-radius: 14px;
             padding: 14px 16px;
-            color: #E8EDF5;
-            font-family: monospace;
+            color: #ffffff;
             font-size: 14px;
+            font-family: monospace;
             outline: none;
+            transition: border 0.2s;
         }
 
         .address-input:focus {
-            border-color: #F7931A;
+            border-color: #3b82f6;
         }
 
-        .fetch-btn {
-            background: #F7931A;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            color: #05070A;
+        /* CSV + Balance options - clean inline */
+        .action-options {
+            display: flex;
+            gap: 24px;
+            margin: 16px 0 24px 0;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid #2a3348;
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #cbd5e1;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             transition: all 0.2s;
         }
 
-        .fetch-btn:hover {
-            background: #E07C0A;
+        .action-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
         }
 
-        .fetch-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        /* Recent transaction - original */
+        .recent-section {
+            border-top: 1px solid #1a1f2e;
+            padding-top: 20px;
+            margin-top: 8px;
         }
 
-        /* Transaction Table */
-        .transactions-section {
-            padding: 24px;
-        }
-
-        .section-title {
-            font-size: 14px;
+        .recent-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .tx-table {
-            width: 100%;
-            font-size: 13px;
-            border-collapse: collapse;
-        }
-
-        .tx-table th {
-            text-align: left;
-            padding: 12px 8px;
-            color: #6C729B;
-            font-weight: 500;
-            border-bottom: 1px solid #1A1E2C;
-        }
-
-        .tx-table td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #1A1E2C;
-            font-family: monospace;
+            color: #6b7280;
+            margin-bottom: 12px;
         }
 
         .tx-hash {
             font-family: monospace;
-            font-size: 12px;
-            color: #8E94B3;
-        }
-
-        .tx-amount.positive {
-            color: #4CAF50;
-        }
-
-        .tx-amount.negative {
-            color: #FF6B6B;
-        }
-
-        /* Status */
-        .status-badge {
-            background: #1A1E2C;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-        }
-
-        .error-message {
-            background: rgba(255, 68, 68, 0.1);
-            border-left: 3px solid #FF4444;
-            padding: 12px 16px;
-            margin: 16px 24px;
-            border-radius: 8px;
-            font-size: 13px;
-        }
-
-        .loading-spinner {
+            font-size: 14px;
+            color: #60a5fa;
+            background: #0b0e14;
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(0, 0, 0, 0.2);
-            border-radius: 50%;
-            border-top-color: #05070A;
-            animation: spin 0.6s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: 24px;
-            padding: 20px;
-            background: #0D0F17;
-            border-radius: 20px;
-            border: 1px solid #1A1E2C;
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #6C729B;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0D0F17;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #2A2F4F;
-            border-radius: 4px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: 1px solid #1e2538;
+            letter-spacing: 0.3px;
         }
     </style>
 </head>
 <body>
-<div class="app-container">
-    <div class="header">
-        <div class="logo-section">
-            <h1>CRYPTOTAX v2.0</h1>
-            <p>Enterprise Multi-Chain Tax Platform</p>
-        </div>
-        <div class="version-badge">PRODUCTION • 13 CHAINS</div>
-    </div>
-
-    <div class="main-grid">
-        <!-- Left Panel: 13 Blockchains with Local Images -->
-        <div class="left-panel">
-            <div class="panel-header">SELECT BLOCKCHAIN</div>
-            <div class="blockchain-list" id="blockchainList"></div>
+    <div class="container">
+        <!-- Header: unique naming (no v2.0, no childish) -->
+        <div class="header">
+            <h1>CRYPTOTAX <span>| Nexus Multi-Chain Engine</span></h1>
+            <div class="sub">Enterprise Tax Intelligence</div>
         </div>
 
-        <!-- Right Panel: Wallet & Transactions -->
-        <div class="right-panel">
-            <div class="wallet-section">
-                <div class="wallet-label">WALLET BALANCE</div>
-                <div class="balance-display">
-                    <span class="balance-number" id="balanceValue">0.00000000</span>
-                    <span class="balance-symbol" id="balanceSymbol">BTC</span>
-                    <span class="balance-usd" id="balanceUSD">$0.00 USD</span>
-                </div>
-                <div class="address-input-area">
-                    <input type="text" class="address-input" id="addressInput" 
-                           placeholder="Enter wallet address (BTC, ETH, BSC, etc.)">
-                    <button class="fetch-btn" id="fetchBtn">Fetch Balance</button>
-                </div>
-                <div class="address-note" id="addressNote" style="font-size: 12px; color: #6C729B; font-family: monospace;"></div>
+        <!-- Network grid: boxes unchanged, coins as circles (GitHub images) -->
+        <div class="network-grid">
+            <!-- Polygon -->
+            <div class="network-item">
+                <img class="coin-circle" src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/0x0000000000000000000000000000000000000000/logo.png?raw=true" 
+                     onerror="this.src='https://cryptologos.cc/logos/polygon-matic-logo.png'" alt="Polygon">
+                <span class="network-name">Polygon PoS<span class="micro-dot"></span></span>
             </div>
+            <!-- Avalanche -->
+            <div class="network-item">
+                <img class="coin-circle" src="https://raw.githubusercontent.com/ava-labs/bridge-token-list/main/assets/avax.png" 
+                     onerror="this.src='https://cryptologos.cc/logos/avalanche-avax-logo.png'" alt="Avalanche">
+                <span class="network-name">Avalanche<span class="micro-dot"></span></span>
+            </div>
+            <!-- Arbitrum -->
+            <div class="network-item">
+                <img class="coin-circle" src="https://raw.githubusercontent.com/OffchainLabs/arbitrum-token-list/master/assets/ARB.svg" 
+                     onerror="this.src='https://cryptologos.cc/logos/arbitrum-arb-logo.png'" alt="Arbitrum">
+                <span class="network-name">Arbitrum<span class="micro-dot"></span></span>
+            </div>
+            <!-- Optimism -->
+            <div class="network-item">
+                <img class="coin-circle" src="https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/svg/OP%20Token%20Icon.svg" 
+                     onerror="this.src='https://cryptologos.cc/logos/optimism-op-logo.png'" alt="Optimism">
+                <span class="network-name">Optimism<span class="micro-dot"></span></span>
+            </div>
+            <!-- Base -->
+            <div class="network-item">
+                <img class="coin-circle" src="https://raw.githubusercontent.com/base-org/brand-kit/main/logo/base-logomark-blue.svg" 
+                     onerror="this.src='https://icons.llamao.fi/icons/chains/rsz_base.jpg'" alt="Base">
+                <span class="network-name">Base<span class="micro-dot"></span></span>
+            </div>
+            <!-- Fantom -->
+            <div class="network-item">
+                <img class="coin-circle" src="https://raw.githubusercontent.com/Fantom-Foundation/fantom-token-list/main/assets/ftm.png" 
+                     onerror="this.src='https://cryptologos.cc/logos/fantom-ftm-logo.png'" alt="Fantom">
+                <span class="network-name">Fantom<span class="micro-dot"></span></span>
+            </div>
+            <!-- Cronos -->
+            <div class="network-item">
+                <img class="coin-circle" src="https://raw.githubusercontent.com/cronos-labs/brand-assets/main/cro-icon.png" 
+                     onerror="this.src='https://cryptologos.cc/logos/cronos-cro-logo.png'" alt="Cronos">
+                <span class="network-name">Cronos<span class="micro-dot"></span></span>
+            </div>
+            <!-- Gnosis -->
+            <div class="network-item">
+                <img class="coin-circle" src="https://raw.githubusercontent.com/gnosischain/brand-kit/main/logo/gno-icon.png" 
+                     onerror="this.src='https://cryptologos.cc/logos/gnosis-gno-logo.png'" alt="Gnosis">
+                <span class="network-name">Gnosis<span class="micro-dot"></span></span>
+            </div>
+        </div>
 
-            <div class="transactions-section">
-                <div class="section-title">
-                    <span>📋 RECENT TRANSACTIONS</span>
-                    <span class="status-badge" id="txCount">0 transactions</span>
-                </div>
-                <div id="transactionsContainer">
-                    <table class="tx-table" id="txTable">
-                        <thead>
-                            <tr><th>TX HASH</th><th>DATE</th><th>AMOUNT</th><th>STATUS</th></tr>
-                        </thead>
-                        <tbody id="txBody">
-                            <tr><td colspan="4" style="text-align: center; color: #6C729B;">Enter an address and click Fetch</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <!-- Enter Base address (original) -->
+        <div class="address-section">
+            <div class="address-label">Enter Base address</div>
+            <input type="text" class="address-input" placeholder="0x... or ENS">
+        </div>
+
+        <!-- CSV + Balance Sync (clean options) -->
+        <div class="action-options">
+            <button class="action-btn" id="csvBtn">📁 CSV Ledger</button>
+            <button class="action-btn" id="balanceBtn">⚡ Balance Sync</button>
+        </div>
+
+        <!-- Recent transaction (original) -->
+        <div class="recent-section">
+            <div class="recent-title">RECENT TRANSACTION</div>
+            <div class="tx-hash">0x7b3c8d9e2a1f4b5c6d7e8f9a0b1c2d3e4f5a6b7c</div>
         </div>
     </div>
 
-    <div class="footer">
-        <span>🔒 Secure • Real-time blockchain data</span>
-        <span id="timestamp"></span>
-    </div>
-</div>
-
-<script>
-    // ============ 13 BLOCKCHAINS CONFIGURATION WITH LOCAL IMAGES ============
-    // All images from your GitHub repo at /images/ folder
-    const BLOCKCHAINS = [
-        { name: "Bitcoin", symbol: "BTC", icon: "/images/btc.png", network: "Bitcoin Mainnet", type: "bitcoin", color: "#F7931A" },
-        { name: "Ethereum", symbol: "ETH", icon: "/images/eth.png", network: "Ethereum Mainnet", type: "evm", color: "#627EEA" },
-        { name: "Binance Smart Chain", symbol: "BNB", icon: "/images/bnb.png", network: "BSC Mainnet", type: "evm", color: "#F3BA2F" },
-        { name: "Solana", symbol: "SOL", icon: "/images/sol.png", network: "Solana Mainnet", type: "solana", color: "#00FFA3" },
-        { name: "Polygon", symbol: "MATIC", icon: "/images/poly.png", network: "Polygon PoS", type: "evm", color: "#8247E5" },
-        { name: "Avalanche", symbol: "AVAX", icon: "/images/avax.png", network: "Avalanche C-Chain", type: "evm", color: "#E84142" },
-        { name: "Arbitrum", symbol: "ETH", icon: "/images/arb.png", network: "Arbitrum One", type: "evm", color: "#28A0F0" },
-        { name: "Optimism", symbol: "OP", icon: "/images/op.png", network: "Optimism Mainnet", type: "evm", color: "#FF0420" },
-        { name: "Base", symbol: "ETH", icon: "/images/base.png", network: "Base Mainnet", type: "evm", color: "#0052FF" },
-        { name: "Fantom", symbol: "FTM", icon: "/images/ftm.png", network: "Fantom Opera", type: "evm", color: "#1969FF" },
-        { name: "Cronos", symbol: "CRO", icon: "/images/cro.png", network: "Cronos Mainnet", type: "evm", color: "#0A2C2C" },
-        { name: "Gnosis", symbol: "xDAI", icon: "/images/gno.png", network: "Gnosis Chain", type: "evm", color: "#04795B" },
-        { name: "Celo", symbol: "CELO", icon: "/images/celo.png", network: "Celo Mainnet", type: "evm", color: "#35D07F" }
-    ];
-
-    let currentChain = BLOCKCHAINS[0];
-    let currentBalance = null;
-
-    // ============ RPC ENDPOINTS (No API keys needed) ============
-    const RPC_URLS = {
-        "Ethereum": "https://cloudflare-eth.com",
-        "Binance Smart Chain": "https://bsc-dataseed.binance.org",
-        "Polygon": "https://polygon-rpc.com",
-        "Avalanche": "https://api.avax.network/ext/bc/C/rpc",
-        "Arbitrum": "https://arb1.arbitrum.io/rpc",
-        "Optimism": "https://mainnet.optimism.io",
-        "Base": "https://mainnet.base.org",
-        "Fantom": "https://rpc.ftm.tools",
-        "Cronos": "https://evm.cronos.org",
-        "Gnosis": "https://rpc.gnosischain.com",
-        "Celo": "https://forno.celo.org"
-    };
-
-    // ============ BITCOIN API (Mempool.space - no key) ============
-    async function fetchBitcoinData(address) {
-        const response = await fetch(`https://mempool.space/api/address/${address}`);
-        if (!response.ok) throw new Error('Bitcoin address not found');
-        const data = await response.json();
-        const funded = data.chain_stats?.funded_txo_sum || 0;
-        const spent = data.chain_stats?.spent_txo_sum || 0;
-        const balanceSat = funded - spent;
-        const balanceBTC = balanceSat / 100000000;
-        
-        const txsResponse = await fetch(`https://mempool.space/api/address/${address}/txs`);
-        const txsData = await txsResponse.json();
-        const transactions = txsData.slice(0, 10).map(tx => ({
-            hash: tx.txid,
-            date: new Date(tx.status?.block_time * 1000 || Date.now()).toLocaleDateString(),
-            amount: (tx.vout.reduce((sum, out) => sum + out.value, 0) / 100000000).toFixed(8),
-            status: tx.status?.confirmed ? 'Confirmed' : 'Pending'
-        }));
-        
-        return { balance: balanceBTC.toFixed(8), transactions };
-    }
-
-    // ============ EVM CHAIN DATA (Direct RPC) ============
-    async function fetchEVMData(chainName, address) {
-        const rpcUrl = RPC_URLS[chainName];
-        if (!rpcUrl) throw new Error(`No RPC for ${chainName}`);
-        
-        const balanceResponse = await fetch(rpcUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                jsonrpc: '2.0',
-                method: 'eth_getBalance',
-                params: [address, 'latest'],
-                id: 1
-            })
+    <script>
+        // Simple interactions for CSV and Balance (alert placeholders)
+        document.getElementById('csvBtn').addEventListener('click', () => {
+            alert('📁 CSV Ledger: Import your transaction history for tax calculation.');
         });
-        const balanceData = await balanceResponse.json();
-        if (balanceData.error) throw new Error(balanceData.error.message);
-        const balanceWei = parseInt(balanceData.result, 16);
-        const balanceETH = balanceWei / 1e18;
-        
-        return { balance: balanceETH.toFixed(8), transactions: [] };
-    }
 
-    // ============ SOLANA API ============
-    async function fetchSolanaData(address) {
-        const response = await fetch(`https://api.mainnet-beta.solana.com`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                jsonrpc: '2.0',
-                method: 'getBalance',
-                params: [address],
-                id: 1
-            })
+        document.getElementById('balanceBtn').addEventListener('click', () => {
+            alert('⚡ Balance Sync: Fetch on-chain balances for the entered address.');
         });
-        const data = await response.json();
-        if (data.error) throw new Error('Solana address not found');
-        const balanceSOL = data.result?.value / 1e9 || 0;
-        return { balance: balanceSOL.toFixed(6), transactions: [] };
-    }
-
-    // ============ MAIN FETCH FUNCTION ============
-    async function fetchWalletData() {
-        const address = document.getElementById('addressInput').value.trim();
-        if (!address) {
-            showError('Please enter a wallet address');
-            return;
-        }
-
-        setLoading(true);
-        
-        try {
-            let result;
-            if (currentChain.type === 'bitcoin') {
-                result = await fetchBitcoinData(address);
-                document.getElementById('addressNote').innerHTML = `📌 ${address.substring(0, 12)}...${address.substring(address.length - 8)} • ${currentChain.network}`;
-            } else if (currentChain.type === 'solana') {
-                result = await fetchSolanaData(address);
-                document.getElementById('addressNote').innerHTML = `📌 ${address.substring(0, 8)}...${address.substring(address.length - 6)} • ${currentChain.network}`;
-            } else {
-                result = await fetchEVMData(currentChain.name, address);
-                document.getElementById('addressNote').innerHTML = `📌 ${address.substring(0, 10)}...${address.substring(address.length - 6)} • ${currentChain.network}`;
-            }
-            
-            currentBalance = result.balance;
-            document.getElementById('balanceValue').innerHTML = parseFloat(result.balance).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 8 });
-            document.getElementById('balanceSymbol').innerHTML = currentChain.symbol;
-            
-            // USD value (using CoinGecko API)
-            try {
-                const priceResponse = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${currentChain.name.toLowerCase()}&vs_currencies=usd`);
-                const priceData = await priceResponse.json();
-                const coinId = currentChain.name.toLowerCase();
-                const price = priceData[coinId]?.usd || 1;
-                const usdValue = parseFloat(result.balance) * price;
-                document.getElementById('balanceUSD').innerHTML = `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
-            } catch {
-                document.getElementById('balanceUSD').innerHTML = `$0.00 USD`;
-            }
-            
-            // Update transaction table
-            const txBody = document.getElementById('txBody');
-            if (result.transactions && result.transactions.length > 0) {
-                txBody.innerHTML = result.transactions.map(tx => `
-                    <tr>
-                        <td class="tx-hash">${tx.hash.substring(0, 10)}...</td>
-                        <td>${tx.date}</td>
-                        <td class="${parseFloat(tx.amount) > 0 ? 'positive' : 'negative'}">${tx.amount} ${currentChain.symbol}</td>
-                        <td><span class="status-badge">${tx.status}</span></td>
-                    </tr>
-                `).join('');
-                document.getElementById('txCount').innerHTML = `${result.transactions.length} transactions`;
-            } else {
-                txBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6C729B;">No recent transactions found</td></tr>';
-                document.getElementById('txCount').innerHTML = '0 transactions';
-            }
-            
-        } catch (error) {
-            console.error(error);
-            showError(`Failed to fetch ${currentChain.name} data: ${error.message}`);
-            document.getElementById('txBody').innerHTML = '<tr><td colspan="4" style="text-align: center; color: #FF6B6B;">Error fetching data</td></tr>';
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    // ============ RENDER BLOCKCHAIN LIST WITH LOCAL IMAGES ============
-    function renderBlockchainList() {
-        const container = document.getElementById('blockchainList');
-        container.innerHTML = BLOCKCHAINS.map(chain => `
-            <div class="blockchain-item ${currentChain.name === chain.name ? 'active' : ''}" data-name="${chain.name}" data-symbol="${chain.symbol}" data-icon="${chain.icon}" data-network="${chain.network}" data-type="${chain.type}" data-color="${chain.color}">
-                <img class="chain-icon-img" src="${chain.icon}" alt="${chain.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="chain-icon-placeholder" style="background: ${chain.color}20; color: ${chain.color}; display: none;">${chain.name.charAt(0)}</div>
-                <div class="chain-info">
-                    <div class="chain-name">${chain.name}</div>
-                    <div class="chain-network">${chain.network}</div>
-                </div>
-                <div class="chain-balance-small">${chain.symbol}</div>
-            </div>
-        `).join('');
-        
-        // Add click handlers
-        document.querySelectorAll('.blockchain-item').forEach(el => {
-            el.addEventListener('click', () => {
-                const chainData = BLOCKCHAINS.find(c => c.name === el.getAttribute('data-name'));
-                if (chainData) {
-                    currentChain = chainData;
-                    renderBlockchainList();
-                    document.getElementById('balanceSymbol').innerHTML = chainData.symbol;
-                    document.getElementById('balanceValue').innerHTML = '0.00000000';
-                    document.getElementById('balanceUSD').innerHTML = '$0.00 USD';
-                    document.getElementById('addressNote').innerHTML = '';
-                    document.getElementById('addressInput').placeholder = `Enter ${chainData.name} address`;
-                    document.getElementById('txBody').innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6C729B;">Select a chain and enter address</td></tr>';
-                    document.getElementById('txCount').innerHTML = '0 transactions';
-                }
-            });
-        });
-    }
-
-    function showError(msg) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.innerHTML = `⚠️ ${msg}`;
-        const rightPanel = document.querySelector('.right-panel');
-        rightPanel.insertBefore(errorDiv, rightPanel.firstChild);
-        setTimeout(() => errorDiv.remove(), 5000);
-    }
-
-    function setLoading(isLoading) {
-        const btn = document.getElementById('fetchBtn');
-        if (isLoading) {
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loading-spinner"></span> Fetching...';
-        } else {
-            btn.disabled = false;
-            btn.innerHTML = 'Fetch Balance';
-        }
-    }
-
-    function updateTimestamp() {
-        document.getElementById('timestamp').innerHTML = new Date().toLocaleString();
-    }
-
-    // Initialize
-    renderBlockchainList();
-    document.getElementById('fetchBtn').addEventListener('click', fetchWalletData);
-    document.getElementById('addressInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') fetchWalletData();
-    });
-    updateTimestamp();
-    setInterval(updateTimestamp, 1000);
-    
-    console.log('✅ CryptoTax v2.0 Enterprise - 13 Blockchains Ready');
-</script>
+    </script>
 </body>
 </html>
