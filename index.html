@@ -4,563 +4,821 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>CryptoTax | Professional Crypto Tax Platform</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
-        
-        .glass-card { 
-            background: rgba(15, 23, 42, 0.5); 
-            backdrop-filter: blur(20px); 
-            border-radius: 32px; 
-            border: 1px solid rgba(139, 92, 246, 0.15); 
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1); 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0C15;
+            color: #E8EDF5;
+            line-height: 1.5;
+            min-height: 100vh;
         }
-        .glass-card:hover { 
-            border-color: rgba(139, 92, 246, 0.3); 
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
-            transform: translateY(-2px);
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px;
         }
-        
-        .btn-premium { 
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); 
-            border-radius: 60px; 
-            padding: 14px 32px; 
-            font-weight: 600; 
-            color: white; 
-            transition: all 0.3s ease; 
-            cursor: pointer; 
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px; 
-            letter-spacing: 0.3px;
+
+        @media (min-width: 768px) {
+            .app-container { padding: 24px; }
         }
-        .btn-premium:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4);
-            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+
+        /* Header */
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px 16px;
+            background: linear-gradient(135deg, #0D0F17 0%, #0A0C15 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(247, 147, 26, 0.2);
         }
-        
-        .gradient-text { 
-            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            color: transparent; 
+
+        @media (min-width: 768px) {
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+                padding: 20px 24px;
+                margin-bottom: 32px;
+            }
         }
-        
-        .stats-card { 
-            background: rgba(0,0,0,0.25); 
-            backdrop-filter: blur(10px);
-            border-radius: 24px; 
-            padding: 24px 20px; 
-            text-align: center; 
-            border: 1px solid rgba(139,92,246,0.1);
+
+        .logo-section h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #F7931A 0%, #FFD166 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        @media (min-width: 768px) {
+            .logo-section h1 { font-size: 32px; }
+        }
+
+        .logo-section p {
+            font-size: 12px;
+            color: #F7931A;
+            margin-top: 4px;
+        }
+
+        .version-badge {
+            background: rgba(247, 147, 26, 0.12);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 11px;
+            color: #F7931A;
+            font-weight: 500;
+            border: 1px solid rgba(247, 147, 26, 0.25);
+            margin-top: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .version-badge { margin-top: 0; }
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 48px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.05), rgba(224, 124, 10, 0.02));
+            border-radius: 48px;
+            border: 1px solid rgba(247, 147, 26, 0.1);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(247, 147, 26, 0.1);
+            padding: 6px 16px;
+            border-radius: 60px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #F7931A;
+        }
+
+        .hero h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .hero h2 { font-size: 52px; }
+        }
+
+        .hero p {
+            color: #8E94B3;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 16px;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .mode-slider {
+            background: #0D0F17;
+            border: 1px solid #1A1E2C;
+            border-radius: 60px;
+            padding: 4px;
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .mode-btn {
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
             transition: all 0.3s ease;
+            background: transparent;
+            color: #6C729B;
+            border: none;
+            font-family: inherit;
         }
-        .stats-card:hover {
-            border-color: rgba(139,92,246,0.3);
-            background: rgba(139,92,246,0.05);
+
+        @media (min-width: 768px) {
+            .mode-btn { padding: 12px 36px; font-size: 15px; }
         }
-        .stats-number { 
-            font-size: 2.5rem; 
-            font-weight: 800; 
-            background: linear-gradient(135deg, #c4b5fd, #8b5cf6); 
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            color: transparent; 
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #F7931A 0%, #E07C0A 100%);
+            color: #05070A;
+            box-shadow: 0 2px 8px rgba(247, 147, 26, 0.3);
         }
-        
+
+        /* Main Card */
+        .main-card {
+            background: #0D0F17;
+            border-radius: 32px;
+            border: 1px solid #1A1E2C;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #1A1E2C;
+            background: linear-gradient(135deg, #0A0C15 0%, #0D0F17 100%);
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F7931A;
+        }
+
+        .card-header p {
+            font-size: 12px;
+            color: #6C729B;
+            margin-top: 4px;
+        }
+
+        /* CSV Dropzone */
+        .csv-upload-area { text-align: center; padding: 20px; }
+        .csv-dropzone {
+            border: 2px dashed #2A2F4F;
+            border-radius: 20px;
+            padding: 50px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #05070A;
+        }
+        .csv-dropzone:hover { border-color: #F7931A; background: rgba(247, 147, 26, 0.05); }
+        .csv-icon { font-size: 48px; margin-bottom: 16px; }
+        .csv-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .csv-subtitle { font-size: 12px; color: #6C729B; }
+        .file-input { display: none; }
+        .csv-format-example {
+            background: #05070A;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 16px;
+            font-family: monospace;
+            font-size: 11px;
+            color: #6C729B;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        /* Wallet Section */
+        .wallet-section { padding: 24px; }
+        .balance-display {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.08), rgba(224, 124, 10, 0.04));
+            border-radius: 20px;
+            border: 1px solid rgba(247, 147, 26, 0.15);
+        }
+        .balance-number {
+            font-size: 36px;
+            font-weight: 700;
+            font-family: monospace;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F7931A 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        @media (min-width: 768px) {
+            .balance-number { font-size: 52px; }
+        }
+        .balance-symbol { font-size: 20px; font-weight: 500; color: #F7931A; }
+        .balance-usd { font-size: 14px; color: #6C729B; }
+
+        .address-input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        @media (min-width: 600px) {
+            .address-input-area { flex-direction: row; }
+        }
+        .address-input {
+            flex: 1;
+            background: #05070A;
+            border: 1px solid #2A2F4F;
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: #E8EDF5;
+            font-family: monospace;
+            font-size: 13px;
+            outline: none;
+        }
+        .address-input:focus {
+            border-color: #F7931A;
+            box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.1);
+        }
+        .fetch-btn {
+            background: linear-gradient(135deg, #F7931A 0%, #E07C0A 100%);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #05070A;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .fetch-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3); }
+        .fetch-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .address-note { font-size: 11px; color: #F7931A; font-family: monospace; background: rgba(247, 147, 26, 0.05); padding: 8px 12px; border-radius: 10px; display: inline-block; word-break: break-all; margin-top: 12px; text-align: center; }
+
+        /* Tax Summary */
+        .tax-summary {
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.08), rgba(224, 124, 10, 0.04));
+            border-radius: 20px;
+            padding: 20px;
+            margin: 0 24px 24px 24px;
+            border: 1px solid rgba(247, 147, 26, 0.15);
+        }
+        .summary-title { font-size: 13px; font-weight: 600; color: #F7931A; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        @media (min-width: 768px) { .summary-grid { grid-template-columns: repeat(4, 1fr); } }
+        .summary-item { text-align: center; }
+        .summary-label { font-size: 11px; color: #6C729B; margin-bottom: 4px; }
+        .summary-value { font-size: 20px; font-weight: 700; color: #F7931A; }
+
+        /* Transactions */
+        .transactions-section { padding: 0 24px 24px 24px; }
+        .section-title { font-size: 13px; font-weight: 600; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; color: #F7931A; flex-wrap: wrap; gap: 10px; }
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .tx-table { width: 100%; font-size: 11px; border-collapse: collapse; min-width: 400px; }
+        .tx-table th { text-align: left; padding: 10px 6px; color: #6C729B; border-bottom: 1px solid #1A1E2C; }
+        .tx-table td { padding: 10px 6px; border-bottom: 1px solid #1A1E2C; font-family: monospace; }
+        .status-badge { background: #1A1E2C; padding: 4px 8px; border-radius: 20px; font-size: 10px; color: #8E94B3; display: inline-block; }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        @media (min-width: 768px) {
+            .features-grid { grid-template-columns: repeat(3, 1fr); }
+        }
         .feature-card {
+            background: #0D0F17;
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid #1A1E2C;
             transition: all 0.3s ease;
         }
         .feature-card:hover {
-            transform: translateY(-5px);
+            border-color: rgba(247, 147, 26, 0.3);
+            transform: translateY(-2px);
         }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.1), rgba(224, 124, 10, 0.05));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 16px;
         }
-        .fade-in {
-            animation: fadeInUp 0.6s ease-out;
+        .feature-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .feature-card p { font-size: 12px; color: #6C729B; line-height: 1.5; }
+
+        /* Footer */
+        .footer {
+            margin-top: 20px;
+            padding: 20px;
+            background: #0D0F17;
+            border-radius: 20px;
+            border: 1px solid #1A1E2C;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            color: #6C729B;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .footer { flex-direction: row; justify-content: space-between; font-size: 12px; }
+        }
+        .disclaimer {
+            background: rgba(247, 147, 26, 0.05);
+            border: 1px solid rgba(247, 147, 26, 0.1);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 20px;
         }
 
-        /* Custom scrollbar */
+        .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; border-top-color: #05070A; animation: spin 0.6s linear infinite; margin-right: 8px; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .hidden { display: none; }
+
         ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
-        
-        .csv-dropzone {
-            transition: all 0.2s;
-        }
-        .csv-dropzone:hover {
-            border-color: #8b5cf6 !important;
-            background: rgba(139, 92, 246, 0.05) !important;
-        }
+        ::-webkit-scrollbar-track { background: #0D0F17; }
+        ::-webkit-scrollbar-thumb { background: #F7931A; border-radius: 4px; }
     </style>
 </head>
-<body class="min-h-screen text-white">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-2xl border-b border-white/5">
-        <div class="container mx-auto px-5 sm:px-8 py-4">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                        <span class="text-lg">💰</span>
-                    </div>
-                    <span class="text-white font-bold text-xl tracking-tight">CryptoTax</span>
-                    <span class="hidden sm:inline-flex text-xs bg-white/5 text-purple-300 px-2 py-1 rounded-full ml-2 border border-white/10">v2.0</span>
-                </div>
-                <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="#" class="text-white text-sm transition px-3 py-1.5 rounded-xl bg-purple-600/20">Home</a>
-                    <a href="#" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Dashboard</a>
-                    <a href="#" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Estimator</a>
-                    <a href="#" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
-                </div>
-            </div>
+<body>
+<div class="app-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-section">
+            <h1>CRYPTOTAX</h1>
+            <p>Professional Crypto Tax Platform</p>
         </div>
-    </nav>
+        <div class="version-badge">FIFO METHOD • 15+ CHAINS</div>
+    </div>
 
-    <div class="container mx-auto px-5 sm:px-8 pt-32 sm:pt-36 pb-16">
-        <div class="max-w-5xl mx-auto text-center fade-in mb-12">
-            <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-purple-500/20">
-                <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                <span class="text-purple-300 text-xs font-medium">15+ Blockchains Supported</span>
-            </div>
-            <h1 class="text-5xl sm:text-6xl font-bold mb-5 tracking-tight">Crypto Tax<br><span class="gradient-text">Made Simple</span></h1>
-            <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8">Calculate capital gains across 15+ blockchains. Upload CSV or connect wallets for instant insights.</p>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-badge">
+            <span>⚡</span> Real-time Calculations
+        </div>
+        <h2>Crypto Tax<br><span style="background: linear-gradient(135deg, #F7931A 0%, #FFD166 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">Made Simple</span></h2>
+        <p>Calculate capital gains using FIFO method. Upload CSV or check wallet balances instantly.</p>
+    </div>
+
+    <!-- Mode Toggle -->
+    <div class="mode-toggle">
+        <div class="mode-slider">
+            <button class="mode-btn active" id="csvModeBtn">📁 CSV Upload</button>
+            <button class="mode-btn" id="walletModeBtn">🔗 Wallet Balance</button>
+        </div>
+    </div>
+
+    <!-- Main Calculator Card -->
+    <div class="main-card">
+        <div class="card-header">
+            <h3>💰 Tax Estimator</h3>
+            <p>FIFO Method • First-In First-Out accounting standard</p>
         </div>
 
-        <!-- Main Tax Estimator Card -->
-        <div class="max-w-5xl mx-auto mb-12">
-            <div class="glass-card p-6 sm:p-8">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-2xl font-bold">💰 Tax Estimator</h2>
-                        <p class="text-gray-400 text-sm mt-1">FIFO Method • Real-time calculations</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button id="csvModeBtnHome" class="px-5 py-2 rounded-full text-sm font-semibold transition bg-purple-600 text-white">📁 CSV Upload</button>
-                        <button id="walletModeBtnHome" class="px-5 py-2 rounded-full text-sm font-semibold transition bg-white/5 text-gray-300 hover:bg-white/10">🔗 Wallet Balance</button>
-                    </div>
+        <!-- CSV Mode -->
+        <div id="csvMode">
+            <div class="csv-upload-area">
+                <div class="csv-dropzone" id="csvDropzone">
+                    <div class="csv-icon">📄</div>
+                    <div class="csv-title">Upload Transaction CSV</div>
+                    <div class="csv-subtitle">Click or drag & drop to upload</div>
+                    <input type="file" id="csvFile" accept=".csv" class="file-input">
                 </div>
-
-                <!-- CSV Mode -->
-                <div id="csvModeHome">
-                    <div class="csv-dropzone border-2 border-dashed border-purple-500/30 rounded-2xl p-8 text-center cursor-pointer transition" id="csvDropzoneHome">
-                        <div class="text-5xl mb-3">📄</div>
-                        <div class="text-lg font-semibold mb-1">Upload Transaction CSV</div>
-                        <div class="text-gray-400 text-sm">Click or drag & drop to upload</div>
-                        <input type="file" id="csvFileHome" accept=".csv" class="hidden">
-                    </div>
-                    <div class="mt-4 p-3 bg-purple-500/5 rounded-xl border border-purple-500/10">
-                        <p class="text-xs text-gray-400 font-mono">📌 CSV Format: date,type,amount,price<br>Example: 2024-01-01,buy,0.5,20000</p>
-                    </div>
-                </div>
-
-                <!-- Wallet Mode -->
-                <div id="walletModeHome" class="hidden">
-                    <div class="mb-4">
-                        <div class="text-center p-6 bg-purple-500/5 rounded-2xl border border-purple-500/10">
-                            <div class="text-3xl font-mono font-bold gradient-text" id="balanceValueHome">0.00000000</div>
-                            <div class="text-purple-400 text-sm" id="balanceSymbolHome">BTC</div>
-                            <div class="text-gray-400 text-xs mt-1" id="balanceUSDHome">$0.00 USD</div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <input type="text" id="addressInputHome" class="flex-1 bg-black/30 border border-purple-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500" placeholder="Enter wallet address (BTC, ETH, BSC, etc.)">
-                        <button id="fetchBtnHome" class="btn-premium py-3 px-6">Fetch Balance</button>
-                    </div>
-                    <div class="mt-3 text-xs text-gray-500 text-center" id="addressNoteHome"></div>
-                </div>
-
-                <!-- Tax Summary Results -->
-                <div id="taxSummaryHome" class="hidden mt-6">
-                    <div class="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-2xl p-5 border border-purple-500/20">
-                        <div class="text-sm font-semibold text-purple-400 mb-3">📊 TAX SUMMARY (FIFO Method)</div>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            <div class="text-center">
-                                <div class="text-gray-400 text-xs">Total Gain</div>
-                                <div class="text-green-400 text-xl font-bold" id="totalGainHome">$0.00</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-gray-400 text-xs">Total Loss</div>
-                                <div class="text-red-400 text-xl font-bold" id="totalLossHome">$0.00</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-gray-400 text-xs">Net Gain</div>
-                                <div class="text-purple-400 text-xl font-bold" id="netGainHome">$0.00</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-gray-400 text-xs">Est. Tax (20%)</div>
-                                <div class="text-amber-400 text-xl font-bold" id="estimatedTaxHome">$0.00</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Transaction Log -->
-                <div class="mt-6">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-sm font-semibold text-purple-400">📋 TRANSACTION LOG</h3>
-                        <span class="text-xs text-gray-500" id="txCountHome">0 transactions</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="border-b border-purple-500/20">
-                                <tr class="text-gray-400 text-xs">
-                                    <th class="text-left py-2">TX HASH / DATE</th>
-                                    <th class="text-left py-2">AMOUNT</th>
-                                    <th class="text-left py-2">GAIN</th>
-                                </tr>
-                            </thead>
-                            <tbody id="txBodyHome">
-                                <tr><td colspan="3" class="text-center text-gray-500 py-8">Upload CSV or fetch wallet data</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="csv-format-example">
+                    <strong>📌 CSV Format:</strong> date,type,amount,price<br>
+                    <span style="color: #F7931A;">Example:</span> 2024-01-01,buy,0.5,20000<br>
+                    <span style="color: #6C729B;">2024-02-15,sell,0.3,35000</span>
                 </div>
             </div>
         </div>
 
-        <!-- Features Grid -->
-        <div class="max-w-5xl mx-auto">
-            <div class="grid sm:grid-cols-3 gap-6 mb-12">
-                <div class="glass-card p-6 feature-card">
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📂</div>
-                    <h3 class="text-lg font-bold mb-2">CSV Import</h3>
-                    <p class="text-gray-400 text-sm">Upload complete transaction history from any exchange or wallet</p>
+        <!-- Wallet Mode -->
+        <div id="walletMode" class="hidden">
+            <div class="wallet-section">
+                <div class="balance-display">
+                    <span class="balance-number" id="balanceValue">0.00000000</span>
+                    <span class="balance-symbol" id="balanceSymbol">BTC</span>
+                    <span class="balance-usd" id="balanceUSD">$0.00 USD</span>
                 </div>
-                <div class="glass-card p-6 feature-card">
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">🔗</div>
-                    <h3 class="text-lg font-bold mb-2">Wallet Connect</h3>
-                    <p class="text-gray-400 text-sm">Fetch real-time balance and recent activity across 15+ networks</p>
+                <div class="address-input-area">
+                    <input type="text" class="address-input" id="addressInput" 
+                           placeholder="Enter wallet address (BTC, ETH, BSC, etc.)">
+                    <button class="fetch-btn" id="fetchBtn">Fetch Balance</button>
                 </div>
-                <div class="glass-card p-6 feature-card">
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📊</div>
-                    <h3 class="text-lg font-bold mb-2">FIFO Method</h3>
-                    <p class="text-gray-400 text-sm">Professional capital gains calculation using industry standard</p>
+                <div class="address-note" id="addressNote"></div>
+            </div>
+        </div>
+
+        <!-- Tax Summary -->
+        <div id="taxSummary" class="hidden">
+            <div class="tax-summary">
+                <div class="summary-title">📊 TAX SUMMARY (FIFO Method)</div>
+                <div class="summary-grid">
+                    <div class="summary-item"><div class="summary-label">Total Gain</div><div class="summary-value" id="totalGain">$0.00</div></div>
+                    <div class="summary-item"><div class="summary-label">Total Loss</div><div class="summary-value" id="totalLoss">$0.00</div></div>
+                    <div class="summary-item"><div class="summary-label">Net Gain</div><div class="summary-value" id="netGain">$0.00</div></div>
+                    <div class="summary-item"><div class="summary-label">Est. Tax (20%)</div><div class="summary-value" id="estimatedTax">$0.00</div></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Transaction Log -->
+        <div class="transactions-section">
+            <div class="section-title">
+                <span>📋 TRANSACTION LOG</span>
+                <span class="status-badge" id="txCount">0 transactions</span>
+            </div>
+            <div class="table-wrapper">
+                <table class="tx-table">
+                    <thead>
+                        <tr><th>DATE</th><th>AMOUNT</th><th>GAIN</th></tr>
+                    </thead>
+                    <tbody id="txBody">
+                        <tr><td colspan="3" style="text-align: center; color: #6C729B;">Upload CSV or fetch wallet data</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <div class="container mx-auto px-5 sm:px-8 pb-8">
-        <div class="max-w-5xl mx-auto">
-            <div class="border-t border-white/10 pt-8">
-                <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 mb-4">
-                    <div class="flex items-center justify-center gap-2 mb-3">
-                        <span class="text-amber-400 text-lg">⚖️</span>
-                        <p class="text-amber-300 text-sm font-semibold">Tax Disclaimer</p>
-                    </div>
-                    <p class="text-gray-400 text-xs leading-relaxed text-center">CryptoTax provides <strong class="text-purple-300">capital gains calculations</strong> using the FIFO (First-In, First-Out) method, a globally recognized accounting standard accepted by tax authorities worldwide.</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 text-left text-xs text-gray-500 max-w-md mx-auto">
-                        <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Calculates net gain/loss from your transactions</span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Uses IRS-approved FIFO methodology</span></div>
-                        <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT calculate country-specific tax rates</span></div>
-                        <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT file taxes or provide legal advice</span></div>
-                    </div>
-                    <p class="text-gray-500 text-xs mt-3 pt-3 border-t border-white/5 text-center">Tax laws vary by jurisdiction. <strong class="text-amber-300">Consult a qualified tax professional</strong> in your country for accurate filing requirements.</p>
-                </div>
-                <p class="text-gray-600 text-xs text-center">© 2026 CryptoTax | FIFO Method | Real On-Chain Data</p>
-            </div>
+    <!-- Features -->
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📂</div>
+            <h4>CSV Import</h4>
+            <p>Upload transaction history from any exchange or wallet</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔗</div>
+            <h4>Wallet Connect</h4>
+            <p>Fetch real-time balance across 15+ blockchain networks</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h4>FIFO Method</h4>
+            <p>Industry standard capital gains calculation</p>
         </div>
     </div>
 
-    <script>
-        // ============ TAX CALCULATION ENGINE ============
-        let currentModeHome = 'csv';
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px;">
+            <span>⚖️</span>
+            <span style="font-size: 12px; font-weight: 600; color: #F7931A;">Tax Disclaimer</span>
+        </div>
+        <p style="font-size: 11px; color: #6C729B; text-align: center; line-height: 1.5;">
+            CryptoTax provides capital gains calculations using FIFO methodology, a globally recognized accounting standard. 
+            Does NOT calculate country-specific tax rates or file taxes. <strong>Consult a qualified tax professional.</strong>
+        </p>
+    </div>
 
-        function calculateFIFOTax(transactions) {
-            let totalGain = 0, totalLoss = 0, holdings = [];
-            const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            for (const tx of sorted) {
-                if (tx.type === 'buy') {
-                    holdings.push({ amount: tx.amount, costBasis: tx.price });
-                } else if (tx.type === 'sell') {
-                    let remaining = tx.amount;
-                    let totalCost = 0;
-                    while (remaining > 0 && holdings.length > 0) {
-                        const oldest = holdings[0];
-                        const sellAmount = Math.min(remaining, oldest.amount);
-                        totalCost += sellAmount * oldest.costBasis;
-                        oldest.amount -= sellAmount;
-                        remaining -= sellAmount;
-                        if (oldest.amount === 0) holdings.shift();
-                    }
-                    const gain = (tx.amount * tx.price) - totalCost;
-                    if (gain > 0) totalGain += gain;
-                    else totalLoss += Math.abs(gain);
+    <!-- Footer -->
+    <div class="footer">
+        <span>🔒 Secure • FIFO Method • Real-time Data</span>
+        <span id="timestamp"></span>
+    </div>
+</div>
+
+<script>
+    // ============ TAX CALCULATION ENGINE ============
+    function calculateFIFOTax(transactions) {
+        let totalGain = 0, totalLoss = 0, holdings = [];
+        const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        for (const tx of sorted) {
+            if (tx.type === 'buy') {
+                holdings.push({ amount: tx.amount, costBasis: tx.price });
+            } else if (tx.type === 'sell') {
+                let remaining = tx.amount;
+                let totalCost = 0;
+                while (remaining > 0 && holdings.length > 0) {
+                    const oldest = holdings[0];
+                    const sellAmount = Math.min(remaining, oldest.amount);
+                    totalCost += sellAmount * oldest.costBasis;
+                    oldest.amount -= sellAmount;
+                    remaining -= sellAmount;
+                    if (oldest.amount === 0) holdings.shift();
                 }
+                const gain = (tx.amount * tx.price) - totalCost;
+                if (gain > 0) totalGain += gain;
+                else totalLoss += Math.abs(gain);
             }
-            const netGain = totalGain - totalLoss;
-            return {
-                totalGain: totalGain.toFixed(2),
-                totalLoss: totalLoss.toFixed(2),
-                netGain: netGain.toFixed(2),
-                estimatedTax: (netGain * 0.2).toFixed(2)
-            };
         }
+        const netGain = totalGain - totalLoss;
+        return {
+            totalGain: totalGain.toFixed(2),
+            totalLoss: totalLoss.toFixed(2),
+            netGain: netGain.toFixed(2),
+            estimatedTax: (netGain * 0.2).toFixed(2)
+        };
+    }
 
-        function updateTaxSummary(taxResult) {
-            document.getElementById('totalGainHome').innerHTML = `$${taxResult.totalGain}`;
-            document.getElementById('totalLossHome').innerHTML = `$${taxResult.totalLoss}`;
-            document.getElementById('netGainHome').innerHTML = `$${taxResult.netGain}`;
-            document.getElementById('estimatedTaxHome').innerHTML = `$${taxResult.estimatedTax}`;
-            document.getElementById('taxSummaryHome').classList.remove('hidden');
-        }
+    function updateTaxSummary(taxResult) {
+        document.getElementById('totalGain').innerHTML = `$${taxResult.totalGain}`;
+        document.getElementById('totalLoss').innerHTML = `$${taxResult.totalLoss}`;
+        document.getElementById('netGain').innerHTML = `$${taxResult.netGain}`;
+        document.getElementById('estimatedTax').innerHTML = `$${taxResult.estimatedTax}`;
+        document.getElementById('taxSummary').classList.remove('hidden');
+    }
 
-        const defaultDropzoneHTML = `
-            <div class="text-5xl mb-3">📄</div>
-            <div class="text-lg font-semibold mb-1">Upload Transaction CSV</div>
-            <div class="text-gray-400 text-sm">Click or drag & drop to upload</div>
+    const defaultDropzoneHTML = `
+        <div class="csv-icon">📄</div>
+        <div class="csv-title">Upload Transaction CSV</div>
+        <div class="csv-subtitle">Click or drag & drop to upload</div>
+    `;
+
+    function resetDropzone() {
+        const dropzone = document.getElementById('csvDropzone');
+        dropzone.innerHTML = defaultDropzoneHTML;
+        dropzone.style.borderColor = '#2A2F4F';
+        dropzone.style.background = '#05070A';
+        dropzone.removeAttribute('data-has-file');
+    }
+
+    function showFileNameInDropzone(file) {
+        const dropzone = document.getElementById('csvDropzone');
+        dropzone.innerHTML = `
+            <div class="csv-icon">✅</div>
+            <div class="csv-title" style="font-size: 13px; word-break: break-all;">📎 ${file.name}</div>
+            <div class="csv-subtitle">${(file.size / 1024).toFixed(1)} KB • Click to change file</div>
         `;
+        dropzone.style.borderColor = '#4CAF50';
+        dropzone.style.background = 'rgba(76, 175, 80, 0.05)';
+        dropzone.setAttribute('data-has-file', 'true');
+    }
 
-        function resetDropzone() {
-            const dropzone = document.getElementById('csvDropzoneHome');
-            dropzone.innerHTML = defaultDropzoneHTML;
-            dropzone.style.borderColor = '';
-            dropzone.style.background = '';
-            dropzone.removeAttribute('data-has-file');
-        }
-
-        function showFileNameInDropzone(file) {
-            const dropzone = document.getElementById('csvDropzoneHome');
-            dropzone.innerHTML = `
-                <div class="text-3xl mb-2">✅</div>
-                <div class="text-sm font-semibold mb-1 break-all">📎 ${file.name}</div>
-                <div class="text-gray-400 text-xs">${(file.size / 1024).toFixed(1)} KB • Click to change file</div>
-            `;
-            dropzone.style.borderColor = '#22c55e';
-            dropzone.style.background = 'rgba(34, 197, 94, 0.05)';
-            dropzone.setAttribute('data-has-file', 'true');
-        }
-
-        async function processCSV(file) {
-            const text = await file.text();
-            const lines = text.trim().split('\n');
-            
-            const transactions = lines.slice(1).map(line => {
-                const [date, type, amount, price] = line.split(',');
-                return { 
-                    date, 
-                    type: type?.toLowerCase().trim(), 
-                    amount: parseFloat(amount), 
-                    price: parseFloat(price) 
-                };
-            }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price) && (tx.type === 'buy' || tx.type === 'sell'));
-            
-            if (transactions.length === 0) {
-                alert('Invalid CSV format. Use: date,type,amount,price\nType must be "buy" or "sell"');
-                resetDropzone();
-                return;
-            }
-            
-            showFileNameInDropzone(file);
-            
-            const taxResult = calculateFIFOTax(transactions);
-            updateTaxSummary(taxResult);
-            
-            const txBody = document.getElementById('txBodyHome');
-            txBody.innerHTML = transactions.slice(0, 20).map(tx => `
-                <tr class="border-b border-purple-500/10">
-                    <td class="py-2 text-xs text-gray-400 font-mono">${tx.date} • ${tx.type.toUpperCase()}</td>
-                    <td class="py-2 text-xs">${tx.amount} @ $${tx.price}</td>
-                    <td class="py-2 text-xs ${tx.type === 'sell' ? (tx.amount * tx.price > 0 ? 'text-green-400' : 'text-red-400') : 'text-gray-500'}">${tx.type === 'sell' ? `$${((tx.amount * tx.price)).toFixed(2)}` : '—'}</td>
-                </tr>
-            `).join('');
-            
-            if (transactions.length > 20) {
-                txBody.innerHTML += `<tr><td colspan="3" class="text-center text-gray-500 text-xs py-2">+ ${transactions.length - 20} more transactions</td></tr>`;
-            }
-            
-            document.getElementById('txCountHome').innerHTML = `${transactions.length} transactions`;
-        }
-
-        function setupCSVUpload() {
-            const dropzone = document.getElementById('csvDropzoneHome');
-            const fileInput = document.getElementById('csvFileHome');
-
-            const handleFile = async (file) => {
-                if (file && file.name.endsWith('.csv')) {
-                    await processCSV(file);
-                } else if (file) {
-                    alert('Please upload a CSV file');
-                    resetDropzone();
-                }
+    async function processCSV(file) {
+        const text = await file.text();
+        const lines = text.trim().split('\n');
+        
+        const transactions = lines.slice(1).map(line => {
+            const [date, type, amount, price] = line.split(',');
+            return { 
+                date, 
+                type: type?.toLowerCase().trim(), 
+                amount: parseFloat(amount), 
+                price: parseFloat(price) 
             };
+        }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price) && (tx.type === 'buy' || tx.type === 'sell'));
+        
+        if (transactions.length === 0) {
+            alert('Invalid CSV format. Use: date,type,amount,price\nType must be "buy" or "sell"');
+            resetDropzone();
+            return;
+        }
+        
+        showFileNameInDropzone(file);
+        
+        const taxResult = calculateFIFOTax(transactions);
+        updateTaxSummary(taxResult);
+        
+        const txBody = document.getElementById('txBody');
+        txBody.innerHTML = transactions.slice(0, 20).map(tx => `
+            <tr>
+                <td class="tx-hash" style="font-size: 11px;">${tx.date} • ${tx.type.toUpperCase()}</td>
+                <td style="font-size: 11px;">${tx.amount} @ $${tx.price}</td>
+                <td style="font-size: 11px; ${tx.type === 'sell' ? (tx.amount * tx.price > 0 ? 'color: #4CAF50' : 'color: #FF6B6B') : 'color: #6C729B'}">${tx.type === 'sell' ? `$${((tx.amount * tx.price)).toFixed(2)}` : '—'}</td>
+            </tr>
+        `).join('');
+        
+        if (transactions.length > 20) {
+            txBody.innerHTML += `<tr><td colspan="3" style="text-align: center; color: #6C729B; font-size: 11px;">+ ${transactions.length - 20} more transactions</td></tr>`;
+        }
+        
+        document.getElementById('txCount').innerHTML = `${transactions.length} transactions`;
+    }
 
-            dropzone.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
+    function setupCSVUpload() {
+        const dropzone = document.getElementById('csvDropzone');
+        const fileInput = document.getElementById('csvFile');
+
+        const handleFile = async (file) => {
+            if (file && file.name.endsWith('.csv')) {
+                await processCSV(file);
+            } else if (file) {
+                alert('Please upload a CSV file');
+                resetDropzone();
+            }
+        };
+
+        dropzone.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (dropzone.getAttribute('data-has-file') === 'true') {
+                resetDropzone();
+                fileInput.value = '';
+                document.getElementById('taxSummary').classList.add('hidden');
+                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6C729B;">Upload CSV or fetch wallet data</td></tr>';
+                document.getElementById('txCount').innerHTML = '0 transactions';
+                setTimeout(() => {
+                    fileInput.click();
+                }, 50);
+            } else {
+                fileInput.click();
+            }
+        });
+        
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (dropzone.getAttribute('data-has-file') !== 'true') {
+                dropzone.style.borderColor = '#F7931A';
+                dropzone.style.background = 'rgba(247, 147, 26, 0.05)';
+            }
+        });
+        
+        dropzone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (dropzone.getAttribute('data-has-file') !== 'true') {
+                dropzone.style.borderColor = '#2A2F4F';
+                dropzone.style.background = '#05070A';
+            }
+        });
+        
+        dropzone.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.style.borderColor = '#2A2F4F';
+            dropzone.style.background = '#05070A';
+            
+            const file = e.dataTransfer.files[0];
+            if (file) {
                 if (dropzone.getAttribute('data-has-file') === 'true') {
                     resetDropzone();
                     fileInput.value = '';
-                    document.getElementById('taxSummaryHome').classList.add('hidden');
-                    document.getElementById('txBodyHome').innerHTML = '<tr><td colspan="3" class="text-center text-gray-500 py-8">Upload CSV or fetch wallet data</td></tr>';
-                    document.getElementById('txCountHome').innerHTML = '0 transactions';
+                    document.getElementById('taxSummary').classList.add('hidden');
+                    document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6C729B;">Upload CSV or fetch wallet data</td></tr>';
+                    document.getElementById('txCount').innerHTML = '0 transactions';
                     setTimeout(() => {
-                        fileInput.click();
+                        handleFile(file);
                     }, 50);
                 } else {
-                    fileInput.click();
+                    await handleFile(file);
                 }
-            });
-            
-            dropzone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (dropzone.getAttribute('data-has-file') !== 'true') {
-                    dropzone.style.borderColor = '#8b5cf6';
-                    dropzone.style.background = 'rgba(139, 92, 246, 0.05)';
-                }
-            });
-            
-            dropzone.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (dropzone.getAttribute('data-has-file') !== 'true') {
-                    dropzone.style.borderColor = '';
-                    dropzone.style.background = '';
-                }
-            });
-            
-            dropzone.addEventListener('drop', async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dropzone.style.borderColor = '';
-                dropzone.style.background = '';
-                
-                const file = e.dataTransfer.files[0];
-                if (file) {
-                    if (dropzone.getAttribute('data-has-file') === 'true') {
-                        resetDropzone();
-                        fileInput.value = '';
-                        document.getElementById('taxSummaryHome').classList.add('hidden');
-                        document.getElementById('txBodyHome').innerHTML = '<tr><td colspan="3" class="text-center text-gray-500 py-8">Upload CSV or fetch wallet data</td></tr>';
-                        document.getElementById('txCountHome').innerHTML = '0 transactions';
-                        setTimeout(() => {
-                            handleFile(file);
-                        }, 50);
-                    } else {
-                        await handleFile(file);
-                    }
-                }
-            });
-            
-            fileInput.addEventListener('change', async (e) => {
-                if (e.target.files[0]) {
-                    await handleFile(e.target.files[0]);
-                }
-            });
-        }
-
-        // Wallet Mode Functions
-        async function fetchBitcoinData(address) {
-            const response = await fetch(`https://mempool.space/api/address/${address}`);
-            if (!response.ok) throw new Error('Bitcoin address not found');
-            const data = await response.json();
-            const funded = data.chain_stats?.funded_txo_sum || 0;
-            const spent = data.chain_stats?.spent_txo_sum || 0;
-            const balanceSat = funded - spent;
-            return { balance: (balanceSat / 100000000).toFixed(8) };
-        }
-
-        async function fetchEVMData(address) {
-            const response = await fetch('https://cloudflare-eth.com', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    jsonrpc: '2.0',
-                    method: 'eth_getBalance',
-                    params: [address, 'latest'],
-                    id: 1
-                })
-            });
-            const data = await response.json();
-            if (data.error) throw new Error('EVM address not found');
-            const balanceWei = parseInt(data.result, 16);
-            return { balance: (balanceWei / 1e18).toFixed(8) };
-        }
-
-        async function fetchWalletData() {
-            const address = document.getElementById('addressInputHome').value.trim();
-            if (!address) {
-                alert('Please enter a wallet address');
-                return;
             }
-
-            const btn = document.getElementById('fetchBtnHome');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div> Loading...';
-            btn.disabled = true;
-            
-            try {
-                let result;
-                if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
-                    result = await fetchBitcoinData(address);
-                    document.getElementById('addressNoteHome').innerHTML = `📍 Bitcoin address • Balance fetched`;
-                } else if (address.startsWith('0x')) {
-                    result = await fetchEVMData(address);
-                    document.getElementById('addressNoteHome').innerHTML = `📍 EVM address • Balance fetched`;
-                } else {
-                    throw new Error('Unrecognized address format');
-                }
-                
-                document.getElementById('balanceValueHome').innerHTML = parseFloat(result.balance).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 8 });
-                
-                const mockPrice = 65000;
-                const usdValue = parseFloat(result.balance) * mockPrice;
-                document.getElementById('balanceUSDHome').innerHTML = `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
-                
-                document.getElementById('taxSummaryHome').classList.add('hidden');
-                document.getElementById('txBodyHome').innerHTML = '<tr><td colspan="3" class="text-center text-gray-500 py-8">For tax calculation, use CSV Upload mode</td></tr>';
-                document.getElementById('txCountHome').innerHTML = 'Balance only';
-                
-            } catch (error) {
-                alert(`Error: ${error.message}`);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }
-
-        function switchMode(mode) {
-            currentModeHome = mode;
-            const csvDiv = document.getElementById('csvModeHome');
-            const walletDiv = document.getElementById('walletModeHome');
-            const csvBtn = document.getElementById('csvModeBtnHome');
-            const walletBtn = document.getElementById('walletModeBtnHome');
-            
-            if (mode === 'csv') {
-                csvDiv.classList.remove('hidden');
-                walletDiv.classList.add('hidden');
-                csvBtn.classList.add('bg-purple-600', 'text-white');
-                csvBtn.classList.remove('bg-white/5', 'text-gray-300');
-                walletBtn.classList.remove('bg-purple-600', 'text-white');
-                walletBtn.classList.add('bg-white/5', 'text-gray-300');
-            } else {
-                csvDiv.classList.add('hidden');
-                walletDiv.classList.remove('hidden');
-                walletBtn.classList.add('bg-purple-600', 'text-white');
-                walletBtn.classList.remove('bg-white/5', 'text-gray-300');
-                csvBtn.classList.remove('bg-purple-600', 'text-white');
-                csvBtn.classList.add('bg-white/5', 'text-gray-300');
-            }
-        }
-
-        // Initialize
-        setupCSVUpload();
-        document.getElementById('fetchBtnHome').addEventListener('click', fetchWalletData);
-        document.getElementById('csvModeBtnHome').addEventListener('click', () => switchMode('csv'));
-        document.getElementById('walletModeBtnHome').addEventListener('click', () => switchMode('wallet'));
-        document.getElementById('addressInputHome').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') fetchWalletData();
         });
-    </script>
+        
+        fileInput.addEventListener('change', async (e) => {
+            if (e.target.files[0]) {
+                await handleFile(e.target.files[0]);
+            }
+        });
+    }
+
+    // Wallet Functions
+    async function fetchBitcoinData(address) {
+        const response = await fetch(`https://mempool.space/api/address/${address}`);
+        if (!response.ok) throw new Error('Bitcoin address not found');
+        const data = await response.json();
+        const funded = data.chain_stats?.funded_txo_sum || 0;
+        const spent = data.chain_stats?.spent_txo_sum || 0;
+        const balanceSat = funded - spent;
+        return { balance: (balanceSat / 100000000).toFixed(8) };
+    }
+
+    async function fetchEVMData(address) {
+        const response = await fetch('https://cloudflare-eth.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                method: 'eth_getBalance',
+                params: [address, 'latest'],
+                id: 1
+            })
+        });
+        const data = await response.json();
+        if (data.error) throw new Error('EVM address not found');
+        const balanceWei = parseInt(data.result, 16);
+        return { balance: (balanceWei / 1e18).toFixed(8) };
+    }
+
+    async function fetchWalletData() {
+        const address = document.getElementById('addressInput').value.trim();
+        if (!address) {
+            alert('Please enter a wallet address');
+            return;
+        }
+
+        const btn = document.getElementById('fetchBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span> Fetching...';
+        
+        try {
+            let result;
+            let chainName = '';
+            if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
+                result = await fetchBitcoinData(address);
+                chainName = 'Bitcoin';
+                document.getElementById('addressNote').innerHTML = `📍 Bitcoin address • Balance fetched`;
+                document.getElementById('balanceSymbol').innerHTML = 'BTC';
+            } else if (address.startsWith('0x')) {
+                result = await fetchEVMData(address);
+                chainName = 'Ethereum';
+                document.getElementById('addressNote').innerHTML = `📍 EVM address • Balance fetched`;
+                document.getElementById('balanceSymbol').innerHTML = 'ETH';
+            } else {
+                throw new Error('Unrecognized address format. Use BTC or ETH address');
+            }
+            
+            document.getElementById('balanceValue').innerHTML = parseFloat(result.balance).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 8 });
+            
+            const mockPrice = chainName === 'Bitcoin' ? 65000 : 3200;
+            const usdValue = parseFloat(result.balance) * mockPrice;
+            document.getElementById('balanceUSD').innerHTML = `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
+            
+            document.getElementById('taxSummary').classList.add('hidden');
+            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6C729B;">For tax calculation, use CSV Upload mode</td></tr>';
+            document.getElementById('txCount').innerHTML = 'Balance only';
+            
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Fetch Balance';
+        }
+    }
+
+    function switchMode(mode) {
+        const csvDiv = document.getElementById('csvMode');
+        const walletDiv = document.getElementById('walletMode');
+        const csvBtn = document.getElementById('csvModeBtn');
+        const walletBtn = document.getElementById('walletModeBtn');
+        
+        if (mode === 'csv') {
+            csvDiv.classList.remove('hidden');
+            walletDiv.classList.add('hidden');
+            csvBtn.classList.add('active');
+            walletBtn.classList.remove('active');
+            resetDropzone();
+            document.getElementById('csvFile').value = '';
+        } else {
+            csvDiv.classList.add('hidden');
+            walletDiv.classList.remove('hidden');
+            walletBtn.classList.add('active');
+            csvBtn.classList.remove('active');
+        }
+        document.getElementById('taxSummary').classList.add('hidden');
+        document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6C729B;">Upload CSV or fetch wallet data</td></tr>';
+        document.getElementById('txCount').innerHTML = '0 transactions';
+    }
+
+    function updateTimestamp() {
+        document.getElementById('timestamp').innerHTML = new Date().toLocaleString();
+    }
+
+    // Initialize
+    setupCSVUpload();
+    document.getElementById('fetchBtn').addEventListener('click', fetchWalletData);
+    document.getElementById('csvModeBtn').addEventListener('click', () => switchMode('csv'));
+    document.getElementById('walletModeBtn').addEventListener('click', () => switchMode('wallet'));
+    document.getElementById('addressInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') fetchWalletData();
+    });
+    
+    updateTimestamp();
+    setInterval(updateTimestamp, 1000);
+</script>
 </body>
 </html>
