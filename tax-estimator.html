@@ -378,6 +378,11 @@
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #0D0F17; }
         ::-webkit-scrollbar-thumb { background: #F7931A; border-radius: 4px; }
+        
+        .csv-filename {
+            word-break: break-all;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -559,40 +564,90 @@
         document.getElementById('taxSummary').classList.remove('hidden');
     }
 
-    // CSV Upload
+    // Store original dropzone content
+    let originalDropzoneContent = '';
+
+    // CSV Upload with file name display
     function setupCSVUpload() {
         const dropzone = document.getElementById('csvDropzone');
         const fileInput = document.getElementById('csvFile');
+        originalDropzoneContent = dropzone.innerHTML;
 
-        dropzone.addEventListener('click', () => fileInput.click());
+        dropzone.addEventListener('click', (e) => {
+            if (!dropzone.getAttribute('data-has-file')) {
+                fileInput.click();
+            }
+        });
         
         dropzone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropzone.style.borderColor = '#F7931A';
-            dropzone.style.background = 'rgba(247, 147, 26, 0.05)';
+            if (!dropzone.getAttribute('data-has-file')) {
+                dropzone.style.borderColor = '#F7931A';
+                dropzone.style.background = 'rgba(247, 147, 26, 0.05)';
+            }
         });
         
         dropzone.addEventListener('dragleave', () => {
-            dropzone.style.borderColor = '#2A2F4F';
-            dropzone.style.background = '#05070A';
+            if (!dropzone.getAttribute('data-has-file')) {
+                dropzone.style.borderColor = '#2A2F4F';
+                dropzone.style.background = '#05070A';
+            }
         });
         
         dropzone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropzone.style.borderColor = '#2A2F4F';
-            dropzone.style.background = '#05070A';
-            const file = e.dataTransfer.files[0];
-            if (file && file.name.endsWith('.csv')) processCSV(file);
+            if (!dropzone.getAttribute('data-has-file')) {
+                dropzone.style.borderColor = '#2A2F4F';
+                dropzone.style.background = '#05070A';
+                const file = e.dataTransfer.files[0];
+                if (file && file.name.endsWith('.csv')) {
+                    processCSV(file);
+                    dropzone.setAttribute('data-has-file', 'true');
+                }
+            }
         });
         
         fileInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) processCSV(e.target.files[0]);
+            if (e.target.files[0]) {
+                processCSV(e.target.files[0]);
+                dropzone.setAttribute('data-has-file', 'true');
+            }
         });
     }
 
     async function processCSV(file) {
         const text = await file.text();
         const lines = text.trim().split('\n');
+        
+        // Show uploaded file name
+        const dropzone = document.getElementById('csvDropzone');
+        dropzone.innerHTML = `
+            <div class="csv-icon">✅</div>
+            <div class="csv-title csv-filename">${file.name}</div>
+            <div class="csv-subtitle">${(file.size / 1024).toFixed(1)} KB • Click to change file</div>
+        `;
+        dropzone.style.borderColor = '#4CAF50';
+        dropzone.style.background = 'rgba(76, 175, 80, 0.05)';
+        
+        // Restore on click to allow re-upload
+        const originalContent = originalDropzoneContent;
+        dropzone.onclick = (e) => {
+            e.stopPropagation();
+            dropzone.innerHTML = originalContent;
+            dropzone.style.borderColor = '#2A2F4F';
+            dropzone.style.background = '#05070A';
+            dropzone.removeAttribute('data-has-file');
+            dropzone.onclick = null;
+            document.getElementById('csvFile').click();
+            // Re-bind the click handler
+            setTimeout(() => {
+                if (!dropzone.getAttribute('data-has-file')) {
+                    const fileInput2 = document.getElementById('csvFile');
+                    fileInput2.value = '';
+                }
+            }, 100);
+        };
+        
         const transactions = lines.slice(1).map(line => {
             const [date, type, amount, price] = line.split(',');
             return { date, type: type?.toLowerCase(), amount: parseFloat(amount), price: parseFloat(price) };
@@ -761,6 +816,15 @@
             mainGrid.classList.remove('wallet-mode');
             csvBtn.classList.add('active');
             walletBtn.classList.remove('active');
+            // Reset CSV dropzone when switching back to CSV mode
+            const dropzone = document.getElementById('csvDropzone');
+            if (dropzone && originalDropzoneContent) {
+                dropzone.innerHTML = originalDropzoneContent;
+                dropzone.style.borderColor = '#2A2F4F';
+                dropzone.style.background = '#05070A';
+                dropzone.removeAttribute('data-has-file');
+                dropzone.onclick = null;
+            }
         } else {
             csvDiv.classList.add('hidden');
             walletDiv.classList.remove('hidden');
