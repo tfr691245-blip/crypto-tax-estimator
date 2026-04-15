@@ -541,7 +541,7 @@
         document.getElementById('taxSummary').classList.remove('hidden');
     }
 
-    function resetDropzone() {
+    function resetToUploadMode() {
         const dropzone = document.getElementById('csvDropzone');
         dropzone.innerHTML = `
             <div class="csv-icon">📄</div>
@@ -551,12 +551,28 @@
         dropzone.style.borderColor = '#2A2F4F';
         dropzone.style.background = '#05070A';
         dropzone.removeAttribute('data-has-file');
+        
+        document.getElementById('csvFile').value = '';
+        document.getElementById('taxSummary').classList.add('hidden');
+        document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6C729B;">Upload CSV or fetch wallet data</td></tr>';
+        document.getElementById('txCount').innerHTML = '0 transactions';
     }
 
     async function processCSV(file) {
         const text = await file.text();
         const lines = text.trim().split('\n');
         
+        const transactions = lines.slice(1).map(line => {
+            const [date, type, amount, price] = line.split(',');
+            return { date, type: type?.toLowerCase(), amount: parseFloat(amount), price: parseFloat(price) };
+        }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price));
+        
+        if (transactions.length === 0) {
+            alert('Invalid CSV format. Use: date,type,amount,price');
+            return;
+        }
+        
+        // Show file name after successful upload
         const dropzone = document.getElementById('csvDropzone');
         dropzone.innerHTML = `
             <div class="csv-icon">✅</div>
@@ -566,17 +582,6 @@
         dropzone.style.borderColor = '#4CAF50';
         dropzone.style.background = 'rgba(76, 175, 80, 0.05)';
         dropzone.setAttribute('data-has-file', 'true');
-        
-        const transactions = lines.slice(1).map(line => {
-            const [date, type, amount, price] = line.split(',');
-            return { date, type: type?.toLowerCase(), amount: parseFloat(amount), price: parseFloat(price) };
-        }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price));
-        
-        if (transactions.length === 0) {
-            alert('Invalid CSV format. Use: date,type,amount,price');
-            resetDropzone();
-            return;
-        }
         
         const taxResult = calculateFIFOTax(transactions);
         updateTaxSummary(taxResult);
@@ -596,7 +601,7 @@
         const dropzone = document.getElementById('csvDropzone');
         const fileInput = document.getElementById('csvFile');
 
-        const handleFileSelect = (file) => {
+        const handleFile = (file) => {
             if (file && file.name.endsWith('.csv')) {
                 processCSV(file);
             } else if (file) {
@@ -604,13 +609,15 @@
             }
         };
 
-        dropzone.addEventListener('click', () => {
-            if (dropzone.getAttribute('data-has-file')) {
-                resetDropzone();
-                document.getElementById('csvFile').value = '';
-                document.getElementById('taxSummary').classList.add('hidden');
-                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6C729B;">Upload CSV or fetch wallet data</td></tr>';
-                document.getElementById('txCount').innerHTML = '0 transactions';
+        // Click handler - handles both initial upload and re-upload
+        dropzone.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (dropzone.getAttribute('data-has-file') === 'true') {
+                // Reset to upload mode first, then trigger file select
+                resetToUploadMode();
+                setTimeout(() => {
+                    fileInput.click();
+                }, 50);
             } else {
                 fileInput.click();
             }
@@ -618,14 +625,14 @@
         
         dropzone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            if (!dropzone.getAttribute('data-has-file')) {
+            if (dropzone.getAttribute('data-has-file') !== 'true') {
                 dropzone.style.borderColor = '#F7931A';
                 dropzone.style.background = 'rgba(247, 147, 26, 0.05)';
             }
         });
         
         dropzone.addEventListener('dragleave', () => {
-            if (!dropzone.getAttribute('data-has-file')) {
+            if (dropzone.getAttribute('data-has-file') !== 'true') {
                 dropzone.style.borderColor = '#2A2F4F';
                 dropzone.style.background = '#05070A';
             }
@@ -633,17 +640,25 @@
         
         dropzone.addEventListener('drop', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             dropzone.style.borderColor = '#2A2F4F';
             dropzone.style.background = '#05070A';
-            if (!dropzone.getAttribute('data-has-file')) {
-                const file = e.dataTransfer.files[0];
-                handleFileSelect(file);
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                if (dropzone.getAttribute('data-has-file') === 'true') {
+                    resetToUploadMode();
+                    setTimeout(() => {
+                        handleFile(file);
+                    }, 50);
+                } else {
+                    handleFile(file);
+                }
             }
         });
         
         fileInput.addEventListener('change', (e) => {
             if (e.target.files[0]) {
-                handleFileSelect(e.target.files[0]);
+                handleFile(e.target.files[0]);
             }
         });
     }
@@ -789,8 +804,7 @@
             mainGrid.classList.remove('wallet-mode');
             csvBtn.classList.add('active');
             walletBtn.classList.remove('active');
-            resetDropzone();
-            document.getElementById('csvFile').value = '';
+            resetToUploadMode();
         } else {
             csvDiv.classList.add('hidden');
             walletDiv.classList.remove('hidden');
@@ -799,9 +813,6 @@
             walletBtn.classList.add('active');
             csvBtn.classList.remove('active');
         }
-        document.getElementById('taxSummary').classList.add('hidden');
-        document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6C729B;">Upload CSV or fetch wallet data</td></tr>';
-        document.getElementById('txCount').innerHTML = '0 transactions';
     }
 
     function updateTimestamp() {
