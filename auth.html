@@ -9,9 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Outfit', 'Space Grotesk', sans-serif;
@@ -355,7 +353,7 @@
 
         .divider span { margin: 0 16px; }
 
-        /* Google Button - Full Clickable */
+        /* Google Button */
         .google-btn {
             width: 100%;
             padding: 14px 20px;
@@ -544,7 +542,7 @@
     
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Theme Toggle
+    // ============ THEME TOGGLE ============
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
     
@@ -569,7 +567,8 @@
         document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
     });
 
-    function togglePassword(fieldId, iconElement) {
+    // ============ PASSWORD TOGGLE ============
+    window.togglePassword = function(fieldId, iconElement) {
         const field = document.getElementById(fieldId);
         if (field.type === 'password') {
             field.type = 'text';
@@ -580,13 +579,15 @@
             iconElement.classList.remove('fa-eye-slash');
             iconElement.classList.add('fa-eye');
         }
-    }
+    };
 
-    // Mode Toggle
+    // ============ MODE TOGGLE ============
     const signinModeBtn = document.getElementById('signinModeBtn');
     const signupModeBtn = document.getElementById('signupModeBtn');
     const signinForm = document.getElementById('signinForm');
     const signupForm = document.getElementById('signupForm');
+    const switchText = document.getElementById('switchText');
+    const googleBtnText = document.getElementById('googleBtnText');
 
     function setMode(mode) {
         if (mode === 'signin') {
@@ -594,30 +595,23 @@
             signupModeBtn.classList.remove('active');
             signinForm.classList.remove('hidden');
             signupForm.classList.add('hidden');
-            document.getElementById('switchText').innerHTML = `Don't have an account? <span id="switchBtn">Sign Up</span>`;
-            document.getElementById('googleBtnText').innerText = 'Sign in with Google';
-            const newSwitchBtn = document.getElementById('switchBtn');
-            if (newSwitchBtn) newSwitchBtn.onclick = () => setMode('signup');
+            switchText.innerHTML = `Don't have an account? <span id="switchBtn">Sign Up</span>`;
+            googleBtnText.innerText = 'Sign in with Google';
+            document.getElementById('switchBtn').onclick = () => setMode('signup');
         } else {
             signupModeBtn.classList.add('active');
             signinModeBtn.classList.remove('active');
             signupForm.classList.remove('hidden');
             signinForm.classList.add('hidden');
-            document.getElementById('switchText').innerHTML = `Already have an account? <span id="switchBtn">Sign In</span>`;
-            document.getElementById('googleBtnText').innerText = 'Sign up with Google';
-            const newSwitchBtn = document.getElementById('switchBtn');
-            if (newSwitchBtn) newSwitchBtn.onclick = () => setMode('signin');
+            switchText.innerHTML = `Already have an account? <span id="switchBtn">Sign In</span>`;
+            googleBtnText.innerText = 'Sign up with Google';
+            document.getElementById('switchBtn').onclick = () => setMode('signin');
         }
         hideMessages();
     }
 
     signinModeBtn.onclick = () => setMode('signin');
     signupModeBtn.onclick = () => setMode('signup');
-    
-    setTimeout(() => {
-        const switchBtn = document.getElementById('switchBtn');
-        if (switchBtn) switchBtn.onclick = () => setMode('signup');
-    }, 100);
 
     function showError(msg) {
         const el = document.getElementById('errorMessage');
@@ -638,7 +632,7 @@
         document.getElementById('successMessage').style.display = 'none';
     }
 
-    // Forgot Password
+    // ============ FORGOT PASSWORD ============
     document.getElementById('forgotPasswordLink').addEventListener('click', async (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
@@ -659,7 +653,7 @@
         }
     });
 
-    // Sign Up
+    // ============ SIGN UP ============
     signupForm.onsubmit = async (e) => {
         e.preventDefault();
         
@@ -690,7 +684,7 @@
         }
     };
 
-    // Sign In
+    // ============ SIGN IN ============
     signinForm.onsubmit = async (e) => {
         e.preventDefault();
         
@@ -726,10 +720,11 @@
         }
     };
 
-    // Google Sign In - Direct button click
+    // ============ GOOGLE SIGN IN ============
     const googleBtn = document.getElementById('googleSignInBtn');
     
-    googleBtn.addEventListener('click', async () => {
+    googleBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
         try {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
@@ -739,13 +734,12 @@
             });
             
             if (error) throw error;
-            // Supabase will redirect automatically
         } catch (error) {
             showError('Google sign in failed: ' + error.message);
         }
     });
 
-    // Check if already logged in
+    // ============ CHECK EXISTING SESSION ============
     const checkSession = async () => {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
