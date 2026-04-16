@@ -518,7 +518,7 @@
                 <div class="table-wrapper">
                     <table class="tx-table">
                         <thead><tr><th>TX HASH / DATE</th><th>AMOUNT</th><th>GAIN</th></tr></thead>
-                        <tbody id="txBody"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr></tbody>
+                        <tbody id="txBody"><td><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -573,7 +573,7 @@
     let currentChain = BLOCKCHAINS[0];
     let currentMode = 'csv';
 
-    // RPC ENDPOINTS WITH MULTIPLE FALLBACKS FOR POLYGON
+    // RPC ENDPOINTS FOR OTHER CHAINS
     function getRpcUrl(chainName) {
         const urls = {
             'Ethereum': 'https://eth.drpc.org',
@@ -582,7 +582,6 @@
             'Arbitrum': 'https://arb1.arbitrum.io/rpc',
             'Optimism': 'https://mainnet.optimism.io',
             'Base': 'https://mainnet.base.org',
-            'Fantom': 'https://rpc.ftm.tools',
             'Cronos': 'https://evm.cronos.org',
             'Gnosis': 'https://rpc.gnosischain.com',
             'Celo': 'https://forno.celo.org'
@@ -596,7 +595,6 @@
             'https://polygon.llamarpc.com',
             'https://polygon-rpc.com',
             'https://rpc-mainnet.maticvigil.com',
-            'https://polygon-mainnet.g.alchemy.com/v2/demo',
             'https://polygon.drpc.org'
         ];
         
@@ -625,7 +623,6 @@
                 if (data.error) continue;
                 
                 const balanceWei = parseInt(data.result, 16);
-                console.log(`Polygon balance fetched from ${rpcUrl}: ${balanceWei / 1e18} MATIC`);
                 return { balance: (balanceWei / 1e18).toFixed(8) };
                 
             } catch (e) {
@@ -634,6 +631,52 @@
             }
         }
         throw new Error('All Polygon RPC endpoints failed');
+    }
+
+    // Special function for Fantom with multiple fallback endpoints
+    async function fetchFantomData(address) {
+        const endpoints = [
+            'https://rpc.ftm.tools',
+            'https://fantom-mainnet.public.blastapi.io',
+            'https://rpc.fantom.network',
+            'https://fantom.drpc.org',
+            'https://fantom.publicnode.com'
+        ];
+        
+        for (const rpcUrl of endpoints) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                
+                const response = await fetch(rpcUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'eth_getBalance',
+                        params: [address, 'latest'],
+                        id: 1
+                    }),
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) continue;
+                
+                const data = await response.json();
+                if (data.error) continue;
+                
+                const balanceWei = parseInt(data.result, 16);
+                console.log(`Fantom balance fetched from ${rpcUrl}: ${balanceWei / 1e18} FTM`);
+                return { balance: (balanceWei / 1e18).toFixed(8) };
+                
+            } catch (e) {
+                console.log(`Fantom RPC ${rpcUrl} failed:`, e.message);
+                continue;
+            }
+        }
+        throw new Error('All Fantom RPC endpoints failed');
     }
 
     function calculateFIFOTax(transactions) {
@@ -726,7 +769,7 @@
                 resetDropzone();
                 fileInput.value = '';
                 document.getElementById('taxSummary').classList.add('hidden');
-                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
+                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>';
                 document.getElementById('txCount').innerHTML = '0';
                 setTimeout(() => fileInput.click(), 50);
             } else { fileInput.click(); }
@@ -743,7 +786,7 @@
                     resetDropzone();
                     fileInput.value = '';
                     document.getElementById('taxSummary').classList.add('hidden');
-                    document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
+                    document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>';
                     document.getElementById('txCount').innerHTML = '0';
                     setTimeout(() => handleFile(file), 50);
                 } else { await handleFile(file); }
@@ -803,9 +846,11 @@
                 document.getElementById('balanceSymbol').innerHTML = 'SOL';
                 document.getElementById('addressNote').innerHTML = `📍 Solana Address • Balance fetched`;
             } else if (address.startsWith('0x')) {
-                // Special handling for Polygon
+                // Special handling for Polygon and Fantom
                 if (currentChain.name === 'Polygon') {
                     result = await fetchPolygonData(address);
+                } else if (currentChain.name === 'Fantom') {
+                    result = await fetchFantomData(address);
                 } else {
                     result = await fetchEVMData(currentChain.name, address);
                 }
@@ -892,7 +937,7 @@
             resetDropzone();
             document.getElementById('csvFile').value = '';
             document.getElementById('taxSummary').classList.add('hidden');
-            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
+            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>';
             document.getElementById('txCount').innerHTML = '0';
         } else {
             csvDiv.classList.add('hidden');
