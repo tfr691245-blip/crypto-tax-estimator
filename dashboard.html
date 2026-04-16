@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>CryptoTax | Dashboard</title>
+    <title>CryptoTax | User Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
             --bg-primary: #0A0C15;
             --bg-secondary: #0D0F17;
+            --bg-card: #0D0F17;
             --text-primary: #E8EDF5;
             --text-secondary: #8E94B3;
             --text-muted: #6C729B;
@@ -18,22 +20,32 @@
             --border-light: rgba(247, 147, 26, 0.15);
             --accent: #F7931A;
             --accent-gradient: linear-gradient(135deg, #F7931A 0%, #E07C0A 100%);
+            --shadow: 0 8px 20px rgba(247, 147, 26, 0.25);
         }
+
         body.light {
             --bg-primary: #F5F7FF;
             --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
             --text-primary: #1A1F36;
             --text-secondary: #4A5568;
             --text-muted: #718096;
             --border-color: #E2E8F0;
+            --border-light: rgba(247, 147, 26, 0.2);
         }
+
+        html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+        
         body {
             font-family: 'Outfit', 'Space Grotesk', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
+            line-height: 1.5;
             min-height: 100vh;
-            transition: background 0.3s;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
+
         body:not(.light) .bg-orb {
             position: fixed;
             top: 0;
@@ -43,6 +55,7 @@
             z-index: -2;
             background: #0A0C15;
         }
+
         body:not(.light) .bg-orb::before {
             content: '';
             position: absolute;
@@ -54,31 +67,36 @@
             filter: blur(80px);
             animation: float 12s ease-in-out infinite;
         }
+
         @keyframes float { 0%,100% { transform: translate(0,0) scale(1); opacity: 0.5; } 50% { transform: translate(5%,5%) scale(1.1); opacity: 0.8; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
         @media (min-width: 768px) { .container { padding: 24px; } }
-        
+
+        /* Navigation */
         .navbar {
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-align: center;
             margin-bottom: 32px;
             padding: 16px;
             background: var(--bg-secondary);
             border-radius: 24px;
             border: 1px solid var(--border-light);
         }
-        @media (min-width: 768px) { .navbar { flex-direction: row; justify-content: space-between; padding: 16px 24px; margin-bottom: 48px; } }
-        
+        @media (min-width: 768px) { .navbar { flex-direction: row; justify-content: space-between; text-align: left; padding: 16px 24px; margin-bottom: 48px; } }
+
         .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .logo-icon { width: 44px; height: 44px; background: var(--accent-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .logo-icon { width: 44px; height: 44px; background: var(--accent-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: var(--shadow); }
         .logo-text h1 { font-size: 24px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .logo-text p { font-size: 11px; color: var(--accent); }
-        
-        .nav-right { display: flex; align-items: center; gap: 16px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
-        @media (min-width: 768px) { .nav-right { margin-top: 0; } }
-        
-        .nav-links { display: flex; gap: 12px; flex-wrap: wrap; }
+        .logo-text p { font-size: 11px; color: var(--accent); letter-spacing: 1px; font-weight: 500; }
+
+        .nav-right { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px; width: 100%; flex-wrap: wrap; }
+        @media (min-width: 768px) { .nav-right { margin-top: 0; width: auto; } }
+
+        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
         .nav-link {
             color: var(--text-secondary);
             text-decoration: none;
@@ -86,16 +104,40 @@
             font-weight: 600;
             padding: 8px 20px;
             border-radius: 40px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
         }
-        .nav-link.active { background: var(--accent-gradient); color: #05070A; }
-        
-        .user-info { display: flex; align-items: center; gap: 12px; background: rgba(247,147,26,0.1); padding: 5px 16px 5px 8px; border-radius: 60px; }
+        .nav-link:hover { background: rgba(247, 147, 26, 0.1); color: var(--accent); }
+        .nav-link.active { background: var(--accent-gradient); color: #05070A; box-shadow: var(--shadow); }
+
+        /* User Profile - NO DASHBOARD BUTTON */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(247, 147, 26, 0.1);
+            padding: 5px 16px 5px 8px;
+            border-radius: 60px;
+            cursor: pointer;
+        }
         .user-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
         .user-name { font-size: 14px; font-weight: 600; color: var(--accent); }
-        .logout-btn { background: transparent; border: 1px solid rgba(247,147,26,0.3); color: var(--accent); padding: 6px 14px; border-radius: 40px; cursor: pointer; }
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(247, 147, 26, 0.3);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover { background: rgba(247, 147, 26, 0.1); }
+
+        .account-btn { background: rgba(247, 147, 26, 0.15); border: 1px solid rgba(247, 147, 26, 0.3); display: flex; align-items: center; gap: 8px; }
         
         .theme-toggle {
-            background: rgba(5,7,10,0.5);
+            background: rgba(5, 7, 10, 0.5);
             border: 1px solid var(--border-color);
             border-radius: 50%;
             width: 44px;
@@ -104,20 +146,26 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
-        
+        .theme-toggle:hover { transform: rotate(15deg); border-color: var(--accent); }
+        .theme-toggle i { font-size: 20px; transition: transform 0.5s ease; }
+        body.light .theme-toggle i { transform: rotate(360deg); }
+
         /* Dashboard Content */
         .welcome-section {
-            background: linear-gradient(135deg, rgba(247,147,26,0.1), rgba(255,107,0,0.05));
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.08), rgba(255, 107, 0, 0.04));
             border-radius: 32px;
             padding: 40px;
             margin-bottom: 32px;
             text-align: center;
             border: 1px solid var(--border-light);
+            animation: fadeInUp 0.6s ease-out;
         }
-        .welcome-section h1 { font-size: 32px; margin-bottom: 8px; }
-        .welcome-section p { color: var(--text-secondary); }
-        
+        .welcome-section h1 { font-size: 32px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .welcome-section p { color: var(--text-secondary); font-size: 15px; }
+
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -125,36 +173,73 @@
             margin-bottom: 32px;
         }
         @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
-        
+
         .stat-card {
-            background: var(--bg-secondary);
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
             border-radius: 24px;
-            padding: 24px;
+            padding: 28px 20px;
             text-align: center;
             border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
-        .stat-number { font-size: 32px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
-        
+        .stat-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-family: 'Space Grotesk', monospace;
+        }
+        @media (min-width: 768px) { .stat-number { font-size: 44px; } }
+        .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 8px; font-weight: 500; }
+
+        /* Activity Card */
         .activity-card {
-            background: var(--bg-secondary);
+            background: var(--bg-card);
             border-radius: 24px;
             padding: 24px;
             border: 1px solid var(--border-color);
+            margin-bottom: 32px;
         }
-        .activity-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--accent); }
+        .activity-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .activity-list { list-style: none; }
         .activity-item {
             display: flex;
             align-items: center;
             gap: 16px;
-            padding: 14px 0;
+            padding: 16px 0;
             border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
-        .activity-icon { width: 44px; height: 44px; background: rgba(247,147,26,0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .activity-item:hover { background: rgba(247, 147, 26, 0.02); padding-left: 8px; }
+        .activity-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(247, 147, 26, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--accent);
+        }
         .activity-detail { flex: 1; }
-        .activity-name { font-weight: 600; }
+        .activity-name { font-weight: 600; margin-bottom: 4px; }
         .activity-time { font-size: 11px; color: var(--text-muted); }
-        
+        .activity-amount { font-weight: 700; color: #4CAF50; }
+
+        /* Footer */
         .footer {
             margin-top: 32px;
             padding: 20px 24px;
@@ -169,80 +254,168 @@
             text-align: center;
         }
         @media (min-width: 768px) { .footer { flex-direction: row; justify-content: space-between; } }
-        
+        .footer-social { display: flex; gap: 20px; }
+        .footer-social a { color: var(--text-muted); transition: all 0.3s ease; font-size: 18px; }
+        .footer-social a:hover { color: var(--accent); }
+
         .hidden { display: none !important; }
+        
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
     </style>
 </head>
 <body>
 <div class="bg-orb"></div>
 <div class="container">
+    <!-- Navigation - NO DASHBOARD BUTTON -->
     <div class="navbar">
         <div class="logo" onclick="window.location.href='index.html'">
             <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
-            <div class="logo-text"><h1>CRYPTOTAX</h1><p>ENTERPRISE GRADE</p></div>
+            <div class="logo-text">
+                <h1>CRYPTOTAX</h1>
+                <p>ENTERPRISE GRADE</p>
+            </div>
         </div>
         <div class="nav-right">
             <div class="nav-links">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="tax-estimator.html" class="nav-link">Estimator</a>
-                <a href="dashboard.html" class="nav-link active">Dashboard</a>
             </div>
+            
+            <!-- User Profile -->
             <div id="userInfo" class="user-info hidden">
                 <img id="userAvatar" class="user-avatar" src="">
                 <span id="userName" class="user-name"></span>
-                <button id="logoutBtn" class="logout-btn">Exit</button>
+                <button id="logoutBtn" class="logout-btn" onclick="event.stopPropagation(); logout();">Exit</button>
             </div>
-            <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></div>
+            
+            <!-- Account Button (shown when not logged in) -->
+            <a href="auth.html" id="authBtn" class="nav-link account-btn">
+                <i class="fas fa-user-circle"></i> Account
+            </a>
+            
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </div>
         </div>
     </div>
 
-    <div class="welcome-section" id="welcomeSection">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
         <h1>Welcome back, <span id="welcomeName">User</span>! 👋</h1>
         <p>Track your crypto tax activity and portfolio performance</p>
     </div>
 
+    <!-- Stats Grid -->
     <div class="stats-grid">
-        <div class="stat-card"><div class="stat-number" id="totalTx">0</div><div class="stat-label">Transactions</div></div>
-        <div class="stat-card"><div class="stat-number" id="totalGainDash">$0</div><div class="stat-label">Total Gain</div></div>
-        <div class="stat-card"><div class="stat-number" id="totalLossDash">$0</div><div class="stat-label">Total Loss</div></div>
-        <div class="stat-card"><div class="stat-number" id="netGainDash">$0</div><div class="stat-label">Net Gain</div></div>
-    </div>
-
-    <div class="activity-card">
-        <div class="activity-title"><i class="fas fa-history"></i> Recent Activity</div>
-        <div class="activity-list" id="activityList">
-            <div class="activity-item"><div class="activity-icon"><i class="fas fa-chart-line"></i></div><div class="activity-detail"><div class="activity-name">No recent activity</div><div class="activity-time">-</div></div></div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalTx">0</div>
+            <div class="stat-label">Total Transactions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalGainDash">$0</div>
+            <div class="stat-label">Total Gain</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalLossDash">$0</div>
+            <div class="stat-label">Total Loss</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="netGainDash">$0</div>
+            <div class="stat-label">Net Gain</div>
         </div>
     </div>
 
+    <!-- Recent Activity -->
+    <div class="activity-card">
+        <div class="activity-title">
+            <i class="fas fa-history"></i> Recent Activity
+        </div>
+        <div class="activity-list" id="activityList">
+            <div class="activity-item">
+                <div class="activity-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="activity-detail">
+                    <div class="activity-name">No recent activity</div>
+                    <div class="activity-time">-</div>
+                </div>
+                <div class="activity-amount"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
     <div class="footer">
         <span><i class="fas fa-shield-alt"></i> Secure • FIFO • Real-time</span>
-        <div class="footer-social"><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-github"></i></a><a href="#"><i class="fab fa-discord"></i></a></div>
+        <div class="footer-social">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-discord"></i></a>
+        </div>
         <span>© 2026 CryptoTax</span>
     </div>
 </div>
 
 <script>
+    // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const icon = themeToggle.querySelector('i');
+    
     function setTheme(theme) {
-        if (theme === 'light') { document.body.classList.add('light'); icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); localStorage.setItem('theme', 'light');
-        } else { document.body.classList.remove('light'); icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); localStorage.setItem('theme', 'dark'); }
+        if (theme === 'light') {
+            document.body.classList.add('light');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.body.classList.remove('light');
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+            localStorage.setItem('theme', 'dark');
+        }
     }
+    
     const savedTheme = localStorage.getItem('theme');
     savedTheme === 'light' ? setTheme('light') : setTheme('dark');
-    themeToggle.addEventListener('click', () => document.body.classList.contains('light') ? setTheme('dark') : setTheme('light'));
-
-    const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
-    if (!currentUser) { window.location.href = 'auth.html'; }
     
-    document.getElementById('welcomeName').innerText = currentUser.name || currentUser.email.split('@')[0];
-    document.getElementById('userName').innerText = currentUser.name || currentUser.email.split('@')[0];
-    document.getElementById('userAvatar').src = currentUser.picture || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${currentUser.email}`;
-    document.getElementById('userInfo').classList.remove('hidden');
-    document.getElementById('logoutBtn').onclick = () => { localStorage.removeItem('cryptotax_current_user'); window.location.href = 'index.html'; };
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
+    });
 
-    const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || { totalTx: 0, totalGain: 0, totalLoss: 0, netGain: 0, recent: [] };
+    // User Authentication
+    const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
+    const userInfo = document.getElementById('userInfo');
+    const authBtn = document.getElementById('authBtn');
+    
+    function logout() {
+        localStorage.removeItem('cryptotax_current_user');
+        window.location.href = 'index.html';
+    }
+    
+    if (currentUser) {
+        userInfo.classList.remove('hidden');
+        authBtn.classList.add('hidden');
+        document.getElementById('welcomeName').innerText = currentUser.name || currentUser.email.split('@')[0];
+        document.getElementById('userName').innerText = currentUser.name || currentUser.email.split('@')[0];
+        document.getElementById('userAvatar').src = currentUser.picture || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${currentUser.email}`;
+        document.getElementById('logoutBtn').onclick = (e) => {
+            e.stopPropagation();
+            logout();
+        };
+    } else {
+        userInfo.classList.add('hidden');
+        authBtn.classList.remove('hidden');
+    }
+
+    // Load Dashboard Data
+    const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || { 
+        totalTx: 0, 
+        totalGain: 0, 
+        totalLoss: 0, 
+        netGain: 0, 
+        recent: [] 
+    };
+    
     document.getElementById('totalTx').innerText = txData.totalTx || 0;
     document.getElementById('totalGainDash').innerHTML = `$${txData.totalGain || 0}`;
     document.getElementById('totalLossDash').innerHTML = `$${txData.totalLoss || 0}`;
@@ -250,14 +423,14 @@
     
     const activityList = document.getElementById('activityList');
     if (txData.recent && txData.recent.length > 0) {
-        activityList.innerHTML = txData.recent.slice(0, 5).map(item => `
+        activityList.innerHTML = txData.recent.slice(0, 10).map(item => `
             <div class="activity-item">
                 <div class="activity-icon"><i class="fas fa-file-csv"></i></div>
                 <div class="activity-detail">
                     <div class="activity-name">${item.name || 'CSV Upload'}</div>
                     <div class="activity-time">${item.date || new Date().toLocaleString()}</div>
                 </div>
-                <div style="color: var(--accent);">${item.netGain ? `+$${item.netGain}` : ''}</div>
+                <div class="activity-amount">${item.netGain ? `+$${item.netGain}` : ''}</div>
             </div>
         `).join('');
     }
