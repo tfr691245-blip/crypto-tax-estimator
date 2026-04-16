@@ -573,12 +573,12 @@
     let currentChain = BLOCKCHAINS[0];
     let currentMode = 'csv';
 
-    // FIXED RPC ENDPOINTS - Polygon and Fantom working
+    // FIXED RPC ENDPOINTS - Solana and Polygon working
     function getRpcUrl(chainName) {
         const urls = {
             'Ethereum': 'https://eth.drpc.org',
             'Binance Smart Chain': 'https://bsc-dataseed.binance.org',
-            'Polygon': 'https://polygon-mainnet.g.alchemy.com/v2/demo',
+            'Polygon': 'https://polygon.llamarpc.com',
             'Avalanche': 'https://api.avax.network/ext/bc/C/rpc',
             'Arbitrum': 'https://arb1.arbitrum.io/rpc',
             'Optimism': 'https://mainnet.optimism.io',
@@ -681,7 +681,7 @@
                 resetDropzone();
                 fileInput.value = '';
                 document.getElementById('taxSummary').classList.add('hidden');
-                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data数据数据</td></tr>';
+                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
                 document.getElementById('txCount').innerHTML = '0';
                 setTimeout(() => fileInput.click(), 50);
             } else { fileInput.click(); }
@@ -707,28 +707,21 @@
         fileInput.addEventListener('change', async (e) => { if (e.target.files[0]) await handleFile(e.target.files[0]); });
     }
 
-    // FIXED - Working Solana with fallback
+    // FIXED - Working Solana with publicnode
     async function fetchSolanaData(address) {
-        try {
-            const response = await fetch('https://api.mainnet-beta.solana.com', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ jsonrpc: '2.0', method: 'getBalance', params: [address], id: 1 })
-            });
-            const data = await response.json();
-            if (data.error) throw new Error('Solana address not found');
-            return { balance: (data.result?.value / 1e9 || 0).toFixed(6) };
-        } catch (error) {
-            // Fallback to public endpoint
-            const response2 = await fetch('https://solana-api.projectserum.com', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ jsonrpc: '2.0', method: 'getBalance', params: [address], id: 1 })
-            });
-            const data2 = await response2.json();
-            if (data2.error) throw new Error('Solana address not found');
-            return { balance: (data2.result?.value / 1e9 || 0).toFixed(6) };
-        }
+        const response = await fetch('https://solana.publicnode.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                method: 'getBalance',
+                params: [address],
+                id: 1
+            })
+        });
+        const data = await response.json();
+        if (data.error) throw new Error('Solana address not found');
+        return { balance: (data.result?.value / 1e9 || 0).toFixed(6) };
     }
 
     async function fetchBitcoinData(address) {
@@ -854,7 +847,7 @@
             resetDropzone();
             document.getElementById('csvFile').value = '';
             document.getElementById('taxSummary').classList.add('hidden');
-            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
+            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>';
             document.getElementById('txCount').innerHTML = '0';
         } else {
             csvDiv.classList.add('hidden');
