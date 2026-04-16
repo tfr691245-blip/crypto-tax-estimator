@@ -56,7 +56,6 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* Animated Background (only in dark mode) */
         body:not(.light) .bg-orb {
             position: fixed;
             top: 0;
@@ -251,6 +250,17 @@
             box-shadow: var(--shadow);
         }
 
+        /* Sign In Button Style */
+        .signin-btn {
+            background: rgba(247, 147, 26, 0.15);
+            border: 1px solid rgba(247, 147, 26, 0.3);
+        }
+
+        .signin-btn:hover {
+            background: var(--accent-gradient);
+            color: #05070A;
+        }
+
         /* Theme Toggle */
         .theme-toggle {
             background: var(--bg-input);
@@ -422,12 +432,6 @@
             .stats-grid {
                 gap: 20px;
                 margin-bottom: 60px;
-            }
-        }
-
-        @media (min-width: 640px) and (max-width: 767px) {
-            .stats-grid {
-                gap: 16px;
             }
         }
 
@@ -855,6 +859,9 @@
                 <a href="index.html" class="nav-link active">Home</a>
                 <a href="tax-estimator.html" class="nav-link">Estimator</a>
                 <a href="#" class="nav-link">Dashboard</a>
+                <a href="auth.html" class="nav-link signin-btn">
+                    <i class="fas fa-user-circle"></i> Sign In
+                </a>
             </div>
             <div class="theme-toggle" id="themeToggle">
                 <i class="fas fa-moon"></i>
