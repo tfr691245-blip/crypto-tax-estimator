@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>CryptoTax | Enterprise Tax Estimator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, view-fit=cover, user-scalable=yes">
+    <title>CryptoTax | Professional Tax Estimator</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
             --bg-primary: #0A0C15;
             --bg-secondary: #0D0F17;
@@ -20,8 +21,9 @@
             --border-light: rgba(247, 147, 26, 0.15);
             --accent: #F7931A;
             --accent-gradient: linear-gradient(135deg, #F7931A 0%, #E07C0A 100%);
-            --shadow: 0 2px 8px rgba(247, 147, 26, 0.3);
+            --shadow: 0 8px 20px rgba(247, 147, 26, 0.25);
         }
+
         body.light {
             --bg-primary: #F5F7FF;
             --bg-secondary: #FFFFFF;
@@ -33,7 +35,9 @@
             --border-color: #E2E8F0;
             --border-light: rgba(247, 147, 26, 0.2);
         }
+
         html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+        
         body {
             font-family: 'Outfit', 'Space Grotesk', sans-serif;
             background: var(--bg-primary);
@@ -43,7 +47,7 @@
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
         }
-        body.wallet-mode .transactions-section { display: none; }
+
         body:not(.light) .bg-orb {
             position: fixed;
             top: 0;
@@ -53,6 +57,7 @@
             z-index: -2;
             background: #0A0C15;
         }
+
         body:not(.light) .bg-orb::before {
             content: '';
             position: absolute;
@@ -64,116 +69,78 @@
             filter: blur(80px);
             animation: float 12s ease-in-out infinite;
         }
-        body:not(.light) .bg-orb::after {
-            content: '';
-            position: absolute;
-            bottom: 20%;
-            right: 20%;
-            width: 50%;
-            height: 50%;
-            background: radial-gradient(circle, rgba(247, 147, 26, 0.08), transparent 70%);
-            filter: blur(80px);
-            animation: float 10s ease-in-out infinite reverse;
-        }
+
         @keyframes float { 0%,100% { transform: translate(0,0) scale(1); opacity: 0.5; } 50% { transform: translate(5%,5%) scale(1.1); opacity: 0.8; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .app-container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 12px; }
-        @media (min-width: 768px) { .app-container { padding: 24px; } }
-        .header {
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 16px; }
+        @media (min-width: 768px) { .container { padding: 24px; } }
+
+        /* Navigation */
+        .navbar {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 32px;
             padding: 16px;
             background: var(--bg-secondary);
-            border-radius: 20px;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-        @media (min-width: 768px) {
-            .header { flex-direction: row; justify-content: space-between; text-align: left; padding: 20px 24px; margin-bottom: 32px; }
-        }
-        .logo-section { cursor: pointer; transition: transform 0.3s ease; }
-        .logo-section:active { transform: scale(0.98); }
-        .logo-section h1 {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        @media (min-width: 768px) { .logo-section h1 { font-size: 32px; } }
-        .logo-section p { font-size: 10px; color: var(--accent); margin-top: 4px; font-weight: 500; }
-        @media (min-width: 768px) { .logo-section p { font-size: 12px; } }
-        .header-right {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            margin-top: 12px;
-        }
-        @media (min-width: 768px) { .header-right { flex-direction: row; margin-top: 0; gap: 16px; } }
-        .nav-tabs {
-            display: flex;
-            gap: 8px;
-            background: rgba(13, 15, 23, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 4px;
-            border-radius: 60px;
+            border-radius: 24px;
             border: 1px solid var(--border-light);
         }
-        body.light .nav-tabs { background: rgba(255, 255, 255, 0.8); }
-        .nav-tab {
-            padding: 6px 16px;
-            border-radius: 60px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: transparent;
+        @media (min-width: 768px) { .navbar { flex-direction: row; justify-content: space-between; text-align: left; padding: 16px 24px; margin-bottom: 48px; } }
+
+        .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-icon { width: 44px; height: 44px; background: var(--accent-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: var(--shadow); }
+        .logo-text h1 { font-size: 24px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo-text p { font-size: 11px; color: var(--accent); letter-spacing: 1px; font-weight: 500; }
+
+        .nav-right { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px; width: 100%; flex-wrap: wrap; }
+        @media (min-width: 768px) { .nav-right { margin-top: 0; width: auto; } }
+
+        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .nav-link {
             color: var(--text-secondary);
             text-decoration: none;
-            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 40px;
+            transition: all 0.3s ease;
             white-space: nowrap;
         }
-        @media (min-width: 768px) { .nav-tab { padding: 8px 24px; font-size: 14px; } }
-        .nav-tab:active { transform: scale(0.96); }
-        .nav-tab.active { background: var(--accent-gradient); color: #05070A; box-shadow: var(--shadow); }
+        .nav-link:hover { background: rgba(247, 147, 26, 0.1); color: var(--accent); }
+        .nav-link.active { background: var(--accent-gradient); color: #05070A; box-shadow: var(--shadow); }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(247, 147, 26, 0.1);
+            padding: 5px 16px 5px 8px;
+            border-radius: 60px;
+            cursor: pointer;
+        }
+        .user-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .user-name { font-size: 14px; font-weight: 600; color: var(--accent); }
+        .logout-btn { background: transparent; border: 1px solid rgba(247,147,26,0.3); color: var(--accent); padding: 6px 14px; border-radius: 40px; font-size: 12px; cursor: pointer; }
+
+        .account-btn { background: rgba(247,147,26,0.15); border: 1px solid rgba(247,147,26,0.3); display: flex; align-items: center; gap: 8px; }
         .theme-toggle {
-            background: var(--bg-input);
+            background: rgba(5,7,10,0.5);
             border: 1px solid var(--border-color);
             border-radius: 50%;
-            width: 38px;
-            height: 38px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
-        @media (min-width: 768px) { .theme-toggle { width: 44px; height: 44px; } }
-        .theme-toggle:active { transform: scale(0.92); }
-        .theme-toggle i { font-size: 18px; transition: transform 0.5s ease; }
-        @media (min-width: 768px) { .theme-toggle i { font-size: 22px; } }
-        body.light .theme-toggle i { transform: rotate(360deg); }
-        .version-badge {
-            background: rgba(247, 147, 26, 0.12);
-            padding: 5px 12px;
-            border-radius: 40px;
-            font-size: 10px;
-            color: var(--accent);
-            font-weight: 600;
-            border: 1px solid rgba(247, 147, 26, 0.25);
-            letter-spacing: 0.5px;
-            display: inline-block;
-            margin-bottom: 12px;
-        }
-        @media (min-width: 768px) { .version-badge { padding: 6px 14px; font-size: 11px; margin-bottom: 16px; } }
-        .mode-toggle { display: flex; justify-content: center; margin-bottom: 20px; animation: fadeInUp 0.5s ease-out 0.1s both; }
+        .theme-toggle:hover { transform: rotate(15deg); border-color: var(--accent); }
+
+        /* Mode Toggle */
+        .mode-toggle { display: flex; justify-content: center; margin-bottom: 24px; }
         .mode-slider {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -183,107 +150,126 @@
             gap: 4px;
         }
         .mode-btn {
-            padding: 8px 20px;
+            padding: 10px 28px;
             border-radius: 60px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
             background: transparent;
             color: var(--text-muted);
             border: none;
             font-family: 'Outfit', sans-serif;
         }
         @media (min-width: 768px) { .mode-btn { padding: 12px 36px; font-size: 15px; } }
-        .mode-btn:active { transform: scale(0.96); }
         .mode-btn.active { background: var(--accent-gradient); color: #05070A; box-shadow: var(--shadow); }
-        .main-grid { display: grid; grid-template-columns: 1fr; gap: 16px; animation: fadeInUp 0.5s ease-out 0.2s both; }
-        @media (min-width: 768px) { .main-grid { gap: 24px; } }
+
+        /* Main Grid */
+        .main-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
         @media (min-width: 900px) { .main-grid.wallet-mode { grid-template-columns: 320px 1fr; } }
+
         .left-panel {
             background: var(--bg-card);
-            border-radius: 20px;
+            border-radius: 24px;
             border: 1px solid var(--border-color);
             overflow: hidden;
             display: none;
-            transition: all 0.3s ease;
         }
-        @media (min-width: 768px) { .left-panel { border-radius: 24px; } }
-        .left-panel.visible { display: block; animation: fadeInUp 0.4s ease-out; }
+        .left-panel.visible { display: block; }
         .panel-header {
-            padding: 14px 16px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--border-color);
             font-weight: 700;
-            font-size: 11px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--accent);
             background: var(--bg-secondary);
-            font-family: 'Space Grotesk', monospace;
         }
-        @media (min-width: 768px) { .panel-header { padding: 16px 20px; font-size: 12px; } }
-        .blockchain-list { max-height: 300px; overflow-y: auto; }
-        @media (min-width: 768px) { .blockchain-list { max-height: 400px; } }
-        @media (min-width: 900px) { .blockchain-list { max-height: 600px; } }
+        .blockchain-list { max-height: 400px; overflow-y: auto; }
         .blockchain-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
+            gap: 12px;
+            padding: 12px 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
             border-bottom: 1px solid var(--border-color);
         }
-        @media (min-width: 768px) { .blockchain-item { gap: 12px; padding: 12px 16px; } }
-        .blockchain-item:active { background: rgba(247, 147, 26, 0.1); }
-        .blockchain-item.active { background: linear-gradient(90deg, rgba(247, 147, 26, 0.1), transparent); border-left: 3px solid var(--accent); }
-        .chain-icon-img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: var(--bg-input); padding: 4px; }
-        @media (min-width: 768px) { .chain-icon-img { width: 36px; height: 36px; } }
-        .chain-info { flex: 1; }
-        .chain-name { font-weight: 700; font-size: 12px; font-family: 'Outfit', sans-serif; }
-        @media (min-width: 768px) { .chain-name { font-size: 13px; } }
-        .chain-network { font-size: 9px; color: var(--text-muted); margin-top: 2px; font-family: 'Space Grotesk', monospace; }
-        @media (min-width: 768px) { .chain-network { font-size: 10px; } }
-        .chain-balance-small { font-size: 11px; font-family: monospace; color: var(--accent); }
+        .blockchain-item:hover { background: rgba(247,147,26,0.05); }
+        .blockchain-item.active { background: linear-gradient(90deg, rgba(247,147,26,0.1), transparent); border-left: 3px solid var(--accent); }
+        .chain-icon-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: var(--bg-input); padding: 4px; }
+        .chain-name { font-weight: 700; font-size: 13px; }
+        .chain-network { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
         .right-panel {
             background: var(--bg-card);
-            border-radius: 20px;
+            border-radius: 24px;
             border: 1px solid var(--border-color);
             overflow: hidden;
+        }
+
+        /* CSV Upload Area - Professional */
+        .csv-upload-area { text-align: center; padding: 20px; }
+        .csv-dropzone {
+            border: 2px dashed var(--border-color);
+            border-radius: 20px;
+            padding: 50px 20px;
+            text-align: center;
+            cursor: pointer;
+            background: var(--bg-input);
             transition: all 0.3s ease;
         }
-        @media (min-width: 768px) { .right-panel { border-radius: 24px; } }
-        .wallet-section {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-color);
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        .csv-dropzone:hover { border-color: var(--accent); background: rgba(247,147,26,0.03); }
+        .csv-illustration {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, rgba(247,147,26,0.15), rgba(255,107,0,0.05));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .csv-illustration svg { width: 48px; height: 48px; stroke: var(--accent); stroke-width: 1.5; fill: none; }
+        .csv-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
+        .csv-subtitle { font-size: 13px; color: var(--text-muted); }
+        .file-input { display: none; }
+        .csv-format-example {
+            background: var(--bg-input);
+            padding: 14px;
+            border-radius: 14px;
+            margin-top: 18px;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Wallet Section */
+        .wallet-section { padding: 20px; }
         @media (min-width: 768px) { .wallet-section { padding: 28px; } }
         .wallet-label {
-            font-size: 10px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--accent);
             margin-bottom: 12px;
             font-weight: 700;
-            font-family: 'Space Grotesk', monospace;
         }
-        @media (min-width: 768px) { .wallet-label { font-size: 11px; } }
         .balance-display {
             display: flex;
             flex-wrap: wrap;
             align-items: baseline;
             justify-content: center;
-            gap: 6px;
-            margin-bottom: 16px;
-            padding: 16px;
-            background: linear-gradient(135deg, rgba(247, 147, 26, 0.08), rgba(224, 124, 10, 0.04));
-            border-radius: 16px;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 28px 20px;
+            background: linear-gradient(135deg, rgba(247,147,26,0.06), rgba(224,124,10,0.02));
+            border-radius: 24px;
             border: 1px solid var(--border-light);
         }
-        @media (min-width: 768px) { .balance-display { gap: 8px; margin-bottom: 20px; padding: 20px; border-radius: 20px; } }
         .balance-number {
-            font-size: 24px;
+            font-size: 36px;
             font-weight: 800;
             font-family: 'Space Grotesk', monospace;
             background: var(--accent-gradient);
@@ -291,175 +277,115 @@
             background-clip: text;
             color: transparent;
         }
-        @media (min-width: 768px) { .balance-number { font-size: 52px; } }
-        .balance-symbol { font-size: 16px; font-weight: 600; color: var(--accent); font-family: 'Outfit', sans-serif; }
-        @media (min-width: 768px) { .balance-symbol { font-size: 20px; } }
-        .balance-usd { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-        @media (min-width: 768px) { .balance-usd { font-size: 14px; } }
-        .csv-upload-area { text-align: center; padding: 12px; }
-        @media (min-width: 768px) { .csv-upload-area { padding: 20px; } }
-        .csv-dropzone {
-            border: 2px dashed var(--border-color);
-            border-radius: 16px;
-            padding: 30px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: var(--bg-input);
-        }
-        @media (min-width: 768px) { .csv-dropzone { border-radius: 20px; padding: 50px 20px; } }
-        .csv-dropzone:active { transform: scale(0.98); }
-        .csv-icon { font-size: 40px; margin-bottom: 12px; }
-        @media (min-width: 768px) { .csv-icon { font-size: 48px; margin-bottom: 16px; } }
-        .csv-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; font-family: 'Outfit', sans-serif; color: var(--text-primary); }
-        @media (min-width: 768px) { .csv-title { font-size: 16px; margin-bottom: 8px; } }
-        .csv-subtitle { font-size: 11px; color: var(--text-muted); font-weight: 500; }
-        @media (min-width: 768px) { .csv-subtitle { font-size: 12px; } }
-        .file-input { display: none; }
-        .csv-format-example {
-            background: var(--bg-input);
-            padding: 10px;
-            border-radius: 12px;
-            margin-top: 12px;
-            font-family: 'Space Grotesk', monospace;
-            font-size: 10px;
-            color: var(--text-muted);
-            text-align: left;
-            overflow-x: auto;
-        }
-        @media (min-width: 768px) { .csv-format-example { padding: 12px; margin-top: 16px; font-size: 11px; } }
-        .address-input-area { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-        @media (min-width: 600px) { .address-input-area { flex-direction: row; gap: 12px; } }
+        @media (min-width: 768px) { .balance-number { font-size: 56px; } }
+        .balance-symbol { font-size: 20px; font-weight: 600; color: var(--accent); }
+        .balance-usd { font-size: 14px; color: var(--text-muted); }
+
+        .address-input-area { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+        @media (min-width: 600px) { .address-input-area { flex-direction: row; } }
         .address-input {
             flex: 1;
             background: var(--bg-input);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 14px;
+            border-radius: 16px;
+            padding: 14px 18px;
             color: var(--text-primary);
             font-family: 'Space Grotesk', monospace;
-            font-size: 12px;
+            font-size: 14px;
             outline: none;
-            transition: all 0.3s ease;
-            min-height: 44px;
         }
-        @media (min-width: 768px) { .address-input { border-radius: 14px; padding: 14px 16px; font-size: 13px; } }
-        .address-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.1); }
+        .address-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(247,147,26,0.1); }
         .fetch-btn {
             background: var(--accent-gradient);
             border: none;
-            padding: 12px 16px;
-            border-radius: 12px;
+            padding: 14px 24px;
+            border-radius: 16px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             color: #05070A;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Outfit', sans-serif;
-            min-height: 44px;
         }
-        @media (min-width: 768px) { .fetch-btn { padding: 14px 24px; border-radius: 14px; font-size: 14px; } }
-        .fetch-btn:active { transform: scale(0.97); }
-        .address-note {
-            font-size: 10px;
-            color: var(--accent);
-            font-family: 'Space Grotesk', monospace;
-            background: rgba(247, 147, 26, 0.05);
-            padding: 8px 10px;
-            border-radius: 10px;
-            display: inline-block;
-            word-break: break-all;
-            text-align: center;
-            width: 100%;
-        }
-        @media (min-width: 768px) { .address-note { font-size: 11px; padding: 8px 12px; } }
+        .address-note { font-size: 12px; color: var(--accent); font-family: monospace; background: rgba(247,147,26,0.05); padding: 10px 14px; border-radius: 12px; text-align: center; }
+
+        /* Tax Summary */
         .tax-summary {
-            background: linear-gradient(135deg, rgba(247, 147, 26, 0.08), rgba(224, 124, 10, 0.04));
-            border-radius: 16px;
-            padding: 16px;
-            margin: 0 16px 16px 16px;
+            background: linear-gradient(135deg, rgba(247,147,26,0.06), rgba(224,124,10,0.02));
+            border-radius: 24px;
+            padding: 24px;
+            margin: 0 24px 24px 24px;
             border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.4s ease-out;
         }
-        @media (min-width: 768px) { .tax-summary { border-radius: 20px; padding: 20px; margin: 0 24px 24px 24px; } }
-        .summary-title { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Outfit', sans-serif; }
-        @media (min-width: 768px) { .summary-title { font-size: 14px; margin-bottom: 16px; } }
-        .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        @media (min-width: 768px) { .summary-grid { gap: 16px; } }
-        .summary-item { text-align: center; transition: all 0.3s ease; }
-        .summary-item:active { transform: scale(0.98); }
-        .summary-label { font-size: 10px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; letter-spacing: 0.5px; }
-        @media (min-width: 768px) { .summary-label { font-size: 11px; } }
-        .summary-value { font-size: 16px; font-weight: 800; color: var(--accent); font-family: 'Space Grotesk', monospace; }
-        @media (min-width: 768px) { .summary-value { font-size: 20px; } }
-        .transactions-section { padding: 12px; }
+        .summary-title { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 20px; text-align: center; letter-spacing: 0.5px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        @media (min-width: 768px) { .summary-grid { grid-template-columns: repeat(4, 1fr); } }
+        .summary-item { text-align: center; }
+        .summary-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+        .summary-value { font-size: 22px; font-weight: 800; color: var(--accent); font-family: 'Space Grotesk', monospace; }
+
+        /* Transactions */
+        .transactions-section { padding: 20px; }
         @media (min-width: 768px) { .transactions-section { padding: 24px; } }
-        .section-title { font-size: 12px; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; color: var(--accent); flex-wrap: wrap; gap: 8px; font-family: 'Outfit', sans-serif; }
-        @media (min-width: 768px) { .section-title { font-size: 13px; margin-bottom: 16px; } }
-        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; padding: 0 4px; }
-        .tx-table { width: 100%; font-size: 10px; border-collapse: collapse; min-width: 400px; }
-        @media (min-width: 768px) { .tx-table { font-size: 11px; min-width: 500px; } }
-        .tx-table th { text-align: left; padding: 8px 4px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-weight: 600; font-family: 'Outfit', sans-serif; }
-        @media (min-width: 768px) { .tx-table th { padding: 10px 6px; } }
-        .tx-table td { padding: 8px 4px; border-bottom: 1px solid var(--border-color); font-family: 'Space Grotesk', monospace; transition: all 0.2s ease; }
-        @media (min-width: 768px) { .tx-table td { padding: 10px 6px; } }
-        .tx-table tr:active td { background: rgba(247, 147, 26, 0.05); }
-        .tx-hash { font-family: 'Space Grotesk', monospace; font-size: 9px; color: var(--text-secondary); }
-        @media (min-width: 768px) { .tx-hash { font-size: 10px; } }
-        .tx-amount.positive { color: #4CAF50; }
-        .tx-amount.negative { color: #FF6B6B; }
-        .status-badge { background: var(--bg-secondary); padding: 4px 8px; border-radius: 20px; font-size: 9px; color: var(--text-secondary); display: inline-block; font-weight: 600; }
-        @media (min-width: 768px) { .status-badge { font-size: 10px; padding: 4px 8px; } }
-        .loading-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; border-top-color: #05070A; animation: spin 0.6s linear infinite; margin-right: 8px; vertical-align: middle; }
+        .section-title { font-size: 13px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; color: var(--accent); }
+        .table-wrapper { overflow-x: auto; }
+        .tx-table { width: 100%; font-size: 12px; border-collapse: collapse; min-width: 500px; }
+        .tx-table th { text-align: left; padding: 12px 8px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-weight: 600; }
+        .tx-table td { padding: 12px 8px; border-bottom: 1px solid var(--border-color); font-family: 'Space Grotesk', monospace; }
+        .status-badge { background: var(--bg-secondary); padding: 4px 10px; border-radius: 20px; font-size: 11px; color: var(--text-secondary); }
+
+        .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; border-top-color: #05070A; animation: spin 0.6s linear infinite; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none; }
+
         .footer {
-            margin-top: 20px;
-            padding: 14px;
+            margin-top: 24px;
+            padding: 20px 24px;
             background: var(--bg-secondary);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            font-size: 9px;
+            gap: 12px;
+            font-size: 12px;
             color: var(--text-muted);
             text-align: center;
         }
-        @media (min-width: 768px) { .footer { margin-top: 24px; padding: 20px 24px; border-radius: 20px; flex-direction: row; justify-content: space-between; font-size: 12px; gap: 12px; } }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        @media (min-width: 768px) { ::-webkit-scrollbar { width: 5px; height: 5px; } }
+        @media (min-width: 768px) { .footer { flex-direction: row; justify-content: space-between; } }
+
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--bg-secondary); }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
     </style>
 </head>
 <body>
 <div class="bg-orb"></div>
-<div class="app-container">
-    <div class="header">
-        <div class="logo-section" onclick="window.location.href='index.html'">
-            <h1>TAX ESTIMATOR</h1>
-            <p>Enterprise Multi-Chain Tax Platform</p>
+<div class="container">
+    <div class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="logo-text"><h1>CRYPTOTAX</h1><p>ENTERPRISE GRADE</p></div>
         </div>
-        <div class="header-right">
-            <div class="nav-tabs">
-                <a href="index.html" class="nav-tab">🏠 Home</a>
-                <a href="#" class="nav-tab">📊 Dashboard</a>
-                <a href="#" class="nav-tab active">💰 Estimator</a>
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tax-estimator.html" class="nav-link active">Estimator</a>
             </div>
-            <div class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i>
+            <div id="userInfo" class="user-info hidden" onclick="window.location.href='dashboard.html'">
+                <img id="userAvatar" class="user-avatar" src="">
+                <span id="userName" class="user-name"></span>
+                <button id="logoutBtn" class="logout-btn" onclick="event.stopPropagation(); logout();">Exit</button>
             </div>
+            <a href="auth.html" id="authBtn" class="nav-link account-btn"><i class="fas fa-user-circle"></i> Account</a>
+            <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></div>
         </div>
     </div>
-    <div class="version-badge" style="display: inline-block; width: auto; text-align: center;">PRODUCTION • 13 CHAINS</div>
+
     <div class="mode-toggle">
         <div class="mode-slider">
-            <button class="mode-btn active" id="csvModeBtn">📁 CSV Upload</button>
-            <button class="mode-btn" id="walletModeBtn">🔗 Wallet Balance</button>
+            <button class="mode-btn active" id="csvModeBtn">CSV Upload</button>
+            <button class="mode-btn" id="walletModeBtn">Wallet Balance</button>
         </div>
     </div>
+
     <div class="main-grid" id="mainGrid">
         <div class="left-panel" id="blockchainPanel">
             <div class="panel-header">SELECT BLOCKCHAIN</div>
@@ -467,20 +393,22 @@
         </div>
         <div class="right-panel">
             <div id="csvMode">
-                <div class="wallet-section">
-                    <div class="wallet-label">📂 CSV IMPORT</div>
-                    <div class="csv-upload-area">
-                        <div class="csv-dropzone" id="csvDropzone">
-                            <div class="csv-icon">📄</div>
-                            <div class="csv-title">Upload Transaction CSV</div>
-                            <div class="csv-subtitle">Click or drag & drop to upload</div>
-                            <input type="file" id="csvFile" accept=".csv" class="file-input">
+                <div class="csv-upload-area">
+                    <div class="csv-dropzone" id="csvDropzone">
+                        <div class="csv-illustration">
+                            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
+                                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+                                <polyline points="8 12 12 16 16 12" />
+                                <line x1="12" y1="2" x2="12" y2="16" />
+                            </svg>
                         </div>
-                        <div class="csv-format-example">
-                            <strong>CSV Format:</strong> date,type,amount,price<br>
-                            Example: 2024-01-01,buy,0.5,20000<br>
-                            <span style="color: var(--accent);">📌 For accurate tax calculation, include all buys and sells</span>
-                        </div>
+                        <div class="csv-title">Upload Transaction CSV</div>
+                        <div class="csv-subtitle">Click or drag & drop to upload</div>
+                        <input type="file" id="csvFile" accept=".csv" class="file-input">
+                    </div>
+                    <div class="csv-format-example">
+                        <strong>CSV Format:</strong> date,type,amount,price<br>
+                        Example: 2024-01-01,buy,0.5,20000
                     </div>
                 </div>
             </div>
@@ -501,31 +429,31 @@
             </div>
             <div id="taxSummary" class="hidden">
                 <div class="tax-summary">
-                    <div class="summary-title">📊 TAX SUMMARY (FIFO Method)</div>
+                    <div class="summary-title">TAX SUMMARY (FIFO Method)</div>
                     <div class="summary-grid">
                         <div class="summary-item"><div class="summary-label">Total Gain</div><div class="summary-value" id="totalGain">$0.00</div></div>
                         <div class="summary-item"><div class="summary-label">Total Loss</div><div class="summary-value" id="totalLoss">$0.00</div></div>
                         <div class="summary-item"><div class="summary-label">Net Gain</div><div class="summary-value" id="netGain">$0.00</div></div>
-                        <div class="summary-item"><div class="summary-label">Estimated Tax (20%)</div><div class="summary-value" id="estimatedTax">$0.00</div></div>
+                        <div class="summary-item"><div class="summary-label">Est. Tax (20%)</div><div class="summary-value" id="estimatedTax">$0.00</div></div>
                     </div>
                 </div>
             </div>
             <div class="transactions-section">
                 <div class="section-title">
-                    <span>📋 TRANSACTION LOG</span>
+                    <span>TRANSACTION LOG</span>
                     <span class="status-badge" id="txCount">0 transactions</span>
                 </div>
                 <div class="table-wrapper">
                     <table class="tx-table">
-                        <thead><tr><th>TX HASH / DATE</th><th>AMOUNT</th><th>GAIN</th></tr></thead>
-                        <tbody id="txBody"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr></tbody>
+                        <thead><tr><th>DATE</th><th>AMOUNT</th><th>GAIN</th></tr></thead>
+                        <tbody id="txBody"><tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px;">Upload CSV or fetch wallet数据</td></tr>?</tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
     <div class="footer">
-        <span>🔒 Secure • FIFO Method • Real-time data</span>
+        <span>Secure • FIFO Method • Real-time data</span>
         <span id="timestamp"></span>
     </div>
 </div>
@@ -549,11 +477,25 @@
     }
     const savedTheme = localStorage.getItem('theme');
     savedTheme === 'light' ? setTheme('light') : setTheme('dark');
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
-    });
+    themeToggle.addEventListener('click', () => document.body.classList.contains('light') ? setTheme('dark') : setTheme('light'));
 
-    // YOUR ORIGINAL BLOCKCHAINS WITH YOUR IMAGES
+    // User Authentication
+    const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
+    const userInfo = document.getElementById('userInfo');
+    const authBtn = document.getElementById('authBtn');
+    function logout() { localStorage.removeItem('cryptotax_current_user'); window.location.reload(); }
+    if (currentUser) {
+        userInfo.classList.remove('hidden');
+        authBtn.classList.add('hidden');
+        document.getElementById('userName').innerText = currentUser.name || currentUser.email.split('@')[0];
+        document.getElementById('userAvatar').src = currentUser.picture || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${currentUser.email}`;
+        document.getElementById('logoutBtn').onclick = (e) => { e.stopPropagation(); logout(); };
+    } else {
+        userInfo.classList.add('hidden');
+        authBtn.classList.remove('hidden');
+    }
+
+    // ============ BLOCKCHAINS ============
     const BLOCKCHAINS = [
         { name: "Bitcoin", symbol: "BTC", icon: "/images/btc.png", network: "Bitcoin Mainnet", type: "bitcoin" },
         { name: "Ethereum", symbol: "ETH", icon: "/images/eth.png", network: "Ethereum Mainnet", type: "evm" },
@@ -573,15 +515,16 @@
     let currentChain = BLOCKCHAINS[0];
     let currentMode = 'csv';
 
-    // RPC ENDPOINTS
     function getRpcUrl(chainName) {
         const urls = {
             'Ethereum': 'https://eth.drpc.org',
             'Binance Smart Chain': 'https://bsc-dataseed.binance.org',
+            'Polygon': 'https://polygon-rpc.com',
             'Avalanche': 'https://api.avax.network/ext/bc/C/rpc',
             'Arbitrum': 'https://arb1.arbitrum.io/rpc',
             'Optimism': 'https://mainnet.optimism.io',
             'Base': 'https://mainnet.base.org',
+            'Fantom': 'https://rpc.ftm.tools',
             'Cronos': 'https://evm.cronos.org',
             'Gnosis': 'https://rpc.gnosischain.com',
             'Celo': 'https://forno.celo.org'
@@ -589,75 +532,36 @@
         return urls[chainName] || 'https://eth.drpc.org';
     }
 
-    // Polygon with fallback endpoints
     async function fetchPolygonData(address) {
-        const endpoints = [
-            'https://polygon.llamarpc.com',
-            'https://polygon-rpc.com',
-            'https://rpc-mainnet.maticvigil.com',
-            'https://polygon.drpc.org'
-        ];
-        
+        const endpoints = ['https://polygon.llamarpc.com', 'https://polygon-rpc.com', 'https://rpc-mainnet.maticvigil.com'];
         for (const rpcUrl of endpoints) {
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000);
                 const response = await fetch(rpcUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        method: 'eth_getBalance',
-                        params: [address, 'latest'],
-                        id: 1
-                    }),
-                    signal: controller.signal
+                    body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getBalance', params: [address, 'latest'], id: 1 })
                 });
-                clearTimeout(timeoutId);
-                if (!response.ok) continue;
                 const data = await response.json();
-                if (data.error) continue;
-                const balanceWei = parseInt(data.result, 16);
-                return { balance: (balanceWei / 1e18).toFixed(8) };
-            } catch (e) { continue; }
+                if (!data.error) return { balance: (parseInt(data.result, 16) / 1e18).toFixed(8) };
+            } catch(e) { continue; }
         }
-        throw new Error('All Polygon RPC endpoints failed');
+        throw new Error('Polygon RPC failed');
     }
 
-    // Fantom with fallback endpoints
     async function fetchFantomData(address) {
-        const endpoints = [
-            'https://rpc.ftm.tools',
-            'https://fantom-mainnet.public.blastapi.io',
-            'https://rpc.fantom.network',
-            'https://fantom.drpc.org',
-            'https://fantom.publicnode.com'
-        ];
-        
+        const endpoints = ['https://rpc.ftm.tools', 'https://fantom-mainnet.public.blastapi.io', 'https://rpc.fantom.network'];
         for (const rpcUrl of endpoints) {
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000);
                 const response = await fetch(rpcUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        method: 'eth_getBalance',
-                        params: [address, 'latest'],
-                        id: 1
-                    }),
-                    signal: controller.signal
+                    body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getBalance', params: [address, 'latest'], id: 1 })
                 });
-                clearTimeout(timeoutId);
-                if (!response.ok) continue;
                 const data = await response.json();
-                if (data.error) continue;
-                const balanceWei = parseInt(data.result, 16);
-                return { balance: (balanceWei / 1e18).toFixed(8) };
-            } catch (e) { continue; }
+                if (!data.error) return { balance: (parseInt(data.result, 16) / 1e18).toFixed(8) };
+            } catch(e) { continue; }
         }
-        throw new Error('All Fantom RPC endpoints failed');
+        throw new Error('Fantom RPC failed');
     }
 
     function calculateFIFOTax(transactions) {
@@ -683,12 +587,7 @@
             }
         }
         const netGain = totalGain - totalLoss;
-        return {
-            totalGain: totalGain.toFixed(2),
-            totalLoss: totalLoss.toFixed(2),
-            netGain: netGain.toFixed(2),
-            estimatedTax: (netGain * 0.2).toFixed(2)
-        };
+        return { totalGain: totalGain.toFixed(2), totalLoss: totalLoss.toFixed(2), netGain: netGain.toFixed(2), estimatedTax: (netGain * 0.2).toFixed(2) };
     }
 
     function updateTaxSummary(taxResult) {
@@ -697,9 +596,25 @@
         document.getElementById('netGain').innerHTML = `$${taxResult.netGain}`;
         document.getElementById('estimatedTax').innerHTML = `$${taxResult.estimatedTax}`;
         document.getElementById('taxSummary').classList.remove('hidden');
+        
+        const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || { totalTx: 0, totalGain: 0, totalLoss: 0, netGain: 0, recent: [] };
+        txData.totalGain = parseFloat(taxResult.totalGain);
+        txData.totalLoss = parseFloat(taxResult.totalLoss);
+        txData.netGain = parseFloat(taxResult.netGain);
+        localStorage.setItem('cryptotax_tx_data', JSON.stringify(txData));
     }
 
-    const defaultDropzoneHTML = `<div class="csv-icon">📄</div><div class="csv-title">Upload Transaction CSV</div><div class="csv-subtitle">Click or drag & drop to upload</div>`;
+    const defaultDropzoneHTML = `
+        <div class="csv-illustration">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
+                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+                <polyline points="8 12 12 16 16 12" />
+                <line x1="12" y1="2" x2="12" y2="16" />
+            </svg>
+        </div>
+        <div class="csv-title">Upload Transaction CSV</div>
+        <div class="csv-subtitle">Click or drag & drop to upload</div>
+    `;
 
     function resetDropzone() {
         const dropzone = document.getElementById('csvDropzone');
@@ -711,9 +626,17 @@
 
     function showFileNameInDropzone(file) {
         const dropzone = document.getElementById('csvDropzone');
-        dropzone.innerHTML = `<div class="csv-icon">✅</div><div class="csv-title" style="font-size: 12px; word-break: break-all;">${file.name}</div><div class="csv-subtitle">${(file.size / 1024).toFixed(1)} KB • Click to change</div>`;
+        dropzone.innerHTML = `
+            <div class="csv-illustration">
+                <svg viewBox="0 0 24 24" stroke="#4CAF50" stroke-width="1.5" fill="none">
+                    <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="csv-title" style="font-size:14px;word-break:break-all;">${file.name}</div>
+            <div class="csv-subtitle">${(file.size/1024).toFixed(1)} KB • Click to change</div>
+        `;
         dropzone.style.borderColor = '#4CAF50';
-        dropzone.style.background = 'rgba(76, 175, 80, 0.05)';
+        dropzone.style.background = 'rgba(76,175,80,0.03)';
         dropzone.setAttribute('data-has-file', 'true');
     }
 
@@ -724,18 +647,32 @@
             const [date, type, amount, price] = line.split(',');
             return { date, type: type?.toLowerCase().trim(), amount: parseFloat(amount), price: parseFloat(price) };
         }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price) && (tx.type === 'buy' || tx.type === 'sell'));
-        if (transactions.length === 0) {
-            alert('Invalid CSV format. Use: date,type,amount,price');
-            resetDropzone();
-            return;
-        }
+        
+        if (transactions.length === 0) { alert('Invalid CSV format'); resetDropzone(); return; }
+        
         showFileNameInDropzone(file);
         const taxResult = calculateFIFOTax(transactions);
         updateTaxSummary(taxResult);
+        
         const txBody = document.getElementById('txBody');
-        txBody.innerHTML = transactions.slice(0, 20).map(tx => `<tr><td class="tx-hash">${tx.date}<br>${tx.type.toUpperCase()}</td><td>${tx.amount} @ $${tx.price}</td><td class="${tx.type === 'sell' ? (tx.amount * tx.price > 0 ? 'positive' : 'negative') : ''}">${tx.type === 'sell' ? `$${((tx.amount * tx.price)).toFixed(2)}` : '—'}</td></tr>`).join('');
-        if (transactions.length > 20) txBody.innerHTML += `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">+ ${transactions.length - 20} more transactions</td></tr>`;
-        document.getElementById('txCount').innerHTML = `${transactions.length}`;
+        txBody.innerHTML = transactions.slice(0, 20).map(tx => `
+            <tr>
+                <td style="padding:10px 8px;">${tx.date}<br><span style="font-size:10px;color:var(--text-muted);">${tx.type.toUpperCase()}</span></td>
+                <td style="padding:10px 8px;">${tx.amount} @ $${tx.price}</td>
+                <td style="padding:10px 8px;${tx.type === 'sell' ? (tx.amount*tx.price>0?'color:#4CAF50':'color:#FF6B6B') : 'color:var(--text-muted)'}">${tx.type === 'sell' ? `$${(tx.amount*tx.price).toFixed(2)}` : '—'}</td>
+            </tr>
+        `).join('');
+        
+        if (transactions.length > 20) {
+            txBody.innerHTML += `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:16px;">+ ${transactions.length-20} more transactions</td></tr>`;
+        }
+        
+        document.getElementById('txCount').innerHTML = `${transactions.length} transactions`;
+        
+        const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || {};
+        txData.totalTx = transactions.length;
+        txData.recent = [{ name: file.name, date: new Date().toLocaleString(), netGain: taxResult.netGain }, ...(txData.recent || [])].slice(0, 10);
+        localStorage.setItem('cryptotax_tx_data', JSON.stringify(txData));
     }
 
     function setupCSVUpload() {
@@ -750,13 +687,13 @@
                 resetDropzone();
                 fileInput.value = '';
                 document.getElementById('taxSummary').classList.add('hidden');
-                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>';
+                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px;">Upload CSV or fetch wallet</td></tr>';
                 document.getElementById('txCount').innerHTML = '0';
                 setTimeout(() => fileInput.click(), 50);
             } else { fileInput.click(); }
         });
-        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); if (dropzone.getAttribute('data-has-file') !== 'true') { dropzone.style.borderColor = '#F7931A'; dropzone.style.background = 'rgba(247, 147, 26, 0.05)'; } });
-        dropzone.addEventListener('dragleave', () => { if (dropzone.getAttribute('data-has-file') !== 'true') { dropzone.style.borderColor = ''; dropzone.style.background = ''; } });
+        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); if (!dropzone.getAttribute('data-has-file')) { dropzone.style.borderColor = '#F7931A'; dropzone.style.background = 'rgba(247,147,26,0.02)'; } });
+        dropzone.addEventListener('dragleave', () => { if (!dropzone.getAttribute('data-has-file')) { dropzone.style.borderColor = ''; dropzone.style.background = ''; } });
         dropzone.addEventListener('drop', async (e) => {
             e.preventDefault();
             dropzone.style.borderColor = '';
@@ -767,7 +704,7 @@
                     resetDropzone();
                     fileInput.value = '';
                     document.getElementById('taxSummary').classList.add('hidden');
-                    document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>';
+                    document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px;">Upload CSV or fetch wallet</td></tr>';
                     document.getElementById('txCount').innerHTML = '0';
                     setTimeout(() => handleFile(file), 50);
                 } else { await handleFile(file); }
@@ -776,7 +713,6 @@
         fileInput.addEventListener('change', async (e) => { if (e.target.files[0]) await handleFile(e.target.files[0]); });
     }
 
-    // WORKING API FUNCTIONS
     async function fetchSolanaData(address) {
         const response = await fetch('https://solana.publicnode.com', {
             method: 'POST',
@@ -809,40 +745,24 @@
         return { balance: (parseInt(data.result, 16) / 1e18).toFixed(8) };
     }
 
-    // MAIN FETCH FUNCTION WITH PROPER ADDRESS VALIDATION
     async function fetchWalletData() {
         const address = document.getElementById('addressInput').value.trim();
         if (!address) { alert('Please enter a wallet address'); return; }
-        
         const btn = document.getElementById('fetchBtn');
         const originalText = btn.innerHTML;
         btn.disabled = true;
-        btn.innerHTML = '<span class="loading-spinner"></span> Fetching...';
-        
+        btn.innerHTML = '<span class="loading-spinner"></span>';
         try {
             let result;
-            
-            // Bitcoin address validation: starts with 1, 3, or bc1
-            const isBitcoinAddress = /^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$/.test(address);
-            
-            // Solana address validation: base58, 32-44 chars, no 0x prefix
-            const isSolanaAddress = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address) && !address.startsWith('0x');
-            
-            // EVM address validation: starts with 0x followed by 40 hex chars
-            const isEvmAddress = /^0x[a-fA-F0-9]{40}$/i.test(address);
-            
-            if (isBitcoinAddress) {
+            if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
                 result = await fetchBitcoinData(address);
                 document.getElementById('balanceSymbol').innerHTML = 'BTC';
-                document.getElementById('addressNote').innerHTML = `📍 Bitcoin Address • Balance fetched`;
-            }
-            else if (isSolanaAddress) {
+                document.getElementById('addressNote').innerHTML = `Bitcoin Address • Balance fetched`;
+            } else if (address.length === 44 && !address.startsWith('0x')) {
                 result = await fetchSolanaData(address);
                 document.getElementById('balanceSymbol').innerHTML = 'SOL';
-                document.getElementById('addressNote').innerHTML = `📍 Solana Address • Balance fetched`;
-            }
-            else if (isEvmAddress) {
-                // Special handling for Polygon and Fantom
+                document.getElementById('addressNote').innerHTML = `Solana Address • Balance fetched`;
+            } else if (address.startsWith('0x')) {
                 if (currentChain.name === 'Polygon') {
                     result = await fetchPolygonData(address);
                 } else if (currentChain.name === 'Fantom') {
@@ -851,44 +771,35 @@
                     result = await fetchEVMData(currentChain.name, address);
                 }
                 document.getElementById('balanceSymbol').innerHTML = currentChain.symbol;
-                document.getElementById('addressNote').innerHTML = `📍 ${currentChain.name} Address • Balance fetched`;
+                document.getElementById('addressNote').innerHTML = `${currentChain.name} Address • Balance fetched`;
+            } else {
+                throw new Error('Invalid address format');
             }
-            else {
-                throw new Error(`Invalid address format for ${currentChain.name}. Please enter a valid address.`);
-            }
-            
             let displayBalance = parseFloat(result.balance).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 8 });
             document.getElementById('balanceValue').innerHTML = displayBalance;
             
-            // Get USD price
-            try {
-                let coinId = 'bitcoin';
-                if (currentChain.name === 'Ethereum') coinId = 'ethereum';
-                else if (currentChain.name === 'Solana') coinId = 'solana';
-                else if (currentChain.name === 'Polygon') coinId = 'matic-network';
-                else if (currentChain.name === 'Binance Smart Chain') coinId = 'binancecoin';
-                else if (currentChain.name === 'Avalanche') coinId = 'avalanche-2';
-                else if (currentChain.name === 'Arbitrum') coinId = 'arbitrum';
-                else if (currentChain.name === 'Optimism') coinId = 'optimism';
-                else if (currentChain.name === 'Base') coinId = 'base';
-                else if (currentChain.name === 'Fantom') coinId = 'fantom';
-                else if (currentChain.name === 'Cronos') coinId = 'cronos';
-                else if (currentChain.name === 'Gnosis') coinId = 'gnosis';
-                else if (currentChain.name === 'Celo') coinId = 'celo';
-                else coinId = 'bitcoin';
-                
-                const priceRes = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`);
-                const priceData = await priceRes.json();
-                const price = priceData[coinId]?.usd || 0;
-                const usdValue = parseFloat(result.balance) * price;
-                document.getElementById('balanceUSD').innerHTML = `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
-            } catch { document.getElementById('balanceUSD').innerHTML = `$0.00 USD`; }
+            let coinId = 'bitcoin';
+            if (currentChain.name === 'Ethereum') coinId = 'ethereum';
+            else if (currentChain.name === 'Solana') coinId = 'solana';
+            else if (currentChain.name === 'Polygon') coinId = 'matic-network';
+            else if (currentChain.name === 'Binance Smart Chain') coinId = 'binancecoin';
+            else if (currentChain.name === 'Avalanche') coinId = 'avalanche-2';
+            else if (currentChain.name === 'Arbitrum') coinId = 'arbitrum';
+            else if (currentChain.name === 'Optimism') coinId = 'optimism';
+            else if (currentChain.name === 'Base') coinId = 'base';
+            else if (currentChain.name === 'Fantom') coinId = 'fantom';
+            else if (currentChain.name === 'Cronos') coinId = 'cronos';
+            else if (currentChain.name === 'Gnosis') coinId = 'gnosis';
+            else if (currentChain.name === 'Celo') coinId = 'celo';
             
+            const priceRes = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`);
+            const priceData = await priceRes.json();
+            const price = priceData[coinId]?.usd || 0;
+            const usdValue = parseFloat(result.balance) * price;
+            document.getElementById('balanceUSD').innerHTML = `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
         } catch (error) {
             alert(`Error: ${error.message}`);
-            document.getElementById('addressNote').innerHTML = `❌ ${error.message}`;
-            document.getElementById('balanceValue').innerHTML = '0.00000000';
-            document.getElementById('balanceUSD').innerHTML = '$0.00 USD';
+            document.getElementById('addressNote').innerHTML = `${error.message}`;
         } finally {
             btn.disabled = false;
             btn.innerHTML = originalText;
@@ -898,10 +809,10 @@
     function renderBlockchainList() {
         const container = document.getElementById('blockchainList');
         container.innerHTML = BLOCKCHAINS.map(chain => `
-            <div class="blockchain-item ${currentChain.name === chain.name ? 'active' : ''}" data-name="${chain.name}" data-symbol="${chain.symbol}" data-type="${chain.type}" data-network="${chain.network}">
+            <div class="blockchain-item ${currentChain.name === chain.name ? 'active' : ''}" data-name="${chain.name}" data-symbol="${chain.symbol}" data-type="${chain.type}">
                 <img class="chain-icon-img" src="${chain.icon}" alt="${chain.name}" onerror="this.style.display='none';">
-                <div class="chain-info"><div class="chain-name">${chain.name}</div><div class="chain-network">${chain.network}</div></div>
-                <div class="chain-balance-small">${chain.symbol}</div>
+                <div><div class="chain-name">${chain.name}</div><div class="chain-network">${chain.network}</div></div>
+                <div style="margin-left:auto;color:var(--accent);">${chain.symbol}</div>
             </div>
         `).join('');
         document.querySelectorAll('.blockchain-item').forEach(el => {
@@ -912,7 +823,7 @@
                     renderBlockchainList();
                     document.getElementById('balanceSymbol').innerHTML = chainData.symbol;
                     document.getElementById('balanceValue').innerHTML = '0.00000000';
-                    document.getElementById('balanceUSD').innerHTML = '$0.00 USD';
+                    document.getElementById('balanceUSD').innerHTML = '$0.00';
                     document.getElementById('addressNote').innerHTML = '';
                     document.getElementById('addressInput').placeholder = `Enter ${chainData.name} address`;
                 }
@@ -937,9 +848,8 @@
             walletBtn.classList.remove('active');
             document.body.classList.remove('wallet-mode');
             resetDropzone();
-            document.getElementById('csvFile').value = '';
             document.getElementById('taxSummary').classList.add('hidden');
-            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>';
+            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px;">Upload CSV or fetch wallet</td></tr>';
             document.getElementById('txCount').innerHTML = '0';
         } else {
             csvDiv.classList.add('hidden');
@@ -950,7 +860,7 @@
             csvBtn.classList.remove('active');
             document.body.classList.add('wallet-mode');
             document.getElementById('taxSummary').classList.add('hidden');
-            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Wallet balance mode - No transactions</td></tr>';
+            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px;">Wallet balance mode - No transactions</td></tr>';
             document.getElementById('txCount').innerHTML = '0';
         }
     }
@@ -965,6 +875,7 @@
     document.getElementById('csvModeBtn').addEventListener('click', () => switchMode('csv'));
     document.getElementById('walletModeBtn').addEventListener('click', () => switchMode('wallet'));
     document.getElementById('addressInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') fetchWalletData(); });
+    
     document.getElementById('blockchainPanel').classList.remove('visible');
     document.getElementById('mainGrid').classList.remove('wallet-mode');
     updateTimestamp();
