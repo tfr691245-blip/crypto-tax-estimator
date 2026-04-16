@@ -24,7 +24,7 @@
             background: #0A0C15;
         }
 
-        /* Professional Animated Background */
+        /* Animated Background */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -65,23 +65,40 @@
             to { transform: rotate(0deg); }
         }
 
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(247, 147, 26, 0.2);
+            border-radius: 50%;
+            animation: floatParticle 8s ease-in-out infinite;
+        }
+
+        @keyframes floatParticle {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { transform: translateY(-40px) translateX(20px); opacity: 0.5; }
+        }
+
         /* Main Container */
         .auth-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 460px;
             margin: 20px;
-            animation: slideUp 0.7s cubic-bezier(0.2, 0.8, 0.4, 1);
+            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.4, 1);
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Glass Card */
@@ -101,13 +118,10 @@
         }
 
         @media (max-width: 550px) {
-            .auth-card {
-                padding: 32px 24px;
-                border-radius: 36px;
-            }
+            .auth-card { padding: 32px 24px; border-radius: 36px; }
         }
 
-        /* Logo Section */
+        /* Logo */
         .logo {
             text-align: center;
             margin-bottom: 40px;
@@ -128,27 +142,11 @@
             transition: transform 0.3s ease;
         }
 
-        .logo-icon:hover {
-            transform: scale(1.03);
-        }
+        .logo-icon:hover { transform: scale(1.03); }
+        .logo h2 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo p { font-size: 12px; color: #8E94B3; margin-top: 6px; }
 
-        .logo h2 {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #F7931A, #FFD166);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .logo p {
-            font-size: 12px;
-            color: #8E94B3;
-            margin-top: 6px;
-        }
-
-        /* Mode Toggle */
+        /* Mode Toggle - Smooth Slider */
         .mode-toggle {
             display: flex;
             gap: 12px;
@@ -157,13 +155,31 @@
             border-radius: 60px;
             margin-bottom: 32px;
             border: 1px solid rgba(247, 147, 26, 0.15);
+            position: relative;
+        }
+
+        .mode-toggle::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: calc(50% - 6px);
+            height: calc(100% - 12px);
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
+            border-radius: 60px;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
+            z-index: 0;
+        }
+
+        .mode-toggle.signup-mode::before {
+            transform: translateX(100%);
         }
 
         .mode-btn {
             flex: 1;
             padding: 12px 20px;
             border-radius: 60px;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -172,13 +188,11 @@
             border: none;
             font-family: 'Outfit', sans-serif;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
-        .mode-btn.active {
-            background: linear-gradient(135deg, #F7931A, #FF6B00);
-            color: #05070A;
-            box-shadow: 0 2px 8px rgba(247, 147, 26, 0.3);
-        }
+        .mode-btn.active { color: #05070A; }
 
         /* Form Styles */
         .form-group {
@@ -205,9 +219,7 @@
             transform: translateX(3px);
         }
 
-        .form-group input::placeholder {
-            color: #4A5568;
-        }
+        .form-group input::placeholder { color: #4A5568; }
 
         .form-group i {
             position: absolute;
@@ -257,11 +269,9 @@
             border-bottom: 1px solid rgba(247, 147, 26, 0.15);
         }
 
-        .divider span {
-            margin: 0 16px;
-        }
+        .divider span { margin: 0 16px; }
 
-        /* Professional Google Button */
+        /* Professional Google Button with G Icon */
         .google-btn {
             width: 100%;
             padding: 14px 20px;
@@ -277,14 +287,18 @@
             font-family: 'Outfit', sans-serif;
         }
 
-        .google-btn-icon {
-            width: 24px;
-            height: 24px;
-            background: url('https://www.google.com/favicon.ico') no-repeat center;
-            background-size: contain;
+        .google-icon {
+            width: 22px;
+            height: 22px;
+            background: conic-gradient(from -45deg, #EA4335 110deg, #4285F4 90deg 210deg, #34A853 210deg 290deg, #FBBC05 290deg) text;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            font-size: 18px;
         }
 
-        .google-btn-text {
+        .google-text {
             font-size: 15px;
             font-weight: 600;
             color: #E8EDF5;
@@ -309,7 +323,10 @@
             color: #F7931A;
             cursor: pointer;
             font-weight: 600;
+            transition: all 0.3s ease;
         }
+
+        .switch-mode span:hover { text-decoration: underline; }
 
         /* Messages */
         .error-message,
@@ -319,6 +336,12 @@
             font-size: 12px;
             margin-bottom: 20px;
             display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .error-message {
@@ -333,14 +356,12 @@
             color: #4CAF50;
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         @media (max-width: 550px) {
             .mode-btn { padding: 10px 16px; font-size: 13px; }
             .submit-btn { padding: 14px; font-size: 15px; }
-            .google-btn-text { font-size: 14px; }
+            .google-text { font-size: 14px; }
         }
     </style>
 </head>
@@ -349,6 +370,7 @@
     <div class="gradient-1"></div>
     <div class="gradient-2"></div>
 </div>
+<div class="particles" id="particles"></div>
 
 <div class="auth-container">
     <div class="auth-card">
@@ -360,7 +382,7 @@
             <p>Enterprise Authentication Portal</p>
         </div>
 
-        <div class="mode-toggle">
+        <div class="mode-toggle" id="modeToggle">
             <button class="mode-btn active" id="signinModeBtn">Sign In</button>
             <button class="mode-btn" id="signupModeBtn">Sign Up</button>
         </div>
@@ -402,10 +424,10 @@
             <span>or continue with</span>
         </div>
 
-        <!-- Professional Google Button with Icon -->
+        <!-- Professional Google Button with G Icon -->
         <button id="googleSignInBtn" class="google-btn">
-            <img src="https://www.google.com/favicon.ico" alt="Google" style="width: 22px; height: 22px;">
-            <span class="google-btn-text">Sign in with Google</span>
+            <span class="google-icon">G</span>
+            <span class="google-text" id="googleBtnText">Google Login</span>
         </button>
 
         <div class="switch-mode">
@@ -415,6 +437,24 @@
 </div>
 
 <script>
+    // Create floating particles
+    function createParticles() {
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 6 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (Math.random() * 6 + 5) + 's';
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
+
     // Supabase Configuration
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
@@ -433,28 +473,31 @@
         }
     }
 
-    // Mode Toggle
+    // Mode Toggle with Smooth Animation
     const signinModeBtn = document.getElementById('signinModeBtn');
     const signupModeBtn = document.getElementById('signupModeBtn');
     const signinForm = document.getElementById('signinForm');
     const signupForm = document.getElementById('signupForm');
+    const modeToggle = document.getElementById('modeToggle');
 
     function setMode(mode) {
         if (mode === 'signin') {
+            modeToggle.classList.remove('signup-mode');
             signinModeBtn.classList.add('active');
             signupModeBtn.classList.remove('active');
             signinForm.classList.remove('hidden');
             signupForm.classList.add('hidden');
             document.getElementById('switchText').innerHTML = `Don't have an account? <span id="switchBtn">Sign Up</span>`;
-            document.querySelector('.google-btn-text').innerText = 'Sign in with Google';
+            document.getElementById('googleBtnText').innerText = 'Google Login';
             document.getElementById('switchBtn').onclick = () => setMode('signup');
         } else {
+            modeToggle.classList.add('signup-mode');
             signupModeBtn.classList.add('active');
             signinModeBtn.classList.remove('active');
             signupForm.classList.remove('hidden');
             signinForm.classList.add('hidden');
             document.getElementById('switchText').innerHTML = `Already have an account? <span id="switchBtn">Sign In</span>`;
-            document.querySelector('.google-btn-text').innerText = 'Sign up with Google';
+            document.getElementById('googleBtnText').innerText = 'Google Sign Up';
             document.getElementById('switchBtn').onclick = () => setMode('signin');
         }
         hideMessages();
@@ -494,9 +537,9 @@
         const password = document.getElementById('signupPassword').value;
         const confirm = document.getElementById('signupConfirmPassword').value;
 
-        if (!email || !password || !confirm) return showError('Fill all fields');
+        if (!email || !password || !confirm) return showError('Please fill in all fields');
         if (password !== confirm) return showError('Passwords do not match');
-        if (password.length < 6) return showError('Password must be 6+ characters');
+        if (password.length < 6) return showError('Password must be at least 6 characters');
 
         const users = getUsers();
         if (users.find(u => u.email === email)) return showError('Email already registered');
@@ -522,7 +565,7 @@
         const email = document.getElementById('signinEmail').value.trim();
         const password = document.getElementById('signinPassword').value;
 
-        if (!email || !password) return showError('Enter email and password');
+        if (!email || !password) return showError('Please enter email and password');
 
         const users = getUsers();
         const user = users.find(u => u.email === email && u.password === btoa(password));
@@ -533,7 +576,7 @@
         setTimeout(() => window.location.href = 'dashboard.html', 1500);
     };
 
-    // Google Sign In - Redirect to Dashboard
+    // Google Sign In
     function handleGoogleCredentialResponse(response) {
         try {
             const data = JSON.parse(atob(response.credential.split('.')[1]));
