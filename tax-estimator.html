@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>CryptoTax | Enterprise Tax Estimator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Outfit', 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #0A0C15;
             color: #E8EDF5;
             line-height: 1.5;
@@ -49,8 +50,8 @@
 
         .logo-section h1 {
             font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-weight: 800;
+            letter-spacing: -1px;
             background: linear-gradient(135deg, #F7931A 0%, #FFD166 100%);
             -webkit-background-clip: text;
             background-clip: text;
@@ -65,6 +66,8 @@
             font-size: 12px;
             color: #F7931A;
             margin-top: 4px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
         .version-badge {
@@ -73,9 +76,10 @@
             border-radius: 40px;
             font-size: 11px;
             color: #F7931A;
-            font-weight: 500;
+            font-weight: 600;
             border: 1px solid rgba(247, 147, 26, 0.25);
             margin-top: 12px;
+            letter-spacing: 0.5px;
         }
 
         @media (min-width: 768px) {
@@ -107,7 +111,7 @@
             background: transparent;
             color: #6C729B;
             border: none;
-            font-family: inherit;
+            font-family: 'Outfit', sans-serif;
         }
 
         @media (min-width: 768px) {
@@ -147,12 +151,13 @@
         .panel-header {
             padding: 16px 20px;
             border-bottom: 1px solid #1A1E2C;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: #F7931A;
             background: #090B12;
+            font-family: 'Space Grotesk', monospace;
         }
 
         .blockchain-list {
@@ -190,8 +195,8 @@
         }
 
         .chain-info { flex: 1; }
-        .chain-name { font-weight: 600; font-size: 13px; }
-        .chain-network { font-size: 10px; color: #6C729B; margin-top: 2px; }
+        .chain-name { font-weight: 700; font-size: 13px; font-family: 'Outfit', sans-serif; }
+        .chain-network { font-size: 10px; color: #6C729B; margin-top: 2px; font-family: 'Space Grotesk', monospace; }
         .chain-balance-small { font-size: 12px; font-family: monospace; color: #F7931A; }
 
         .right-panel {
@@ -217,7 +222,8 @@
             letter-spacing: 1.5px;
             color: #F7931A;
             margin-bottom: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            font-family: 'Space Grotesk', monospace;
         }
 
         .balance-display {
@@ -230,8 +236,8 @@
 
         .balance-number {
             font-size: 32px;
-            font-weight: 700;
-            font-family: monospace;
+            font-weight: 800;
+            font-family: 'Space Grotesk', monospace;
             background: linear-gradient(135deg, #FFFFFF 0%, #F7931A 100%);
             -webkit-background-clip: text;
             background-clip: text;
@@ -242,8 +248,8 @@
             .balance-number { font-size: 52px; }
         }
 
-        .balance-symbol { font-size: 20px; font-weight: 500; color: #F7931A; }
-        .balance-usd { font-size: 14px; color: #6C729B; margin-left: auto; }
+        .balance-symbol { font-size: 20px; font-weight: 600; color: #F7931A; font-family: 'Outfit', sans-serif; }
+        .balance-usd { font-size: 14px; color: #6C729B; margin-left: auto; font-weight: 500; }
 
         .csv-upload-area { text-align: center; padding: 20px; }
         .csv-dropzone {
@@ -257,15 +263,15 @@
         }
         .csv-dropzone:hover { border-color: #F7931A; background: rgba(247, 147, 26, 0.05); }
         .csv-icon { font-size: 48px; margin-bottom: 16px; }
-        .csv-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-        .csv-subtitle { font-size: 12px; color: #6C729B; }
+        .csv-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; font-family: 'Outfit', sans-serif; }
+        .csv-subtitle { font-size: 12px; color: #6C729B; font-weight: 500; }
         .file-input { display: none; }
         .csv-format-example {
             background: #05070A;
             padding: 12px;
             border-radius: 12px;
             margin-top: 16px;
-            font-family: monospace;
+            font-family: 'Space Grotesk', monospace;
             font-size: 11px;
             color: #6C729B;
             text-align: left;
@@ -290,7 +296,7 @@
             border-radius: 14px;
             padding: 14px 16px;
             color: #E8EDF5;
-            font-family: monospace;
+            font-family: 'Space Grotesk', monospace;
             font-size: 13px;
             outline: none;
         }
@@ -305,16 +311,17 @@
             border: none;
             padding: 14px 20px;
             border-radius: 14px;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 14px;
             color: #05070A;
             cursor: pointer;
             transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
         }
 
         .fetch-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3); }
         .fetch-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .address-note { font-size: 11px; color: #F7931A; font-family: monospace; background: rgba(247, 147, 26, 0.05); padding: 8px 12px; border-radius: 10px; display: inline-block; word-break: break-all; }
+        .address-note { font-size: 11px; color: #F7931A; font-family: 'Space Grotesk', monospace; background: rgba(247, 147, 26, 0.05); padding: 8px 12px; border-radius: 10px; display: inline-block; word-break: break-all; }
 
         .tax-summary {
             background: linear-gradient(135deg, rgba(247, 147, 26, 0.08), rgba(224, 124, 10, 0.04));
@@ -324,24 +331,24 @@
             border: 1px solid rgba(247, 147, 26, 0.15);
         }
 
-        .summary-title { font-size: 14px; font-weight: 600; color: #F7931A; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .summary-title { font-size: 14px; font-weight: 700; color: #F7931A; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; font-family: 'Outfit', sans-serif; }
         .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         @media (min-width: 768px) { .summary-grid { grid-template-columns: repeat(4, 1fr); } }
         .summary-item { text-align: center; }
-        .summary-label { font-size: 11px; color: #6C729B; margin-bottom: 4px; }
-        .summary-value { font-size: 20px; font-weight: 700; color: #F7931A; }
+        .summary-label { font-size: 11px; color: #6C729B; margin-bottom: 4px; font-weight: 600; letter-spacing: 0.5px; }
+        .summary-value { font-size: 20px; font-weight: 800; color: #F7931A; font-family: 'Space Grotesk', monospace; }
 
         .transactions-section { padding: 16px; }
         @media (min-width: 768px) { .transactions-section { padding: 24px; } }
-        .section-title { font-size: 13px; font-weight: 600; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; color: #F7931A; flex-wrap: wrap; gap: 10px; }
+        .section-title { font-size: 13px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; color: #F7931A; flex-wrap: wrap; gap: 10px; font-family: 'Outfit', sans-serif; }
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .tx-table { width: 100%; font-size: 11px; border-collapse: collapse; min-width: 400px; }
-        .tx-table th { text-align: left; padding: 10px 6px; color: #6C729B; border-bottom: 1px solid #1A1E2C; }
-        .tx-table td { padding: 10px 6px; border-bottom: 1px solid #1A1E2C; font-family: monospace; }
-        .tx-hash { font-family: monospace; font-size: 10px; color: #8E94B3; }
+        .tx-table th { text-align: left; padding: 10px 6px; color: #6C729B; border-bottom: 1px solid #1A1E2C; font-weight: 600; font-family: 'Outfit', sans-serif; }
+        .tx-table td { padding: 10px 6px; border-bottom: 1px solid #1A1E2C; font-family: 'Space Grotesk', monospace; }
+        .tx-hash { font-family: 'Space Grotesk', monospace; font-size: 10px; color: #8E94B3; }
         .tx-amount.positive { color: #4CAF50; }
         .tx-amount.negative { color: #FF6B6B; }
-        .status-badge { background: #1A1E2C; padding: 4px 8px; border-radius: 20px; font-size: 10px; color: #8E94B3; display: inline-block; }
+        .status-badge { background: #1A1E2C; padding: 4px 8px; border-radius: 20px; font-size: 10px; color: #8E94B3; display: inline-block; font-weight: 600; }
 
         .error-message { background: rgba(255, 68, 68, 0.1); border-left: 3px solid #FF4444; padding: 12px 16px; margin: 16px; border-radius: 8px; font-size: 12px; }
         .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; border-top-color: #05070A; animation: spin 0.6s linear infinite; margin-right: 8px; vertical-align: middle; }
@@ -541,7 +548,6 @@
         document.getElementById('taxSummary').classList.remove('hidden');
     }
 
-    // Store the default HTML content
     const defaultDropzoneHTML = `
         <div class="csv-icon">📄</div>
         <div class="csv-title">Upload Transaction CSV</div>
@@ -588,7 +594,6 @@
             return;
         }
         
-        // Show file name
         showFileNameInDropzone(file);
         
         const taxResult = calculateFIFOTax(transactions);
@@ -623,21 +628,16 @@
             }
         };
 
-        // Click handler - intelligent reset
         dropzone.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             
             if (dropzone.getAttribute('data-has-file') === 'true') {
-                // Reset UI first
                 resetDropzone();
-                // Clear the file input value
                 fileInput.value = '';
-                // Clear tax summary and transactions
                 document.getElementById('taxSummary').classList.add('hidden');
                 document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6C729B;">Upload CSV or fetch wallet data</td></tr>';
                 document.getElementById('txCount').innerHTML = '0 transactions';
-                // Small delay to ensure reset is complete before opening file picker
                 setTimeout(() => {
                     fileInput.click();
                 }, 50);
