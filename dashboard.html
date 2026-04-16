@@ -55,8 +55,9 @@
             animation: float 12s ease-in-out infinite;
         }
         @keyframes float { 0%,100% { transform: translate(0,0) scale(1); opacity: 0.5; } 50% { transform: translate(5%,5%) scale(1.1); opacity: 0.8; } }
-        .container { max-width: 1400px; margin: 0 auto; padding: 16px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
         @media (min-width: 768px) { .container { padding: 24px; } }
+        
         .navbar {
             display: flex;
             flex-direction: column;
@@ -64,104 +65,111 @@
             margin-bottom: 32px;
             padding: 16px;
             background: var(--bg-secondary);
-            border-radius: 20px;
+            border-radius: 24px;
             border: 1px solid var(--border-light);
         }
         @media (min-width: 768px) { .navbar { flex-direction: row; justify-content: space-between; padding: 16px 24px; margin-bottom: 48px; } }
-        .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .logo-icon { width: 40px; height: 40px; background: var(--accent-gradient); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .logo-text h1 { font-size: 20px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .logo-text p { font-size: 9px; color: var(--accent); }
-        @media (min-width: 768px) { .logo-icon { width: 44px; height: 44px; font-size: 24px; } .logo-text h1 { font-size: 24px; } .logo-text p { font-size: 11px; } }
-        .nav-right { display: flex; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
+        
+        .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-icon { width: 44px; height: 44px; background: var(--accent-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .logo-text h1 { font-size: 24px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo-text p { font-size: 11px; color: var(--accent); }
+        
+        .nav-right { display: flex; align-items: center; gap: 16px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
         @media (min-width: 768px) { .nav-right { margin-top: 0; } }
-        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+        
+        .nav-links { display: flex; gap: 12px; flex-wrap: wrap; }
         .nav-link {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            padding: 8px 16px;
+            padding: 8px 20px;
             border-radius: 40px;
         }
-        @media (min-width: 768px) { .nav-link { font-size: 14px; padding: 8px 20px; } }
         .nav-link.active { background: var(--accent-gradient); color: #05070A; }
-        .user-info { display: flex; align-items: center; gap: 10px; background: rgba(247,147,26,0.1); padding: 4px 12px 4px 8px; border-radius: 60px; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent); }
-        .user-name { font-size: 12px; font-weight: 600; color: var(--accent); }
-        .logout-btn { background: transparent; border: 1px solid rgba(247,147,26,0.3); color: var(--accent); padding: 4px 10px; border-radius: 40px; font-size: 11px; cursor: pointer; }
+        
+        .user-info { display: flex; align-items: center; gap: 12px; background: rgba(247,147,26,0.1); padding: 5px 16px 5px 8px; border-radius: 60px; }
+        .user-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .user-name { font-size: 14px; font-weight: 600; color: var(--accent); }
+        .logout-btn { background: transparent; border: 1px solid rgba(247,147,26,0.3); color: var(--accent); padding: 6px 14px; border-radius: 40px; cursor: pointer; }
+        
         .theme-toggle {
             background: rgba(5,7,10,0.5);
             border: 1px solid var(--border-color);
             border-radius: 50%;
-            width: 38px;
-            height: 38px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
         }
-        @media (min-width: 768px) { .theme-toggle { width: 44px; height: 44px; } }
-        .welcome-card {
+        
+        /* Dashboard Content */
+        .welcome-section {
             background: linear-gradient(135deg, rgba(247,147,26,0.1), rgba(255,107,0,0.05));
             border-radius: 32px;
-            padding: 32px 24px;
+            padding: 40px;
             margin-bottom: 32px;
             text-align: center;
             border: 1px solid var(--border-light);
         }
-        .welcome-card h1 { font-size: 24px; margin-bottom: 8px; }
-        @media (min-width: 768px) { .welcome-card { padding: 40px; } .welcome-card h1 { font-size: 28px; } }
+        .welcome-section h1 { font-size: 32px; margin-bottom: 8px; }
+        .welcome-section p { color: var(--text-secondary); }
+        
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 20px;
             margin-bottom: 32px;
         }
-        @media (min-width: 768px) { .stats-grid { gap: 20px; margin-bottom: 40px; } }
+        @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+        
         .stat-card {
             background: var(--bg-secondary);
-            border-radius: 20px;
-            padding: 20px 12px;
+            border-radius: 24px;
+            padding: 24px;
             text-align: center;
             border: 1px solid var(--border-color);
         }
-        @media (min-width: 768px) { .stat-card { padding: 28px 20px; } }
-        .stat-number { font-size: 28px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        @media (min-width: 768px) { .stat-number { font-size: 36px; } }
+        .stat-number { font-size: 32px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+        
         .activity-card {
             background: var(--bg-secondary);
             border-radius: 24px;
-            padding: 20px;
+            padding: 24px;
             border: 1px solid var(--border-color);
-            margin-bottom: 32px;
         }
-        .activity-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--accent); }
-        @media (min-width: 768px) { .activity-card { padding: 24px; } .activity-title { font-size: 18px; } }
+        .activity-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--accent); }
         .activity-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 0;
+            gap: 16px;
+            padding: 14px 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .activity-icon { width: 36px; height: 36px; background: rgba(247,147,26,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .activity-icon { width: 44px; height: 44px; background: rgba(247,147,26,0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .activity-detail { flex: 1; }
-        .activity-name { font-weight: 600; font-size: 14px; }
-        .activity-time { font-size: 10px; color: var(--text-muted); }
+        .activity-name { font-weight: 600; }
+        .activity-time { font-size: 11px; color: var(--text-muted); }
+        
         .footer {
-            padding: 16px;
+            margin-top: 32px;
+            padding: 20px 24px;
             background: var(--bg-secondary);
-            border-radius: 20px;
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
-            font-size: 10px;
+            font-size: 12px;
             color: var(--text-muted);
             text-align: center;
         }
-        @media (min-width: 768px) { .footer { padding: 20px 24px; flex-direction: row; justify-content: space-between; font-size: 13px; } }
+        @media (min-width: 768px) { .footer { flex-direction: row; justify-content: space-between; } }
+        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -188,7 +196,7 @@
         </div>
     </div>
 
-    <div class="welcome-card" id="welcomeCard">
+    <div class="welcome-section" id="welcomeSection">
         <h1>Welcome back, <span id="welcomeName">User</span>! 👋</h1>
         <p>Track your crypto tax activity and portfolio performance</p>
     </div>
@@ -227,6 +235,7 @@
 
     const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
     if (!currentUser) { window.location.href = 'auth.html'; }
+    
     document.getElementById('welcomeName').innerText = currentUser.name || currentUser.email.split('@')[0];
     document.getElementById('userName').innerText = currentUser.name || currentUser.email.split('@')[0];
     document.getElementById('userAvatar').src = currentUser.picture || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${currentUser.email}`;
@@ -238,6 +247,7 @@
     document.getElementById('totalGainDash').innerHTML = `$${txData.totalGain || 0}`;
     document.getElementById('totalLossDash').innerHTML = `$${txData.totalLoss || 0}`;
     document.getElementById('netGainDash').innerHTML = `$${txData.netGain || 0}`;
+    
     const activityList = document.getElementById('activityList');
     if (txData.recent && txData.recent.length > 0) {
         activityList.innerHTML = txData.recent.slice(0, 5).map(item => `
