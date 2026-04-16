@@ -9,6 +9,12 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* Remove blue tap highlight on mobile */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
         body {
             font-family: 'Outfit', 'Space Grotesk', sans-serif;
             min-height: 100vh;
@@ -36,7 +42,6 @@
         }
         body.light .google-btn {
             background: rgba(0, 0, 0, 0.02);
-            color: #1A1F36;
         }
         body.light .google-text {
             color: #1A1F36;
@@ -92,16 +97,48 @@
             to { transform: rotate(0deg); }
         }
 
-        /* Theme Toggle Button - Top Right */
-        .theme-toggle-wrapper {
+        /* Top Bar - Back Button Left, Theme Toggle Right */
+        .top-bar {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             z-index: 100;
+            background: transparent;
+        }
+
+        .back-btn {
+            background: rgba(13, 15, 23, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(247, 147, 26, 0.3);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #F7931A;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        body.light .back-btn {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            border-color: #F7931A;
         }
 
         .theme-toggle {
-            background: rgba(13, 15, 23, 0.8);
+            background: rgba(13, 15, 23, 0.7);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(247, 147, 26, 0.3);
             border-radius: 50%;
@@ -116,7 +153,6 @@
 
         body.light .theme-toggle {
             background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(247, 147, 26, 0.4);
         }
 
         .theme-toggle:hover {
@@ -124,8 +160,8 @@
             border-color: #F7931A;
         }
 
-        .theme-toggle i {
-            font-size: 24px;
+        .theme-toggle i, .back-btn i {
+            font-size: 22px;
             color: #F7931A;
             transition: transform 0.5s ease;
         }
@@ -165,6 +201,9 @@
 
         @media (max-width: 550px) {
             .auth-card { padding: 32px 24px; border-radius: 36px; }
+            .top-bar { padding: 16px 20px; }
+            .back-btn, .theme-toggle { width: 42px; height: 42px; }
+            .back-btn i, .theme-toggle i { font-size: 18px; }
         }
 
         /* Logo */
@@ -280,9 +319,8 @@
             margin-top: 12px;
         }
 
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(247, 147, 26, 0.3);
+        .submit-btn:active {
+            transform: scale(0.98);
         }
 
         /* Divider */
@@ -304,7 +342,7 @@
 
         .divider span { margin: 0 16px; }
 
-        /* Professional Google Button with G Icon + Text */
+        /* Google Button with G Icon + Text */
         .google-btn {
             width: 100%;
             padding: 14px 20px;
@@ -318,6 +356,10 @@
             justify-content: center;
             gap: 12px;
             font-family: 'Outfit', sans-serif;
+        }
+
+        .google-btn:active {
+            transform: scale(0.98);
         }
 
         .google-icon {
@@ -362,8 +404,6 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-
-        .switch-mode span:hover { text-decoration: underline; }
 
         /* Messages */
         .error-message,
@@ -410,8 +450,11 @@
     <div class="gradient-2"></div>
 </div>
 
-<!-- Theme Toggle Button - Top Right -->
-<div class="theme-toggle-wrapper">
+<!-- Top Bar: Back Button Left, Theme Toggle Right -->
+<div class="top-bar">
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
     <div class="theme-toggle" id="themeToggle">
         <i class="fas fa-moon"></i>
     </div>
@@ -471,10 +514,10 @@
         </div>
 
         <!-- Google Button with G Icon + Text -->
-        <button id="googleSignInBtn" class="google-btn">
+        <div id="googleSignInBtn" class="google-btn">
             <span class="google-icon">G</span>
             <span class="google-text" id="googleBtnText">Google Login</span>
-        </button>
+        </div>
 
         <div class="switch-mode">
             <span id="switchText">Don't have an account? <span id="switchBtn">Sign Up</span></span>
@@ -540,7 +583,8 @@
             signupForm.classList.add('hidden');
             document.getElementById('switchText').innerHTML = `Don't have an account? <span id="switchBtn">Sign Up</span>`;
             document.getElementById('googleBtnText').innerText = 'Google Login';
-            document.getElementById('switchBtn').onclick = () => setMode('signup');
+            const newSwitchBtn = document.getElementById('switchBtn');
+            if (newSwitchBtn) newSwitchBtn.onclick = () => setMode('signup');
         } else {
             signupModeBtn.classList.add('active');
             signinModeBtn.classList.remove('active');
@@ -548,13 +592,20 @@
             signinForm.classList.add('hidden');
             document.getElementById('switchText').innerHTML = `Already have an account? <span id="switchBtn">Sign In</span>`;
             document.getElementById('googleBtnText').innerText = 'Google Sign Up';
-            document.getElementById('switchBtn').onclick = () => setMode('signin');
+            const newSwitchBtn = document.getElementById('switchBtn');
+            if (newSwitchBtn) newSwitchBtn.onclick = () => setMode('signin');
         }
         hideMessages();
     }
 
     signinModeBtn.onclick = () => setMode('signin');
     signupModeBtn.onclick = () => setMode('signup');
+    
+    // Initial setup for switch button
+    setTimeout(() => {
+        const switchBtn = document.getElementById('switchBtn');
+        if (switchBtn) switchBtn.onclick = () => setMode('signup');
+    }, 100);
 
     function showError(msg) {
         const el = document.getElementById('errorMessage');
@@ -626,7 +677,9 @@
         setTimeout(() => window.location.href = 'dashboard.html', 1500);
     };
 
-    // Google Sign In
+    // Google Sign In - Custom button handler
+    const googleBtn = document.getElementById('googleSignInBtn');
+    
     function handleGoogleCredentialResponse(response) {
         try {
             const data = JSON.parse(atob(response.credential.split('.')[1]));
@@ -656,7 +709,9 @@
                 auto_select: false,
                 cancel_on_tap_outside: true
             });
-            google.accounts.id.renderButton(document.getElementById('googleSignInBtn'), {
+            
+            // Render Google button with icon only, we wrap it with our custom button
+            google.accounts.id.renderButton(googleBtn, {
                 type: 'icon',
                 theme: 'outline',
                 size: 'large',
