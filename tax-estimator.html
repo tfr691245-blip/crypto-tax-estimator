@@ -52,6 +52,11 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
+        /* Hide transactions section in wallet mode */
+        body.wallet-mode .transactions-section {
+            display: none;
+        }
+
         /* Animated Background (only in dark mode) */
         body:not(.light) .bg-orb {
             position: fixed;
@@ -1048,8 +1053,8 @@
 
     <div class="mode-toggle">
         <div class="mode-slider">
-            <button class="mode-btn active" id="csvModeBtn">📁 CSV</button>
-            <button class="mode-btn" id="walletModeBtn">🔗 Wallet</button>
+            <button class="mode-btn active" id="csvModeBtn">📁 CSV Upload</button>
+            <button class="mode-btn" id="walletModeBtn">🔗 Wallet Balance</button>
         </div>
     </div>
 
@@ -1066,13 +1071,14 @@
                     <div class="csv-upload-area">
                         <div class="csv-dropzone" id="csvDropzone">
                             <div class="csv-icon">📄</div>
-                            <div class="csv-title">Upload CSV</div>
-                            <div class="csv-subtitle">Click or drag & drop</div>
+                            <div class="csv-title">Upload Transaction CSV</div>
+                            <div class="csv-subtitle">Click or drag & drop to upload</div>
                             <input type="file" id="csvFile" accept=".csv" class="file-input">
                         </div>
                         <div class="csv-format-example">
-                            <strong>Format:</strong> date,type,amount,price<br>
-                            <span style="color: var(--accent);">📌 Include all buys and sells</span>
+                            <strong>CSV Format:</strong> date,type,amount,price<br>
+                            Example: 2024-01-01,buy,0.5,20000<br>
+                            <span style="color: var(--accent);">📌 For accurate tax calculation, include all buys and sells</span>
                         </div>
                     </div>
                 </div>
@@ -1088,8 +1094,8 @@
                     </div>
                     <div class="address-input-area">
                         <input type="text" class="address-input" id="addressInput" 
-                               placeholder="Enter wallet address">
-                        <button class="fetch-btn" id="fetchBtn">Fetch</button>
+                               placeholder="Enter wallet address (BTC, ETH, BSC, etc.)">
+                        <button class="fetch-btn" id="fetchBtn">Fetch Balance</button>
                     </div>
                     <div class="address-note" id="addressNote"></div>
                 </div>
@@ -1097,25 +1103,27 @@
 
             <div id="taxSummary" class="hidden">
                 <div class="tax-summary">
-                    <div class="summary-title">📊 TAX SUMMARY (FIFO)</div>
+                    <div class="summary-title">📊 TAX SUMMARY (FIFO Method)</div>
                     <div class="summary-grid">
-                        <div class="summary-item"><div class="summary-label">Gain</div><div class="summary-value" id="totalGain">$0.00</div></div>
-                        <div class="summary-item"><div class="summary-label">Loss</div><div class="summary-value" id="totalLoss">$0.00</div></div>
-                        <div class="summary-item"><div class="summary-label">Net</div><div class="summary-value" id="netGain">$0.00</div></div>
-                        <div class="summary-item"><div class="summary-label">Tax (20%)</div><div class="summary-value" id="estimatedTax">$0.00</div></div>
+                        <div class="summary-item"><div class="summary-label">Total Gain</div><div class="summary-value" id="totalGain">$0.00</div></div>
+                        <div class="summary-item"><div class="summary-label">Total Loss</div><div class="summary-value" id="totalLoss">$0.00</div></div>
+                        <div class="summary-item"><div class="summary-label">Net Gain</div><div class="summary-value" id="netGain">$0.00</div></div>
+                        <div class="summary-item"><div class="summary-label">Estimated Tax (20%)</div><div class="summary-value" id="estimatedTax">$0.00</div></div>
                     </div>
                 </div>
             </div>
 
             <div class="transactions-section">
                 <div class="section-title">
-                    <span>📋 TRANSACTIONS</span>
-                    <span class="status-badge" id="txCount">0</span>
+                    <span>📋 TRANSACTION LOG</span>
+                    <span class="status-badge" id="txCount">0 transactions</span>
                 </div>
                 <div class="table-wrapper">
                     <table class="tx-table">
-                        <thead><tr><th>DATE</th><th>AMOUNT</th><th>GAIN</th></tr></thead>
-                        <tbody id="txBody"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet</td></tr></tbody>
+                        <thead><tr><th>TX HASH / DATE</th><th>AMOUNT</th><th>GAIN</th></tr></thead>
+                        <tbody id="txBody">
+                            <tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -1123,7 +1131,7 @@
     </div>
 
     <div class="footer">
-        <span>🔒 Secure • FIFO • Real-time</span>
+        <span>🔒 Secure • FIFO Method • Real-time data</span>
         <span id="timestamp"></span>
     </div>
 </div>
@@ -1230,8 +1238,8 @@
 
     const defaultDropzoneHTML = `
         <div class="csv-icon">📄</div>
-        <div class="csv-title">Upload CSV</div>
-        <div class="csv-subtitle">Click or drag & drop</div>
+        <div class="csv-title">Upload Transaction CSV</div>
+        <div class="csv-subtitle">Click or drag & drop to upload</div>
     `;
 
     function resetDropzone() {
@@ -1280,11 +1288,15 @@
         
         const txBody = document.getElementById('txBody');
         txBody.innerHTML = transactions.slice(0, 20).map(tx => `
-            <tr><td class="tx-hash">${tx.date}<br>${tx.type.toUpperCase()}</td><td>${tx.amount} @ $${tx.price}</td><td class="${tx.type === 'sell' ? (tx.amount * tx.price > 0 ? 'positive' : 'negative') : ''}">${tx.type === 'sell' ? `$${((tx.amount * tx.price)).toFixed(2)}` : '—'}</td></tr>
+            <tr>
+                <td class="tx-hash">${tx.date}<br>${tx.type.toUpperCase()}</td>
+                <td>${tx.amount} @ $${tx.price}</td>
+                <td class="${tx.type === 'sell' ? (tx.amount * tx.price > 0 ? 'positive' : 'negative') : ''}">${tx.type === 'sell' ? `$${((tx.amount * tx.price)).toFixed(2)}` : '—'}</td>
+            </tr>
         `).join('');
         
         if (transactions.length > 20) {
-            txBody.innerHTML += `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">+ ${transactions.length - 20} more</td></tr>`;
+            txBody.innerHTML += `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">+ ${transactions.length - 20} more transactions</td></tr>`;
         }
         
         document.getElementById('txCount').innerHTML = `${transactions.length}`;
@@ -1303,7 +1315,7 @@
                 resetDropzone();
                 fileInput.value = '';
                 document.getElementById('taxSummary').classList.add('hidden');
-                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet</td></tr>';
+                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
                 document.getElementById('txCount').innerHTML = '0';
                 setTimeout(() => fileInput.click(), 50);
             } else {
@@ -1336,7 +1348,7 @@
                     resetDropzone();
                     fileInput.value = '';
                     document.getElementById('taxSummary').classList.add('hidden');
-                    document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet</td></tr>';
+                    document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
                     document.getElementById('txCount').innerHTML = '0';
                     setTimeout(() => handleFile(file), 50);
                 } else {
@@ -1412,14 +1424,11 @@
             const price = priceData[coinId]?.usd || 0;
             document.getElementById('balanceUSD').innerHTML = `$${(parseFloat(result.balance) * price).toFixed(2)}`;
             
-            document.getElementById('taxSummary').classList.add('hidden');
-            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Use CSV mode for tax calculation</td></tr>';
-            document.getElementById('txCount').innerHTML = 'Balance';
         } catch (error) {
             alert(`Error: ${error.message}`);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = 'Fetch';
+            btn.innerHTML = 'Fetch Balance';
         }
     }
 
@@ -1465,10 +1474,11 @@
             grid.classList.remove('wallet-mode');
             csvBtn.classList.add('active');
             walletBtn.classList.remove('active');
+            document.body.classList.remove('wallet-mode');
             resetDropzone();
             document.getElementById('csvFile').value = '';
             document.getElementById('taxSummary').classList.add('hidden');
-            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet</td></tr>';
+            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
             document.getElementById('txCount').innerHTML = '0';
         } else {
             csvDiv.classList.add('hidden');
@@ -1477,6 +1487,12 @@
             grid.classList.add('wallet-mode');
             walletBtn.classList.add('active');
             csvBtn.classList.remove('active');
+            document.body.classList.add('wallet-mode');
+            // HIDE tax summary when switching to wallet mode
+            document.getElementById('taxSummary').classList.add('hidden');
+            // Clear transaction display
+            document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Wallet balance mode - No transactions</td></tr>';
+            document.getElementById('txCount').innerHTML = '0';
         }
     }
 
