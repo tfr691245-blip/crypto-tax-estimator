@@ -9,7 +9,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Remove blue tap highlight on mobile */
         * {
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
@@ -23,13 +22,13 @@
             justify-content: center;
             overflow-x: hidden;
             position: relative;
-            background: #0A0C15;
+            background: linear-gradient(135deg, #0A0C15 0%, #1a1a2e 50%, #0f0f23 100%);
             transition: background 0.3s ease;
         }
 
         /* Light Theme */
         body.light {
-            background: #F5F7FF;
+            background: linear-gradient(135deg, #F5F7FF 0%, #E8ECF8 50%, #DFE4F0 100%);
         }
         body.light .auth-card {
             background: rgba(255, 255, 255, 0.95);
@@ -52,18 +51,18 @@
         body.light .mode-btn.active {
             color: #05070A;
         }
-        body.light .logo p, body.light .switch-mode {
+        body.light .logo p, body.light .switch-mode, body.light .forgot-password {
             color: #6C729B;
         }
 
-        /* Animated Background */
+        /* Animated Gradient Background */
         .animated-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2;
+            z-index: -1;
             overflow: hidden;
         }
 
@@ -73,7 +72,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(247, 147, 26, 0.12), rgba(224, 124, 10, 0.04), transparent 70%);
+            background: radial-gradient(circle, rgba(247, 147, 26, 0.15), rgba(224, 124, 10, 0.05), transparent 70%);
             animation: rotateBg 25s linear infinite;
         }
 
@@ -83,7 +82,7 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.08), rgba(79, 70, 229, 0.03), transparent 70%);
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1), rgba(79, 70, 229, 0.05), transparent 70%);
             animation: rotateBgReverse 20s linear infinite;
         }
 
@@ -97,7 +96,7 @@
             to { transform: rotate(0deg); }
         }
 
-        /* Top Bar - Back Button Left, Theme Toggle Right */
+        /* Top Bar */
         .top-bar {
             position: fixed;
             top: 0;
@@ -112,7 +111,7 @@
         }
 
         .back-btn {
-            background: rgba(13, 15, 23, 0.7);
+            background: rgba(13, 15, 23, 0.6);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(247, 147, 26, 0.3);
             border-radius: 50%;
@@ -129,7 +128,7 @@
         }
 
         body.light .back-btn {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .back-btn:hover {
@@ -138,7 +137,7 @@
         }
 
         .theme-toggle {
-            background: rgba(13, 15, 23, 0.7);
+            background: rgba(13, 15, 23, 0.6);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(247, 147, 26, 0.3);
             border-radius: 50%;
@@ -152,7 +151,7 @@
         }
 
         body.light .theme-toggle {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .theme-toggle:hover {
@@ -185,7 +184,7 @@
 
         /* Glass Card */
         .auth-card {
-            background: rgba(13, 15, 23, 0.85);
+            background: rgba(13, 15, 23, 0.75);
             backdrop-filter: blur(20px);
             border-radius: 48px;
             border: 1px solid rgba(247, 147, 26, 0.25);
@@ -303,6 +302,24 @@
             cursor: pointer;
         }
 
+        /* Forgot Password Link */
+        .forgot-password {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #F7931A;
+            font-size: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
         /* Submit Button */
         .submit-btn {
             width: 100%;
@@ -342,7 +359,7 @@
 
         .divider span { margin: 0 16px; }
 
-        /* Google Button with G Icon + Text */
+        /* Google Button */
         .google-btn {
             width: 100%;
             padding: 14px 20px;
@@ -435,7 +452,7 @@
 
         .hidden { display: none !important; }
 
-        /* Touch-friendly for mobile */
+        /* Touch-friendly */
         @media (max-width: 550px) {
             .submit-btn, .mode-btn, .google-btn { min-height: 48px; }
             .form-group input { font-size: 16px; }
@@ -450,7 +467,7 @@
     <div class="gradient-2"></div>
 </div>
 
-<!-- Top Bar: Back Button Left, Theme Toggle Right -->
+<!-- Top Bar -->
 <div class="top-bar">
     <a href="index.html" class="back-btn">
         <i class="fas fa-arrow-left"></i>
@@ -470,7 +487,6 @@
             <p>Enterprise Authentication Portal</p>
         </div>
 
-        <!-- Mode Toggle -->
         <div class="mode-toggle">
             <button class="mode-btn active" id="signinModeBtn">Sign In</button>
             <button class="mode-btn" id="signupModeBtn">Sign Up</button>
@@ -488,6 +504,9 @@
             <div class="form-group">
                 <input type="password" id="signinPassword" placeholder="Password" required>
                 <i class="fas fa-eye" onclick="togglePassword('signinPassword', this)"></i>
+            </div>
+            <div class="forgot-password">
+                <a href="#" id="forgotPasswordLink">Forgot password?</a>
             </div>
             <button type="submit" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
         </form>
@@ -513,7 +532,6 @@
             <span>or continue with</span>
         </div>
 
-        <!-- Google Button with G Icon + Text -->
         <div id="googleSignInBtn" class="google-btn">
             <span class="google-icon">G</span>
             <span class="google-text" id="googleBtnText">Google Login</span>
@@ -526,7 +544,15 @@
 </div>
 
 <script>
-    // ============ THEME TOGGLE ============
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
+    const GOOGLE_CLIENT_ID = '39831574357-244ods19sr6ffqqcj0epkc6r8e6pucb3.apps.googleusercontent.com';
+    
+    // Initialize Supabase client
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
     
@@ -550,11 +576,6 @@
     themeToggle.addEventListener('click', () => {
         document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
     });
-
-    // ============ SUPABASE CONFIGURATION ============
-    const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
-    const GOOGLE_CLIENT_ID = '39831574357-244ods19sr6ffqqcj0epkc6r8e6pucb3.apps.googleusercontent.com';
 
     function togglePassword(fieldId, iconElement) {
         const field = document.getElementById(fieldId);
@@ -601,7 +622,6 @@
     signinModeBtn.onclick = () => setMode('signin');
     signupModeBtn.onclick = () => setMode('signup');
     
-    // Initial setup for switch button
     setTimeout(() => {
         const switchBtn = document.getElementById('switchBtn');
         if (switchBtn) switchBtn.onclick = () => setMode('signup');
@@ -611,14 +631,14 @@
         const el = document.getElementById('errorMessage');
         el.textContent = msg;
         el.style.display = 'block';
-        setTimeout(() => el.style.display = 'none', 4000);
+        setTimeout(() => el.style.display = 'none', 5000);
     }
 
     function showSuccess(msg) {
         const el = document.getElementById('successMessage');
         el.textContent = msg;
         el.style.display = 'block';
-        setTimeout(() => el.style.display = 'none', 3000);
+        setTimeout(() => el.style.display = 'none', 5000);
     }
 
     function hideMessages() {
@@ -626,14 +646,31 @@
         document.getElementById('successMessage').style.display = 'none';
     }
 
-    // Local Storage Functions
-    function getUsers() { return JSON.parse(localStorage.getItem('cryptotax_users') || '[]'); }
-    function saveUsers(users) { localStorage.setItem('cryptotax_users', JSON.stringify(users)); }
-    function saveCurrentUser(user) { localStorage.setItem('cryptotax_current_user', JSON.stringify(user)); }
-
-    // Sign Up
-    signupForm.onsubmit = (e) => {
+    // Forgot Password
+    document.getElementById('forgotPasswordLink').addEventListener('click', async (e) => {
         e.preventDefault();
+        const email = document.getElementById('signinEmail').value.trim();
+        
+        if (!email) {
+            showError('Please enter your email address');
+            return;
+        }
+        
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + '/reset-password.html'
+        });
+        
+        if (error) {
+            showError(error.message);
+        } else {
+            showSuccess('Password reset link sent to your email!');
+        }
+    });
+
+    // Sign Up with Email Confirmation
+    signupForm.onsubmit = async (e) => {
+        e.preventDefault();
+        
         const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value;
         const confirm = document.getElementById('signupConfirmPassword').value;
@@ -642,63 +679,89 @@
         if (password !== confirm) return showError('Passwords do not match');
         if (password.length < 6) return showError('Password must be at least 6 characters');
 
-        const users = getUsers();
-        if (users.find(u => u.email === email)) return showError('Email already registered');
-
-        const newUser = {
-            id: Date.now().toString(),
+        const { data, error } = await supabase.auth.signUp({
             email: email,
-            password: btoa(password),
-            name: email.split('@')[0],
-            picture: `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}`,
-            createdAt: new Date().toISOString()
-        };
-        users.push(newUser);
-        saveUsers(users);
-        saveCurrentUser({ id: newUser.id, email: newUser.email, name: newUser.name, picture: newUser.picture });
-        showSuccess('Account created! Redirecting to dashboard...');
-        setTimeout(() => window.location.href = 'dashboard.html', 1500);
+            password: password,
+            options: {
+                emailRedirectTo: window.location.origin + '/dashboard.html'
+            }
+        });
+
+        if (error) {
+            showError(error.message);
+        } else {
+            showSuccess('Check your email for confirmation link! Please verify your email.');
+            // Clear form
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirmPassword').value = '';
+            // Switch to sign in mode after 2 seconds
+            setTimeout(() => setMode('signin'), 3000);
+        }
     };
 
     // Sign In
-    signinForm.onsubmit = (e) => {
+    signinForm.onsubmit = async (e) => {
         e.preventDefault();
+        
         const email = document.getElementById('signinEmail').value.trim();
         const password = document.getElementById('signinPassword').value;
 
         if (!email || !password) return showError('Please enter email and password');
 
-        const users = getUsers();
-        const user = users.find(u => u.email === email && u.password === btoa(password));
-        if (!user) return showError('Invalid email or password');
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
 
-        saveCurrentUser({ id: user.id, email: user.email, name: user.name, picture: user.picture });
-        showSuccess('Signed in! Redirecting to dashboard...');
-        setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        if (error) {
+            if (error.message.includes('Email not confirmed')) {
+                showError('Please confirm your email first. Check your inbox!');
+            } else {
+                showError(error.message);
+            }
+            return;
+        }
+
+        if (data.user) {
+            const user = {
+                id: data.user.id,
+                email: data.user.email,
+                name: data.user.user_metadata?.full_name || email.split('@')[0],
+                picture: data.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}`
+            };
+            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+            showSuccess('Signed in! Redirecting to dashboard...');
+            setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        }
     };
 
-    // Google Sign In - Custom button handler
+    // Google Sign In
     const googleBtn = document.getElementById('googleSignInBtn');
     
-    function handleGoogleCredentialResponse(response) {
+    async function handleGoogleCredentialResponse(response) {
         try {
-            const data = JSON.parse(atob(response.credential.split('.')[1]));
-            const users = getUsers();
-            if (!users.find(u => u.email === data.email)) {
-                users.push({
-                    id: data.sub,
-                    email: data.email,
-                    name: data.name,
-                    picture: data.picture,
-                    googleLogin: true,
-                    createdAt: new Date().toISOString()
-                });
-                saveUsers(users);
+            const { data, error } = await supabase.auth.signInWithIdToken({
+                provider: 'google',
+                token: response.credential
+            });
+            
+            if (error) throw error;
+            
+            if (data.user) {
+                const user = {
+                    id: data.user.id,
+                    email: data.user.email,
+                    name: data.user.user_metadata?.full_name || data.user.email.split('@')[0],
+                    picture: data.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${data.user.email.split('@')[0]}`
+                };
+                localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+                showSuccess('Google sign in successful! Redirecting to dashboard...');
+                setTimeout(() => window.location.href = 'dashboard.html', 1500);
             }
-            saveCurrentUser({ id: data.sub, email: data.email, name: data.name, picture: data.picture });
-            showSuccess('Google sign in successful! Redirecting to dashboard...');
-            setTimeout(() => window.location.href = 'dashboard.html', 1500);
-        } catch (e) { showError('Google sign in failed'); }
+        } catch (e) {
+            showError('Google sign in failed: ' + e.message);
+        }
     }
 
     function initGoogle() {
@@ -710,7 +773,6 @@
                 cancel_on_tap_outside: true
             });
             
-            // Render Google button with icon only, we wrap it with our custom button
             google.accounts.id.renderButton(googleBtn, {
                 type: 'icon',
                 theme: 'outline',
@@ -718,7 +780,9 @@
                 shape: 'circle',
                 text: 'continue_with'
             });
-        } else { setTimeout(initGoogle, 500); }
+        } else { 
+            setTimeout(initGoogle, 500); 
+        }
     }
 
     const script = document.createElement('script');
@@ -727,6 +791,7 @@
     script.onload = initGoogle;
     document.head.appendChild(script);
 
+    // Check if already logged in
     if (localStorage.getItem('cryptotax_current_user')) window.location.href = 'dashboard.html';
     setMode('signin');
 </script>
