@@ -7,11 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Outfit', 'Space Grotesk', sans-serif;
@@ -22,6 +18,37 @@
             overflow-x: hidden;
             position: relative;
             background: #0A0C15;
+            transition: background 0.3s ease;
+        }
+
+        /* Light Theme */
+        body.light {
+            background: #F5F7FF;
+        }
+        body.light .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(247, 147, 26, 0.3);
+        }
+        body.light .form-group input {
+            background: rgba(0, 0, 0, 0.03);
+            color: #1A1F36;
+            border-color: rgba(247, 147, 26, 0.2);
+        }
+        body.light .google-btn {
+            background: rgba(0, 0, 0, 0.02);
+            color: #1A1F36;
+        }
+        body.light .google-text {
+            color: #1A1F36;
+        }
+        body.light .mode-btn {
+            color: #6C729B;
+        }
+        body.light .mode-btn.active {
+            color: #05070A;
+        }
+        body.light .logo p, body.light .switch-mode {
+            color: #6C729B;
         }
 
         /* Animated Background */
@@ -63,6 +90,48 @@
         @keyframes rotateBgReverse {
             from { transform: rotate(360deg); }
             to { transform: rotate(0deg); }
+        }
+
+        /* Theme Toggle Button - Top Right */
+        .theme-toggle-wrapper {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .theme-toggle {
+            background: rgba(13, 15, 23, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(247, 147, 26, 0.3);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.light .theme-toggle {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(247, 147, 26, 0.4);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+            border-color: #F7931A;
+        }
+
+        .theme-toggle i {
+            font-size: 24px;
+            color: #F7931A;
+            transition: transform 0.5s ease;
+        }
+
+        body.light .theme-toggle i {
+            transform: rotate(360deg);
         }
 
         /* Main Container */
@@ -123,7 +192,7 @@
         .logo h2 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .logo p { font-size: 12px; color: #8E94B3; margin-top: 6px; }
 
-        /* Mode Toggle - Smooth Slider like Tax Estimator */
+        /* Mode Toggle */
         .mode-toggle {
             display: flex;
             background: rgba(5, 7, 10, 0.5);
@@ -131,7 +200,6 @@
             border-radius: 60px;
             margin-bottom: 32px;
             border: 1px solid rgba(247, 147, 26, 0.15);
-            position: relative;
         }
 
         .mode-btn {
@@ -147,8 +215,6 @@
             border: none;
             font-family: 'Outfit', sans-serif;
             text-align: center;
-            position: relative;
-            z-index: 1;
         }
 
         .mode-btn.active {
@@ -344,6 +410,13 @@
     <div class="gradient-2"></div>
 </div>
 
+<!-- Theme Toggle Button - Top Right -->
+<div class="theme-toggle-wrapper">
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
+</div>
+
 <div class="auth-container">
     <div class="auth-card">
         <div class="logo" onclick="window.location.href='index.html'">
@@ -354,7 +427,7 @@
             <p>Enterprise Authentication Portal</p>
         </div>
 
-        <!-- Mode Toggle - Smooth like Tax Estimator -->
+        <!-- Mode Toggle -->
         <div class="mode-toggle">
             <button class="mode-btn active" id="signinModeBtn">Sign In</button>
             <button class="mode-btn" id="signupModeBtn">Sign Up</button>
@@ -397,7 +470,7 @@
             <span>or continue with</span>
         </div>
 
-        <!-- Professional Google Button with G Icon + Text -->
+        <!-- Google Button with G Icon + Text -->
         <button id="googleSignInBtn" class="google-btn">
             <span class="google-icon">G</span>
             <span class="google-text" id="googleBtnText">Google Login</span>
@@ -410,7 +483,32 @@
 </div>
 
 <script>
-    // Supabase Configuration
+    // ============ THEME TOGGLE ============
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    function setTheme(theme) {
+        if (theme === 'light') {
+            document.body.classList.add('light');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.body.classList.remove('light');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+    
+    const savedTheme = localStorage.getItem('theme');
+    savedTheme === 'light' ? setTheme('light') : setTheme('dark');
+    
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
+    });
+
+    // ============ SUPABASE CONFIGURATION ============
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
     const GOOGLE_CLIENT_ID = '39831574357-244ods19sr6ffqqcj0epkc6r8e6pucb3.apps.googleusercontent.com';
