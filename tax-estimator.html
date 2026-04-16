@@ -14,6 +14,61 @@
             color: #E8EDF5;
             line-height: 1.5;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-orb {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: #0A0C15;
+        }
+
+        .bg-orb::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(247, 147, 26, 0.12), transparent 70%);
+            filter: blur(80px);
+            animation: float 12s ease-in-out infinite;
+        }
+
+        .bg-orb::after {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            right: 20%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(247, 147, 26, 0.08), transparent 70%);
+            filter: blur(80px);
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(5%, 5%) scale(1.1); opacity: 0.8; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
         }
 
         .app-container {
@@ -26,6 +81,7 @@
             .app-container { padding: 24px; }
         }
 
+        /* Header */
         .header {
             display: flex;
             flex-direction: column;
@@ -48,6 +104,15 @@
             }
         }
 
+        .logo-section {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logo-section:hover {
+            transform: scale(1.02);
+        }
+
         .logo-section h1 {
             font-size: 28px;
             font-weight: 800;
@@ -56,6 +121,7 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            transition: all 0.3s ease;
         }
 
         @media (min-width: 768px) {
@@ -70,6 +136,42 @@
             letter-spacing: 0.5px;
         }
 
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            background: rgba(13, 15, 23, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 6px;
+            border-radius: 60px;
+            border: 1px solid rgba(247, 147, 26, 0.15);
+        }
+
+        .nav-tab {
+            padding: 8px 24px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: #8E94B3;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-tab:hover {
+            background: rgba(247, 147, 26, 0.1);
+            color: #F7931A;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #F7931A 0%, #E07C0A 100%);
+            color: #05070A;
+            box-shadow: 0 2px 8px rgba(247, 147, 26, 0.3);
+        }
+
         .version-badge {
             background: rgba(247, 147, 26, 0.12);
             padding: 6px 14px;
@@ -80,6 +182,7 @@
             border: 1px solid rgba(247, 147, 26, 0.25);
             margin-top: 12px;
             letter-spacing: 0.5px;
+            animation: pulse 2s ease-in-out infinite;
         }
 
         @media (min-width: 768px) {
@@ -90,6 +193,7 @@
             display: flex;
             justify-content: center;
             margin-bottom: 24px;
+            animation: fadeInUp 0.5s ease-out 0.1s both;
         }
 
         .mode-slider {
@@ -128,6 +232,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 24px;
+            animation: fadeInUp 0.5s ease-out 0.2s both;
         }
 
         @media (min-width: 900px) {
@@ -142,10 +247,12 @@
             border: 1px solid #1A1E2C;
             overflow: hidden;
             display: none;
+            transition: all 0.3s ease;
         }
 
         .left-panel.visible {
             display: block;
+            animation: fadeInUp 0.4s ease-out;
         }
 
         .panel-header {
@@ -175,11 +282,11 @@
             gap: 12px;
             padding: 12px 16px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             border-bottom: 1px solid #1A1E2C;
         }
 
-        .blockchain-item:hover { background: #131725; }
+        .blockchain-item:hover { background: #131725; transform: translateX(5px); }
         .blockchain-item.active {
             background: linear-gradient(90deg, #1A2038 0%, #0D0F17 100%);
             border-left: 3px solid #F7931A;
@@ -192,6 +299,11 @@
             object-fit: cover;
             background: #1A1E2C;
             padding: 4px;
+            transition: transform 0.3s ease;
+        }
+
+        .blockchain-item:hover .chain-icon-img {
+            transform: scale(1.1);
         }
 
         .chain-info { flex: 1; }
@@ -204,6 +316,11 @@
             border-radius: 24px;
             border: 1px solid #1A1E2C;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .right-panel:hover {
+            border-color: rgba(247, 147, 26, 0.2);
         }
 
         .wallet-section {
@@ -232,6 +349,7 @@
             align-items: baseline;
             gap: 8px;
             margin-bottom: 20px;
+            animation: fadeInUp 0.4s ease-out;
         }
 
         .balance-number {
@@ -258,11 +376,12 @@
             padding: 40px 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             background: #05070A;
         }
-        .csv-dropzone:hover { border-color: #F7931A; background: rgba(247, 147, 26, 0.05); }
-        .csv-icon { font-size: 48px; margin-bottom: 16px; }
+        .csv-dropzone:hover { border-color: #F7931A; background: rgba(247, 147, 26, 0.05); transform: scale(1.01); }
+        .csv-icon { font-size: 48px; margin-bottom: 16px; transition: transform 0.3s ease; }
+        .csv-dropzone:hover .csv-icon { transform: scale(1.1); }
         .csv-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; font-family: 'Outfit', sans-serif; }
         .csv-subtitle { font-size: 12px; color: #6C729B; font-weight: 500; }
         .file-input { display: none; }
@@ -276,6 +395,10 @@
             color: #6C729B;
             text-align: left;
             overflow-x: auto;
+            transition: all 0.3s ease;
+        }
+        .csv-format-example:hover {
+            background: rgba(247, 147, 26, 0.03);
         }
 
         .address-input-area {
@@ -299,11 +422,13 @@
             font-family: 'Space Grotesk', monospace;
             font-size: 13px;
             outline: none;
+            transition: all 0.3s ease;
         }
 
         .address-input:focus {
             border-color: #F7931A;
             box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.1);
+            transform: scale(1.01);
         }
 
         .fetch-btn {
@@ -315,12 +440,12 @@
             font-size: 14px;
             color: #05070A;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             font-family: 'Outfit', sans-serif;
         }
 
-        .fetch-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3); }
-        .fetch-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .fetch-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3); }
+        .fetch-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .address-note { font-size: 11px; color: #F7931A; font-family: 'Space Grotesk', monospace; background: rgba(247, 147, 26, 0.05); padding: 8px 12px; border-radius: 10px; display: inline-block; word-break: break-all; }
 
         .tax-summary {
@@ -329,12 +454,20 @@
             padding: 20px;
             margin-bottom: 24px;
             border: 1px solid rgba(247, 147, 26, 0.15);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .tax-summary:hover {
+            border-color: rgba(247, 147, 26, 0.3);
+            transform: translateY(-2px);
         }
 
         .summary-title { font-size: 14px; font-weight: 700; color: #F7931A; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; font-family: 'Outfit', sans-serif; }
         .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         @media (min-width: 768px) { .summary-grid { grid-template-columns: repeat(4, 1fr); } }
-        .summary-item { text-align: center; }
+        .summary-item { text-align: center; transition: all 0.3s ease; }
+        .summary-item:hover { transform: scale(1.05); }
         .summary-label { font-size: 11px; color: #6C729B; margin-bottom: 4px; font-weight: 600; letter-spacing: 0.5px; }
         .summary-value { font-size: 20px; font-weight: 800; color: #F7931A; font-family: 'Space Grotesk', monospace; }
 
@@ -344,11 +477,13 @@
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .tx-table { width: 100%; font-size: 11px; border-collapse: collapse; min-width: 400px; }
         .tx-table th { text-align: left; padding: 10px 6px; color: #6C729B; border-bottom: 1px solid #1A1E2C; font-weight: 600; font-family: 'Outfit', sans-serif; }
-        .tx-table td { padding: 10px 6px; border-bottom: 1px solid #1A1E2C; font-family: 'Space Grotesk', monospace; }
+        .tx-table td { padding: 10px 6px; border-bottom: 1px solid #1A1E2C; font-family: 'Space Grotesk', monospace; transition: all 0.2s ease; }
+        .tx-table tr:hover td { background: rgba(247, 147, 26, 0.05); }
         .tx-hash { font-family: 'Space Grotesk', monospace; font-size: 10px; color: #8E94B3; }
         .tx-amount.positive { color: #4CAF50; }
         .tx-amount.negative { color: #FF6B6B; }
-        .status-badge { background: #1A1E2C; padding: 4px 8px; border-radius: 20px; font-size: 10px; color: #8E94B3; display: inline-block; font-weight: 600; }
+        .status-badge { background: #1A1E2C; padding: 4px 8px; border-radius: 20px; font-size: 10px; color: #8E94B3; display: inline-block; font-weight: 600; transition: all 0.3s ease; }
+        .status-badge:hover { background: rgba(247, 147, 26, 0.2); color: #F7931A; }
 
         .error-message { background: rgba(255, 68, 68, 0.1); border-left: 3px solid #FF4444; padding: 12px 16px; margin: 16px; border-radius: 8px; font-size: 12px; }
         .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; border-top-color: #05070A; animation: spin 0.6s linear infinite; margin-right: 8px; vertical-align: middle; }
@@ -368,6 +503,7 @@
             font-size: 10px;
             color: #6C729B;
             text-align: center;
+            animation: fadeInUp 0.5s ease-out 0.3s both;
         }
 
         @media (min-width: 768px) {
@@ -380,13 +516,22 @@
     </style>
 </head>
 <body>
+<div class="bg-orb"></div>
 <div class="app-container">
+    <!-- Header with clickable logo -->
     <div class="header">
-        <div class="logo-section">
+        <div class="logo-section" onclick="window.location.href='index.html'">
             <h1>TAX ESTIMATOR</h1>
             <p>Enterprise Multi-Chain Tax Platform</p>
         </div>
-        <div class="version-badge">PRODUCTION • 13 CHAINS</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <div class="nav-tabs">
+                <a href="index.html" class="nav-tab">🏠 Home</a>
+                <a href="#" class="nav-tab">📊 Dashboard</a>
+                <a href="#" class="nav-tab active">💰 Estimator</a>
+            </div>
+            <div class="version-badge">PRODUCTION • 13 CHAINS</div>
+        </div>
     </div>
 
     <div class="mode-toggle">
