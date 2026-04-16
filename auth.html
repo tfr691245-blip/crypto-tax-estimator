@@ -24,7 +24,7 @@
             background: #0A0C15;
         }
 
-        /* Animated Gradient Background */
+        /* Professional Animated Background */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -41,7 +41,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(247, 147, 26, 0.15), rgba(224, 124, 10, 0.05), transparent 70%);
+            background: radial-gradient(circle, rgba(247, 147, 26, 0.12), rgba(224, 124, 10, 0.04), transparent 70%);
             animation: rotateBg 25s linear infinite;
         }
 
@@ -51,7 +51,7 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1), rgba(79, 70, 229, 0.05), transparent 70%);
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.08), rgba(79, 70, 229, 0.03), transparent 70%);
             animation: rotateBgReverse 20s linear infinite;
         }
 
@@ -65,130 +65,75 @@
             to { transform: rotate(0deg); }
         }
 
-        /* Floating Particles */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            background: rgba(247, 147, 26, 0.3);
-            border-radius: 50%;
-            animation: floatParticle 8s ease-in-out infinite;
-        }
-
-        @keyframes floatParticle {
-            0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
-            50% { transform: translateY(-30px) translateX(20px) scale(1.2); opacity: 0.6; }
-        }
-
         /* Main Container */
         .auth-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             margin: 20px;
-            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.4, 1);
-            perspective: 1000px;
+            animation: slideUp 0.7s cubic-bezier(0.2, 0.8, 0.4, 1);
         }
 
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(50px) rotateX(10deg);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) rotateX(0);
+                transform: translateY(0);
             }
         }
 
-        /* Glass Card with Glow Effect */
+        /* Glass Card */
         .auth-card {
-            background: rgba(13, 15, 23, 0.75);
+            background: rgba(13, 15, 23, 0.85);
             backdrop-filter: blur(20px);
-            border-radius: 56px;
-            border: 1px solid rgba(247, 147, 26, 0.2);
-            padding: 52px 44px;
-            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(247, 147, 26, 0.1);
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(247, 147, 26, 0.08), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .auth-card:hover::before {
-            left: 100%;
+            border-radius: 48px;
+            border: 1px solid rgba(247, 147, 26, 0.25);
+            padding: 48px 40px;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+            transition: all 0.4s ease;
         }
 
         .auth-card:hover {
-            border-color: rgba(247, 147, 26, 0.4);
-            box-shadow: 0 50px 100px -20px rgba(247, 147, 26, 0.2);
-            transform: translateY(-5px);
+            border-color: rgba(247, 147, 26, 0.45);
+            box-shadow: 0 40px 80px -20px rgba(247, 147, 26, 0.15);
         }
 
         @media (max-width: 550px) {
             .auth-card {
-                padding: 36px 28px;
-                border-radius: 40px;
+                padding: 32px 24px;
+                border-radius: 36px;
             }
         }
 
-        /* Logo Section with Animation */
+        /* Logo Section */
         .logo {
             text-align: center;
-            margin-bottom: 44px;
+            margin-bottom: 40px;
             cursor: pointer;
-            position: relative;
         }
 
         .logo-icon {
-            width: 80px;
-            height: 80px;
+            width: 75px;
+            height: 75px;
             background: linear-gradient(135deg, #F7931A, #FF6B00);
-            border-radius: 28px;
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 18px;
+            font-size: 36px;
+            margin: 0 auto 16px;
             box-shadow: 0 15px 35px rgba(247, 147, 26, 0.3);
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
-            animation: pulseGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% {
-                box-shadow: 0 15px 35px rgba(247, 147, 26, 0.3);
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 0 20px 45px rgba(247, 147, 26, 0.5);
-                transform: scale(1.02);
-            }
+            transition: transform 0.3s ease;
         }
 
         .logo-icon:hover {
-            transform: scale(1.05) rotate(5deg);
+            transform: scale(1.03);
         }
 
         .logo h2 {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             background: linear-gradient(135deg, #F7931A, #FFD166);
             -webkit-background-clip: text;
@@ -198,47 +143,28 @@
         }
 
         .logo p {
-            font-size: 13px;
+            font-size: 12px;
             color: #8E94B3;
             margin-top: 6px;
-            letter-spacing: 1px;
         }
 
-        /* Mode Toggle with Animation */
+        /* Mode Toggle */
         .mode-toggle {
             display: flex;
             gap: 12px;
-            background: rgba(5, 7, 10, 0.6);
+            background: rgba(5, 7, 10, 0.5);
             padding: 6px;
-            border-radius: 80px;
-            margin-bottom: 36px;
-            border: 1px solid rgba(247, 147, 26, 0.15);
-            position: relative;
-        }
-
-        .mode-toggle::before {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            width: calc(50% - 6px);
-            height: calc(100% - 12px);
-            background: linear-gradient(135deg, #F7931A, #FF6B00);
             border-radius: 60px;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
-            z-index: 0;
-        }
-
-        .mode-toggle.signup-mode::before {
-            transform: translateX(100%);
+            margin-bottom: 32px;
+            border: 1px solid rgba(247, 147, 26, 0.15);
         }
 
         .mode-btn {
             flex: 1;
-            padding: 14px 20px;
+            padding: 12px 20px;
             border-radius: 60px;
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             background: transparent;
@@ -246,105 +172,72 @@
             border: none;
             font-family: 'Outfit', sans-serif;
             text-align: center;
-            position: relative;
-            z-index: 1;
         }
 
         .mode-btn.active {
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
             color: #05070A;
+            box-shadow: 0 2px 8px rgba(247, 147, 26, 0.3);
         }
 
-        /* Form Styles with Animation */
+        /* Form Styles */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             position: relative;
-            transform: translateX(0);
-            transition: all 0.3s ease;
         }
 
         .form-group input {
             width: 100%;
-            padding: 18px 22px;
-            background: rgba(5, 7, 10, 0.5);
+            padding: 16px 20px;
+            background: rgba(5, 7, 10, 0.6);
             border: 1.5px solid rgba(247, 147, 26, 0.15);
-            border-radius: 24px;
-            font-size: 15px;
+            border-radius: 20px;
+            font-size: 14px;
             color: #E8EDF5;
             font-family: 'Space Grotesk', monospace;
             outline: none;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+            transition: all 0.3s ease;
         }
 
         .form-group input:focus {
             border-color: #F7931A;
-            box-shadow: 0 0 0 4px rgba(247, 147, 26, 0.1);
-            transform: translateX(5px);
-            background: rgba(5, 7, 10, 0.8);
+            box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.1);
+            transform: translateX(3px);
         }
 
         .form-group input::placeholder {
             color: #4A5568;
-            font-weight: 400;
         }
 
         .form-group i {
             position: absolute;
-            right: 20px;
+            right: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: #F7931A;
             font-size: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 5px;
-        }
-
-        .form-group i:hover {
-            opacity: 0.7;
-            transform: translateY(-50%) scale(1.1);
         }
 
         /* Submit Button */
         .submit-btn {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: linear-gradient(135deg, #F7931A, #FF6B00);
             border: none;
             border-radius: 60px;
             font-size: 16px;
-            font-weight: 800;
+            font-weight: 700;
             color: #05070A;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+            transition: all 0.3s ease;
             font-family: 'Outfit', sans-serif;
-            margin-top: 16px;
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.5px;
-        }
-
-        .submit-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .submit-btn:hover::before {
-            left: 100%;
+            margin-top: 12px;
         }
 
         .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(247, 147, 26, 0.4);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(247, 147, 26, 0.3);
         }
 
         /* Divider */
@@ -352,9 +245,9 @@
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 32px 0;
+            margin: 28px 0;
             color: #6C729B;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .divider::before,
@@ -365,107 +258,77 @@
         }
 
         .divider span {
-            margin: 0 18px;
-            font-weight: 500;
+            margin: 0 16px;
         }
 
-        /* Google Icon Button - Professional */
-        .google-icon-btn {
+        /* Professional Google Button */
+        .google-btn {
             width: 100%;
-            padding: 16px;
+            padding: 14px 20px;
             background: rgba(255, 255, 255, 0.03);
-            border: 1.5px solid rgba(247, 147, 26, 0.2);
+            border: 1.5px solid rgba(247, 147, 26, 0.25);
             border-radius: 60px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #E8EDF5;
+            gap: 12px;
             font-family: 'Outfit', sans-serif;
         }
 
-        .google-icon-btn i {
-            font-size: 22px;
-            transition: transform 0.3s ease;
+        .google-btn-icon {
+            width: 24px;
+            height: 24px;
+            background: url('https://www.google.com/favicon.ico') no-repeat center;
+            background-size: contain;
         }
 
-        .google-icon-btn:hover {
+        .google-btn-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #E8EDF5;
+            letter-spacing: 0.3px;
+        }
+
+        .google-btn:hover {
             background: rgba(247, 147, 26, 0.08);
             border-color: #F7931A;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(247, 147, 26, 0.2);
-        }
-
-        .google-icon-btn:hover i {
-            transform: scale(1.1);
         }
 
         /* Switch Mode Link */
         .switch-mode {
             text-align: center;
-            margin-top: 28px;
-            font-size: 14px;
+            margin-top: 24px;
+            font-size: 13px;
             color: #6C729B;
         }
 
         .switch-mode span {
             color: #F7931A;
             cursor: pointer;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            position: relative;
+            font-weight: 600;
         }
 
-        .switch-mode span::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #F7931A;
-            transition: width 0.3s ease;
-        }
-
-        .switch-mode span:hover::after {
-            width: 100%;
-        }
-
-        /* Message Alerts */
+        /* Messages */
         .error-message,
         .success-message {
-            padding: 14px 18px;
-            border-radius: 20px;
-            font-size: 13px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 12px;
             margin-bottom: 20px;
             display: none;
-            animation: slideIn 0.3s ease-out;
-            font-weight: 500;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .error-message {
-            background: rgba(255, 68, 68, 0.12);
+            background: rgba(255, 68, 68, 0.1);
             border-left: 3px solid #FF4444;
             color: #FF6B6B;
         }
 
         .success-message {
-            background: rgba(76, 175, 80, 0.12);
+            background: rgba(76, 175, 80, 0.1);
             border-left: 3px solid #4CAF50;
             color: #4CAF50;
         }
@@ -474,56 +337,10 @@
             display: none !important;
         }
 
-        /* Loading Animation */
-        .loading-spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(5, 7, 10, 0.2);
-            border-radius: 50%;
-            border-top-color: #05070A;
-            animation: spin 0.6s linear infinite;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Responsive */
         @media (max-width: 550px) {
-            .mode-btn {
-                padding: 10px 16px;
-                font-size: 13px;
-            }
-            .form-group input {
-                padding: 14px 18px;
-                font-size: 14px;
-            }
-            .submit-btn {
-                padding: 14px;
-                font-size: 15px;
-            }
-            .logo-icon {
-                width: 65px;
-                height: 65px;
-                font-size: 32px;
-            }
-            .logo h2 {
-                font-size: 26px;
-            }
-        }
-
-        /* Shake animation for errors */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            75% { transform: translateX(8px); }
-        }
-
-        .shake {
-            animation: shake 0.4s ease-in-out;
+            .mode-btn { padding: 10px 16px; font-size: 13px; }
+            .submit-btn { padding: 14px; font-size: 15px; }
+            .google-btn-text { font-size: 14px; }
         }
     </style>
 </head>
@@ -532,7 +349,6 @@
     <div class="gradient-1"></div>
     <div class="gradient-2"></div>
 </div>
-<div class="particles" id="particles"></div>
 
 <div class="auth-container">
     <div class="auth-card">
@@ -544,9 +360,9 @@
             <p>Enterprise Authentication Portal</p>
         </div>
 
-        <div class="mode-toggle" id="modeToggle">
-            <button class="mode-btn active" id="signinModeBtn">🔐 Sign In</button>
-            <button class="mode-btn" id="signupModeBtn">📝 Sign Up</button>
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="signinModeBtn">Sign In</button>
+            <button class="mode-btn" id="signupModeBtn">Sign Up</button>
         </div>
 
         <div id="errorMessage" class="error-message"></div>
@@ -555,43 +371,41 @@
         <!-- Sign In Form -->
         <form id="signinForm">
             <div class="form-group">
-                <input type="email" id="signinEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="email" id="signinEmail" placeholder="Email address" required>
                 <i class="fas fa-envelope"></i>
             </div>
             <div class="form-group">
-                <input type="password" id="signinPassword" placeholder="Password" required autocomplete="current-password">
+                <input type="password" id="signinPassword" placeholder="Password" required>
                 <i class="fas fa-eye" onclick="togglePassword('signinPassword', this)"></i>
             </div>
-            <button type="submit" class="submit-btn">
-                Sign In <i class="fas fa-arrow-right"></i>
-            </button>
+            <button type="submit" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
         </form>
 
         <!-- Sign Up Form -->
         <form id="signupForm" class="hidden">
             <div class="form-group">
-                <input type="email" id="signupEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="email" id="signupEmail" placeholder="Email address" required>
                 <i class="fas fa-envelope"></i>
             </div>
             <div class="form-group">
-                <input type="password" id="signupPassword" placeholder="Password" required autocomplete="new-password">
+                <input type="password" id="signupPassword" placeholder="Password" required>
                 <i class="fas fa-eye" onclick="togglePassword('signupPassword', this)"></i>
             </div>
             <div class="form-group">
-                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm password" required>
                 <i class="fas fa-check-circle"></i>
             </div>
-            <button type="submit" class="submit-btn">
-                Create Account <i class="fas fa-user-plus"></i>
-            </button>
+            <button type="submit" class="submit-btn">Create Account <i class="fas fa-user-plus"></i></button>
         </form>
 
         <div class="divider">
-            <span>OR</span>
+            <span>or continue with</span>
         </div>
 
-        <button id="googleSignInBtn" class="google-icon-btn">
-            <i class="fab fa-google"></i> <span id="googleBtnText">Continue with Google</span>
+        <!-- Professional Google Button with Icon -->
+        <button id="googleSignInBtn" class="google-btn">
+            <img src="https://www.google.com/favicon.ico" alt="Google" style="width: 22px; height: 22px;">
+            <span class="google-btn-text">Sign in with Google</span>
         </button>
 
         <div class="switch-mode">
@@ -601,24 +415,6 @@
 </div>
 
 <script>
-    // Create floating particles
-    function createParticles() {
-        const container = document.getElementById('particles');
-        for (let i = 0; i < 30; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            const size = Math.random() * 8 + 2;
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 8 + 's';
-            particle.style.animationDuration = (Math.random() * 6 + 5) + 's';
-            container.appendChild(particle);
-        }
-    }
-    createParticles();
-
     // Supabase Configuration
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
@@ -637,31 +433,28 @@
         }
     }
 
-    // Mode Toggle with Animation
+    // Mode Toggle
     const signinModeBtn = document.getElementById('signinModeBtn');
     const signupModeBtn = document.getElementById('signupModeBtn');
     const signinForm = document.getElementById('signinForm');
     const signupForm = document.getElementById('signupForm');
-    const modeToggle = document.getElementById('modeToggle');
 
     function setMode(mode) {
         if (mode === 'signin') {
-            modeToggle.classList.remove('signup-mode');
             signinModeBtn.classList.add('active');
             signupModeBtn.classList.remove('active');
             signinForm.classList.remove('hidden');
             signupForm.classList.add('hidden');
             document.getElementById('switchText').innerHTML = `Don't have an account? <span id="switchBtn">Sign Up</span>`;
-            document.getElementById('googleBtnText').innerText = 'Continue with Google';
+            document.querySelector('.google-btn-text').innerText = 'Sign in with Google';
             document.getElementById('switchBtn').onclick = () => setMode('signup');
         } else {
-            modeToggle.classList.add('signup-mode');
             signupModeBtn.classList.add('active');
             signinModeBtn.classList.remove('active');
             signupForm.classList.remove('hidden');
             signinForm.classList.add('hidden');
             document.getElementById('switchText').innerHTML = `Already have an account? <span id="switchBtn">Sign In</span>`;
-            document.getElementById('googleBtnText').innerText = 'Sign up with Google';
+            document.querySelector('.google-btn-text').innerText = 'Sign up with Google';
             document.getElementById('switchBtn').onclick = () => setMode('signin');
         }
         hideMessages();
@@ -674,8 +467,6 @@
         const el = document.getElementById('errorMessage');
         el.textContent = msg;
         el.style.display = 'block';
-        document.querySelector('.auth-card').classList.add('shake');
-        setTimeout(() => document.querySelector('.auth-card').classList.remove('shake'), 400);
         setTimeout(() => el.style.display = 'none', 4000);
     }
 
@@ -703,9 +494,9 @@
         const password = document.getElementById('signupPassword').value;
         const confirm = document.getElementById('signupConfirmPassword').value;
 
-        if (!email || !password || !confirm) return showError('Please fill in all fields');
+        if (!email || !password || !confirm) return showError('Fill all fields');
         if (password !== confirm) return showError('Passwords do not match');
-        if (password.length < 6) return showError('Password must be at least 6 characters');
+        if (password.length < 6) return showError('Password must be 6+ characters');
 
         const users = getUsers();
         if (users.find(u => u.email === email)) return showError('Email already registered');
@@ -721,8 +512,8 @@
         users.push(newUser);
         saveUsers(users);
         saveCurrentUser({ id: newUser.id, email: newUser.email, name: newUser.name, picture: newUser.picture });
-        showSuccess('Account created successfully! Redirecting...');
-        setTimeout(() => window.location.href = 'index.html', 1500);
+        showSuccess('Account created! Redirecting to dashboard...');
+        setTimeout(() => window.location.href = 'dashboard.html', 1500);
     };
 
     // Sign In
@@ -731,18 +522,18 @@
         const email = document.getElementById('signinEmail').value.trim();
         const password = document.getElementById('signinPassword').value;
 
-        if (!email || !password) return showError('Please enter email and password');
+        if (!email || !password) return showError('Enter email and password');
 
         const users = getUsers();
         const user = users.find(u => u.email === email && u.password === btoa(password));
         if (!user) return showError('Invalid email or password');
 
         saveCurrentUser({ id: user.id, email: user.email, name: user.name, picture: user.picture });
-        showSuccess('Signed in successfully! Redirecting...');
-        setTimeout(() => window.location.href = 'index.html', 1500);
+        showSuccess('Signed in! Redirecting to dashboard...');
+        setTimeout(() => window.location.href = 'dashboard.html', 1500);
     };
 
-    // Google Sign In
+    // Google Sign In - Redirect to Dashboard
     function handleGoogleCredentialResponse(response) {
         try {
             const data = JSON.parse(atob(response.credential.split('.')[1]));
@@ -759,8 +550,8 @@
                 saveUsers(users);
             }
             saveCurrentUser({ id: data.sub, email: data.email, name: data.name, picture: data.picture });
-            showSuccess('Google sign in successful! Redirecting...');
-            setTimeout(() => window.location.href = 'index.html', 1500);
+            showSuccess('Google sign in successful! Redirecting to dashboard...');
+            setTimeout(() => window.location.href = 'dashboard.html', 1500);
         } catch (e) { showError('Google sign in failed'); }
     }
 
@@ -788,7 +579,7 @@
     script.onload = initGoogle;
     document.head.appendChild(script);
 
-    if (localStorage.getItem('cryptotax_current_user')) window.location.href = 'index.html';
+    if (localStorage.getItem('cryptotax_current_user')) window.location.href = 'dashboard.html';
     setMode('signin');
 </script>
 </body>
