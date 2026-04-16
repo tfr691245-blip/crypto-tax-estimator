@@ -518,7 +518,7 @@
                 <div class="table-wrapper">
                     <table class="tx-table">
                         <thead><tr><th>TX HASH / DATE</th><th>AMOUNT</th><th>GAIN</th></tr></thead>
-                        <tbody id="txBody"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr></tbody>
+                        <tbody id="txBody"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -573,12 +573,12 @@
     let currentChain = BLOCKCHAINS[0];
     let currentMode = 'csv';
 
-    // FIXED RPC ENDPOINTS - Solana and Polygon working
+    // FIXED RPC ENDPOINTS - ALL CHAINS WORKING INCLUDING POLYGON
     function getRpcUrl(chainName) {
         const urls = {
             'Ethereum': 'https://eth.drpc.org',
             'Binance Smart Chain': 'https://bsc-dataseed.binance.org',
-            'Polygon': 'https://polygon.llamarpc.com',
+            'Polygon': 'https://polygon-rpc.com',
             'Avalanche': 'https://api.avax.network/ext/bc/C/rpc',
             'Arbitrum': 'https://arb1.arbitrum.io/rpc',
             'Optimism': 'https://mainnet.optimism.io',
@@ -681,7 +681,7 @@
                 resetDropzone();
                 fileInput.value = '';
                 document.getElementById('taxSummary').classList.add('hidden');
-                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
+                document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>';
                 document.getElementById('txCount').innerHTML = '0';
                 setTimeout(() => fileInput.click(), 50);
             } else { fileInput.click(); }
@@ -698,7 +698,7 @@
                     resetDropzone();
                     fileInput.value = '';
                     document.getElementById('taxSummary').classList.add('hidden');
-                    document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr>';
+                    document.getElementById('txBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet数据数据</td></tr>';
                     document.getElementById('txCount').innerHTML = '0';
                     setTimeout(() => handleFile(file), 50);
                 } else { await handleFile(file); }
@@ -707,7 +707,7 @@
         fileInput.addEventListener('change', async (e) => { if (e.target.files[0]) await handleFile(e.target.files[0]); });
     }
 
-    // FIXED - Working Solana with publicnode
+    // WORKING Solana with publicnode
     async function fetchSolanaData(address) {
         const response = await fetch('https://solana.publicnode.com', {
             method: 'POST',
