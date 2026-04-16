@@ -2,121 +2,288 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>CryptoTax | Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: radial-gradient(ellipse at top, #0f172a 0%, #1e1b4b 50%, #0a0a1a 100%); background-attachment: fixed; }
-        .glass-card { background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(20px); border-radius: 32px; border: 1px solid rgba(139, 92, 246, 0.15); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1); }
-        .glass-card:hover { border-color: rgba(139, 92, 246, 0.3); box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4); }
-        .btn-premium { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 60px; padding: 14px 32px; font-weight: 600; color: white; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25); display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4); background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); }
-        .gradient-text { background: linear-gradient(135deg, #c4b5fd, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeInUp 0.5s ease-out; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', 'Space Grotesk', sans-serif;
+            background: #0A0C15;
+            color: #E8EDF5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body.light {
+            background: #F5F7FF;
+            color: #1A1F36;
+        }
+
+        .bg-orb {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: #0A0C15;
+        }
+
+        body.light .bg-orb { background: #F5F7FF; }
+
+        .bg-orb::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(247, 147, 26, 0.12), transparent 70%);
+            filter: blur(80px);
+            animation: float 12s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(5%, 5%) scale(1.1); opacity: 0.8; }
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 16px 24px;
+            background: rgba(13, 15, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(247, 147, 26, 0.2);
+        }
+
+        body.light .navbar { background: rgba(255, 255, 255, 0.8); }
+
+        @media (min-width: 768px) { .navbar { flex-direction: row; justify-content: space-between; text-align: left; } }
+
+        .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, #F7931A, #FF6B00); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .logo-text h1 { font-size: 24px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FF6B00); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo-text p { font-size: 11px; color: #F7931A; }
+
+        .nav-right { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
+        @media (min-width: 768px) { .nav-right { margin-top: 0; } }
+
+        .nav-links { display: flex; gap: 12px; }
+        .nav-link {
+            color: #8E94B3;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover { background: rgba(247, 147, 26, 0.1); color: #F7931A; }
+        .nav-link.active { background: linear-gradient(135deg, #F7931A, #FF6B00); color: #05070A; }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(247, 147, 26, 0.1);
+            padding: 5px 15px 5px 8px;
+            border-radius: 60px;
+        }
+        .user-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #F7931A; }
+        .user-name { font-size: 13px; font-weight: 600; color: #F7931A; }
+        .logout-btn { background: transparent; border: 1px solid rgba(247, 147, 26, 0.3); color: #F7931A; padding: 5px 12px; border-radius: 40px; cursor: pointer; }
+
+        .theme-toggle {
+            background: rgba(5, 7, 10, 0.5);
+            border: 1px solid #2A2F4F;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .stat-card {
+            background: rgba(13, 15, 23, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 28px 20px;
+            text-align: center;
+            border: 1px solid rgba(247, 147, 26, 0.15);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: rgba(247, 147, 26, 0.4); }
+        .stat-number { font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .stat-label { font-size: 13px; color: #8E94B3; margin-top: 8px; }
+
+        /* Welcome Card */
+        .welcome-card {
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.1), rgba(255, 107, 0, 0.05));
+            border-radius: 32px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(247, 147, 26, 0.2);
+            text-align: center;
+        }
+        .welcome-card h1 { font-size: 28px; margin-bottom: 12px; }
+        .welcome-card p { color: #8E94B3; }
+
+        /* Recent Activity */
+        .activity-card {
+            background: rgba(13, 15, 23, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid rgba(247, 147, 26, 0.15);
+        }
+        .activity-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #F7931A; }
+        .activity-list { list-style: none; }
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(247, 147, 26, 0.1);
+        }
+        .activity-icon { width: 40px; height: 40px; background: rgba(247, 147, 26, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .activity-detail { flex: 1; }
+        .activity-name { font-weight: 600; }
+        .activity-time { font-size: 11px; color: #6C729B; }
+
+        .footer {
+            margin-top: 40px;
+            padding: 20px 24px;
+            background: rgba(13, 15, 23, 0.5);
+            border-radius: 24px;
+            border: 1px solid rgba(247, 147, 26, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-social { display: flex; gap: 20px; }
+        .footer-social a { color: #6C729B; font-size: 18px; transition: all 0.3s ease; }
+        .footer-social a:hover { color: #F7931A; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen text-white">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-2xl border-b border-white/5">
-        <div class="container mx-auto px-5 sm:px-8 py-4">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center"><span class="text-lg">💰</span></div>
-                    <span class="text-white font-bold text-xl tracking-tight">CryptoTax</span>
-                    <span class="hidden sm:inline-flex text-xs bg-white/5 text-purple-300 px-2 py-1 rounded-full ml-2 border border-white/10">v2.0</span>
-                </div>
-                <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="index.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Home</a>
-                    <a href="dashboard.html" class="text-white text-sm transition px-3 py-1.5 rounded-xl bg-purple-600/20">Dashboard</a>
-                    <a href="tax-estimator.html" class="text-gray-400 hover:text-white text-sm transition px-3 py-1.5 rounded-xl hover:bg-white/5">Estimator</a>
-                    <a href="airdrop-claim.html" class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold shadow-lg">Claim</a>
-                </div>
-            </div>
+<body>
+<div class="bg-orb"></div>
+<div class="container">
+    <div class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="logo-text"><h1>CRYPTOTAX</h1><p>ENTERPRISE GRADE</p></div>
         </div>
-    </nav>
-
-    <div class="container mx-auto px-5 sm:px-8 pt-28 sm:pt-32 pb-16">
-        <div class="max-w-4xl mx-auto text-center fade-in">
-            <div class="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur rounded-full px-4 py-1.5 mb-6 border border-purple-500/20">
-                <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                <span class="text-purple-300 text-xs font-medium">MFC Token Balance</span>
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tax-estimator.html" class="nav-link">Estimator</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
             </div>
-            <h1 class="text-5xl font-bold mb-3 tracking-tight">Dashboard</h1>
-            <p class="text-gray-400 text-lg mb-8">View your MFC token balance on Polygon Amoy</p>
-        </div>
-        <div class="max-w-md mx-auto fade-in">
-            <div class="glass-card p-8">
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl flex items-center justify-center text-4xl mb-5">💜</div>
-                    <h2 class="text-2xl font-bold mb-2">MFC Token</h2>
-                    <p class="text-gray-400 text-sm mb-6">Polygon Amoy Network</p>
-                    <div id="walletStatus" class="w-full"><button id="connectBtn" class="btn-premium w-full">Connect MetaMask</button></div>
-                    <div id="walletInfo" class="hidden w-full mt-6">
-                        <div class="bg-white/5 rounded-2xl p-6">
-                            <p class="text-gray-400 text-sm">Connected Wallet</p>
-                            <p id="walletAddress" class="text-white font-mono text-sm break-all mt-1"></p>
-                            <div class="mt-4 pt-4 border-t border-white/10">
-                                <p class="text-gray-400 text-sm">MFC Balance</p>
-                                <p id="tokenBalance" class="text-4xl font-bold gradient-text mt-1">0 MFC</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="userInfo" class="user-info">
+                <img id="userAvatar" class="user-avatar" src="" alt="">
+                <span id="userName" class="user-name"></span>
+                <button id="logoutBtn" class="logout-btn">Exit</button>
             </div>
+            <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></div>
         </div>
     </div>
 
-    <div class="container mx-auto px-5 sm:px-8 pb-8">
-        <div class="max-w-5xl mx-auto">
-            <div class="border-t border-white/10 pt-8">
-                <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 mb-4">
-                    <div class="flex items-center justify-center gap-2 mb-3"><span class="text-amber-400 text-lg">⚖️</span><p class="text-amber-300 text-sm font-semibold">Tax Disclaimer</p></div>
-                    <p class="text-gray-400 text-xs leading-relaxed text-center">CryptoTax provides <strong class="text-purple-300">capital gains calculations</strong> using the FIFO (First-In, First-Out) method, a globally recognized accounting standard accepted by tax authorities worldwide.</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 text-left text-xs text-gray-500 max-w-md mx-auto">
-                        <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Calculates net gain/loss from your transactions</span></div>
-                        <div class="flex items-start gap-2"><span class="text-green-400">✓</span><span>Uses IRS-approved FIFO methodology</span></div>
-                        <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT calculate country-specific tax rates</span></div>
-                        <div class="flex items-start gap-2"><span class="text-red-400">✗</span><span>Does NOT file taxes or provide legal advice</span></div>
-                    </div>
-                    <p class="text-gray-500 text-xs mt-3 pt-3 border-t border-white/5 text-center">Tax laws vary by jurisdiction. <strong class="text-amber-300">Consult a qualified tax professional</strong> in your country for accurate filing requirements.</p>
-                </div>
-                <p class="text-gray-600 text-xs text-center">© 2026 CryptoTax | FIFO Method | Real On-Chain Data</p>
-            </div>
+    <div class="welcome-card" id="welcomeCard">
+        <h1>Welcome back, <span id="welcomeName">User</span>! 👋</h1>
+        <p>Track your crypto tax activity and portfolio performance</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" id="totalTx">0</div><div class="stat-label">Total Transactions</div></div>
+        <div class="stat-card"><div class="stat-number" id="totalGainDash">$0</div><div class="stat-label">Total Gain</div></div>
+        <div class="stat-card"><div class="stat-number" id="totalLossDash">$0</div><div class="stat-label">Total Loss</div></div>
+        <div class="stat-card"><div class="stat-number" id="netGainDash">$0</div><div class="stat-label">Net Gain</div></div>
+    </div>
+
+    <div class="activity-card">
+        <div class="activity-title">📋 Recent Activity</div>
+        <div class="activity-list" id="activityList">
+            <div class="activity-item"><div class="activity-icon"><i class="fas fa-chart-line"></i></div><div class="activity-detail"><div class="activity-name">No recent activity</div><div class="activity-time">-</div></div></div>
         </div>
     </div>
 
-    <script>
-        const TOKEN_CONTRACT = '0xe7C74768e9AdF945C920967e334FFF40167A126F';
-        const RPC_URL = 'https://lb.drpc.live/polygon-amoy/AlKOOugi5EgeoaJxUsJsaFsKxwDeMRwR8aGVGrar0DFx';
-        const tokenABI = ['function balanceOf(address owner) view returns (uint256)', 'function decimals() view returns (uint8)'];
-        let provider = new ethers.JsonRpcProvider(RPC_URL);
-        let tokenContract = new ethers.Contract(TOKEN_CONTRACT, tokenABI, provider);
-        
-        async function fetchMFCBalance(address) {
-            try {
-                const balanceRaw = await tokenContract.balanceOf(address);
-                const decimals = await tokenContract.decimals();
-                const balance = ethers.formatUnits(balanceRaw, decimals);
-                return parseFloat(balance);
-            } catch (err) { console.error(err); return null; }
-        }
-        
-        document.getElementById('connectBtn').onclick = async () => {
-            if (!window.ethereum) { alert('Please install MetaMask!'); return; }
-            try {
-                const metamaskProvider = new ethers.BrowserProvider(window.ethereum);
-                const signer = await metamaskProvider.getSigner();
-                const address = await signer.getAddress();
-                const balance = await fetchMFCBalance(address);
-                document.getElementById('walletAddress').innerText = address;
-                document.getElementById('tokenBalance').innerHTML = `${balance.toLocaleString()} MFC`;
-                document.getElementById('walletStatus').classList.add('hidden');
-                document.getElementById('walletInfo').classList.remove('hidden');
-            } catch (err) { alert('Connection failed: ' + err.message); }
-        };
-    </script>
+    <div class="footer">
+        <span><i class="fas fa-shield-alt"></i> Secure • FIFO • Real-time</span>
+        <div class="footer-social"><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-github"></i></a><a href="#"><i class="fab fa-discord"></i></a></div>
+        <span>© 2026 CryptoTax</span>
+    </div>
+</div>
+
+<script>
+    const themeToggle = document.getElementById('themeToggle');
+    const icon = themeToggle.querySelector('i');
+    function setTheme(theme) {
+        if (theme === 'light') { document.body.classList.add('light'); icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); localStorage.setItem('theme', 'light');
+        } else { document.body.classList.remove('light'); icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); localStorage.setItem('theme', 'dark'); }
+    }
+    const savedTheme = localStorage.getItem('theme');
+    savedTheme === 'light' ? setTheme('light') : setTheme('dark');
+    themeToggle.addEventListener('click', () => document.body.classList.contains('light') ? setTheme('dark') : setTheme('light'));
+
+    // Get current user
+    const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
+    if (!currentUser) { window.location.href = 'auth.html'; }
+
+    document.getElementById('welcomeName').innerText = currentUser.name || currentUser.email.split('@')[0];
+    document.getElementById('userName').innerText = currentUser.name || currentUser.email.split('@')[0];
+    document.getElementById('userAvatar').src = currentUser.picture || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${currentUser.email}`;
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('cryptotax_current_user');
+        window.location.href = 'index.html';
+    });
+
+    // Load dashboard data from localStorage
+    const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || { totalTx: 0, totalGain: 0, totalLoss: 0, netGain: 0, recent: [] };
+    document.getElementById('totalTx').innerText = txData.totalTx || 0;
+    document.getElementById('totalGainDash').innerHTML = `$${txData.totalGain || 0}`;
+    document.getElementById('totalLossDash').innerHTML = `$${txData.totalLoss || 0}`;
+    document.getElementById('netGainDash').innerHTML = `$${txData.netGain || 0}`;
+
+    const activityList = document.getElementById('activityList');
+    if (txData.recent && txData.recent.length > 0) {
+        activityList.innerHTML = txData.recent.slice(0, 5).map(item => `
+            <div class="activity-item">
+                <div class="activity-icon"><i class="fas fa-file-csv"></i></div>
+                <div class="activity-detail">
+                    <div class="activity-name">${item.name || 'CSV Upload'}</div>
+                    <div class="activity-time">${item.date || new Date().toLocaleString()}</div>
+                </div>
+                <div style="color: #F7931A;">${item.netGain ? `+$${item.netGain}` : ''}</div>
+            </div>
+        `).join('');
+    }
+</script>
 </body>
 </html>
