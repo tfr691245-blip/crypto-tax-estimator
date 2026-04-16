@@ -6,7 +6,6 @@
     <title>CryptoTax | Authentication Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         * { -webkit-tap-highlight-color: transparent; }
@@ -188,11 +187,6 @@
             transition: all 0.4s ease;
         }
 
-        .auth-card:hover {
-            border-color: rgba(247, 147, 26, 0.45);
-            box-shadow: 0 40px 80px -20px rgba(247, 147, 26, 0.15);
-        }
-
         @media (max-width: 550px) {
             .auth-card { padding: 32px 24px; border-radius: 36px; }
             .top-bar { padding: 16px 20px; }
@@ -311,10 +305,6 @@
             cursor: pointer;
         }
 
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-
         .submit-btn {
             width: 100%;
             padding: 16px;
@@ -404,10 +394,6 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
-        }
-
-        .switch-mode span:hover {
-            text-decoration: underline;
         }
 
         /* Messages */
@@ -536,12 +522,6 @@
 </div>
 
 <script>
-    // Supabase Configuration
-    const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
-    
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     // ============ THEME TOGGLE ============
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
@@ -617,14 +597,14 @@
         const el = document.getElementById('errorMessage');
         el.textContent = msg;
         el.style.display = 'block';
-        setTimeout(() => el.style.display = 'none', 5000);
+        setTimeout(() => el.style.display = 'none', 4000);
     }
 
     function showSuccess(msg) {
         const el = document.getElementById('successMessage');
         el.textContent = msg;
         el.style.display = 'block';
-        setTimeout(() => el.style.display = 'none', 5000);
+        setTimeout(() => el.style.display = 'none', 3000);
     }
 
     function hideMessages() {
@@ -632,8 +612,21 @@
         document.getElementById('successMessage').style.display = 'none';
     }
 
+    // ============ LOCAL STORAGE FUNCTIONS ============
+    function getUsers() { 
+        return JSON.parse(localStorage.getItem('cryptotax_users') || '[]'); 
+    }
+    
+    function saveUsers(users) { 
+        localStorage.setItem('cryptotax_users', JSON.stringify(users)); 
+    }
+    
+    function saveCurrentUser(user) { 
+        localStorage.setItem('cryptotax_current_user', JSON.stringify(user)); 
+    }
+
     // ============ FORGOT PASSWORD ============
-    document.getElementById('forgotPasswordLink').addEventListener('click', async (e) => {
+    document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
         
@@ -642,19 +635,26 @@
             return;
         }
         
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/reset-password.html'
-        });
+        const users = getUsers();
+        const user = users.find(u => u.email === email);
         
-        if (error) {
-            showError(error.message);
-        } else {
-            showSuccess('Password reset link sent to your email!');
+        if (!user) {
+            showError('No account found with this email');
+            return;
         }
+        
+        // Generate random reset token
+        const resetToken = Math.random().toString(36).substring(2, 15);
+        user.resetToken = resetToken;
+        user.resetExpiry = Date.now() + 3600000; // 1 hour
+        saveUsers(users);
+        
+        showSuccess(`Password reset link sent to ${email}. Check console for demo link.`);
+        console.log(`Reset link: ${window.location.origin}/reset-password.html?token=${resetToken}&email=${email}`);
     });
 
     // ============ SIGN UP ============
-    signupForm.onsubmit = async (e) => {
+    signupForm.onsubmit = (e) => {
         e.preventDefault();
         
         const email = document.getElementById('signupEmail').value.trim();
@@ -665,27 +665,44 @@
         if (password !== confirm) return showError('Passwords do not match');
         if (password.length < 6) return showError('Password must be at least 6 characters');
 
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                emailRedirectTo: window.location.origin + '/dashboard.html'
-            }
-        });
-
-        if (error) {
-            showError(error.message);
-        } else {
-            showSuccess('Check your email for confirmation link! Please verify your email.');
-            document.getElementById('signupEmail').value = '';
-            document.getElementById('signupPassword').value = '';
-            document.getElementById('signupConfirmPassword').value = '';
-            setTimeout(() => setMode('signin'), 3000);
+        const users = getUsers();
+        if (users.find(u => u.email === email)) {
+            return showError('Email already registered. Please sign in.');
         }
+
+        const newUser = {
+            id: Date.now().toString(),
+            email: email,
+            password: btoa(password),
+            name: email.split('@')[0],
+            picture: `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}`,
+            createdAt: new Date().toISOString(),
+            confirmed: false
+        };
+        
+        users.push(newUser);
+        saveUsers(users);
+        
+        // Send confirmation email simulation
+        showSuccess(`Account created! Please check ${email} for confirmation link. (Demo: Click OK to auto-confirm)`);
+        
+        // Auto-confirm for demo
+        newUser.confirmed = true;
+        saveUsers(users);
+        saveCurrentUser({ id: newUser.id, email: newUser.email, name: newUser.name, picture: newUser.picture });
+        
+        setTimeout(() => {
+            showSuccess('Email confirmed! Redirecting to dashboard...');
+            setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        }, 2000);
+        
+        document.getElementById('signupEmail').value = '';
+        document.getElementById('signupPassword').value = '';
+        document.getElementById('signupConfirmPassword').value = '';
     };
 
     // ============ SIGN IN ============
-    signinForm.onsubmit = async (e) => {
+    signinForm.onsubmit = (e) => {
         e.preventDefault();
         
         const email = document.getElementById('signinEmail').value.trim();
@@ -693,68 +710,61 @@
 
         if (!email || !password) return showError('Please enter email and password');
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-
-        if (error) {
-            if (error.message.includes('Email not confirmed')) {
-                showError('Please confirm your email first. Check your inbox!');
-            } else {
-                showError(error.message);
-            }
+        const users = getUsers();
+        const user = users.find(u => u.email === email && u.password === btoa(password));
+        
+        if (!user) {
+            return showError('Invalid email or password');
+        }
+        
+        if (!user.confirmed) {
+            showError('Please confirm your email first. Check your inbox!');
             return;
         }
 
-        if (data.user) {
-            const user = {
-                id: data.user.id,
-                email: data.user.email,
-                name: data.user.user_metadata?.full_name || email.split('@')[0],
-                picture: data.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}`
-            };
-            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
-            showSuccess('Signed in! Redirecting to dashboard...');
-            setTimeout(() => window.location.href = 'dashboard.html', 1500);
-        }
+        saveCurrentUser({ id: user.id, email: user.email, name: user.name, picture: user.picture });
+        showSuccess('Signed in! Redirecting to dashboard...');
+        setTimeout(() => window.location.href = 'dashboard.html', 1500);
     };
 
     // ============ GOOGLE SIGN IN ============
     const googleBtn = document.getElementById('googleSignInBtn');
     
-    googleBtn.addEventListener('click', async (e) => {
+    googleBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        try {
-            const { data, error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.origin + '/dashboard.html'
-                }
-            });
-            
-            if (error) throw error;
-        } catch (error) {
-            showError('Google sign in failed: ' + error.message);
+        
+        // Demo Google sign in - creates a demo user
+        const demoEmail = `user_${Math.random().toString(36).substring(2, 8)}@gmail.com`;
+        const demoName = demoEmail.split('@')[0];
+        
+        const users = getUsers();
+        let user = users.find(u => u.googleId === 'demo_google_user');
+        
+        if (!user) {
+            user = {
+                id: Date.now().toString(),
+                email: demoEmail,
+                name: demoName,
+                picture: `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${demoName}`,
+                googleId: 'demo_google_user',
+                confirmed: true,
+                createdAt: new Date().toISOString()
+            };
+            users.push(user);
+            saveUsers(users);
         }
+        
+        saveCurrentUser({ id: user.id, email: user.email, name: user.name, picture: user.picture });
+        showSuccess('Google sign in successful! Redirecting to dashboard...');
+        setTimeout(() => window.location.href = 'dashboard.html', 1500);
     });
 
-    // ============ CHECK EXISTING SESSION ============
-    const checkSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            const user = {
-                id: session.user.id,
-                email: session.user.email,
-                name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
-                picture: session.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${session.user.email.split('@')[0]}`
-            };
-            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
-            window.location.href = 'dashboard.html';
-        }
-    };
+    // ============ CHECK EXISTING USER ============
+    const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
+    if (currentUser) {
+        window.location.href = 'dashboard.html';
+    }
     
-    checkSession();
     setMode('signin');
 </script>
 </body>
