@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CryptoTax | Sign In / Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', 'Space Grotesk', sans-serif;
+            background: #0A0C15;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(247, 147, 26, 0.15), transparent 70%);
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .bg-animation .circle:nth-child(1) { width: 300px; height: 300px; top: -100px; left: -100px; animation-delay: 0s; }
+        .bg-animation .circle:nth-child(2) { width: 500px; height: 500px; bottom: -200px; right: -200px; animation-delay: -5s; }
+        .bg-animation .circle:nth-child(3) { width: 200px; height: 200px; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
+        .bg-animation .circle:nth-child(4) { width: 150px; height: 150px; top: 20%; right: 10%; animation-delay: -3s; }
+        .bg-animation .circle:nth-child(5) { width: 250px; height: 250px; bottom: 10%; left: 5%; animation-delay: -7s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(20px, -20px) scale(1.1); opacity: 0.8; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .auth-card {
+            background: rgba(13, 15, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            border: 1px solid rgba(247, 147, 26, 0.2);
+            padding: 40px 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .auth-card:hover {
+            border-color: rgba(247, 147, 26, 0.4);
+            box-shadow: 0 30px 60px -12px rgba(247, 147, 26, 0.15);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 25px rgba(247, 147, 26, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon:hover { transform: scale(1.05); }
+        .logo h2 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo p { font-size: 12px; color: #8E94B3; margin-top: 4px; }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            gap: 12px;
+            background: rgba(5, 7, 10, 0.5);
+            padding: 6px;
+            border-radius: 60px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(247, 147, 26, 0.1);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: #6C729B;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            text-align: center;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
+            color: #05070A;
+            box-shadow: 0 2px 8px rgba(247, 147, 26, 0.3);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(5, 7, 10, 0.6);
+            border: 1px solid rgba(247, 147, 26, 0.2);
+            border-radius: 20px;
+            font-size: 14px;
+            color: #E8EDF5;
+            font-family: 'Space Grotesk', monospace;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #F7931A;
+            box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group input::placeholder { color: #4A5568; }
+
+        .form-group i {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #F7931A;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-group i:hover { opacity: 0.7; }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
+            border: none;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #05070A;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            margin-top: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover::before { left: 100%; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(247, 147, 26, 0.3); }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 24px 0;
+            color: #6C729B;
+            font-size: 12px;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(247, 147, 26, 0.2);
+        }
+
+        .divider span { margin: 0 16px; }
+
+        /* Google Button */
+        .google-btn {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(247, 147, 26, 0.2);
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #E8EDF5;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .google-btn i { font-size: 20px; }
+        .google-btn:hover {
+            background: rgba(247, 147, 26, 0.1);
+            border-color: #F7931A;
+            transform: translateY(-2px);
+        }
+
+        /* Switch Mode Link */
+        .switch-mode {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+            color: #6C729B;
+        }
+
+        .switch-mode span {
+            color: #F7931A;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .switch-mode span:hover { text-decoration: underline; }
+
+        /* Messages */
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border-left: 3px solid #FF4444;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #FF6B6B;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 3px solid #4CAF50;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #4CAF50;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .hidden { display: none; }
+
+        @media (max-width: 480px) {
+            .auth-card { padding: 32px 24px; }
+            .mode-btn { padding: 10px 16px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-animation">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+</div>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+            <h2>CRYPTOTAX</h2>
+            <p>Enterprise Crypto Tax Platform</p>
+        </div>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="signinModeBtn">🔐 Sign In</button>
+            <button class="mode-btn" id="signupModeBtn">📝 Sign Up</button>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <!-- Sign In Form -->
+        <form id="signinForm">
+            <div class="form-group">
+                <input type="email" id="signinEmail" placeholder="Email Address" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="form-group">
+                <input type="password" id="signinPassword" placeholder="Password" required>
+                <i class="fas fa-eye" onclick="togglePassword('signinPassword', this)"></i>
+            </div>
+            <button type="submit" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signupForm" class="hidden">
+            <div class="form-group">
+                <input type="email" id="signupEmail" placeholder="Email Address" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="form-group">
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <i class="fas fa-eye" onclick="togglePassword('signupPassword', this)"></i>
+            </div>
+            <div class="form-group">
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <button type="submit" class="submit-btn">Create Account <i class="fas fa-user-plus"></i></button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider"><span>OR CONTINUE WITH</span></div>
+
+        <!-- Google Sign In Button -->
+        <div id="googleSignInBtn"></div>
+
+        <div class="switch-mode">
+            <span id="switchText">Don't have an account? <span id="switchBtn">Sign up</span></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Toggle between Sign In & Sign Up
+    const signinModeBtn = document.getElementById('signinModeBtn');
+    const signupModeBtn = document.getElementById('signupModeBtn');
+    const signinForm = document.getElementById('signinForm');
+    const signupForm = document.getElementById('signupForm');
+    const switchBtn = document.getElementById('switchBtn');
+    const switchText = document.getElementById('switchText');
+
+    function setMode(mode) {
+        if (mode === 'signin') {
+            signinModeBtn.classList.add('active');
+            signupModeBtn.classList.remove('active');
+            signinForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            switchText.innerHTML = `Don't have an account? <span id="switchBtn">Sign up</span>`;
+            document.getElementById('switchBtn').addEventListener('click', () => setMode('signup'));
+        } else {
+            signupModeBtn.classList.add('active');
+            signinModeBtn.classList.remove('active');
+            signupForm.classList.remove('hidden');
+            signinForm.classList.add('hidden');
+            switchText.innerHTML = `Already have an account? <span id="switchBtn">Sign in</span>`;
+            document.getElementById('switchBtn').addEventListener('click', () => setMode('signin'));
+        }
+        hideMessages();
+    }
+
+    signinModeBtn.addEventListener('click', () => setMode('signin'));
+    signupModeBtn.addEventListener('click', () => setMode('signup'));
+    if (switchBtn) switchBtn.addEventListener('click', () => setMode('signup'));
+
+    function showError(message) {
+        const errorDiv = document.getElementById('errorMessage');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        setTimeout(() => { errorDiv.style.display = 'none'; }, 4000);
+    }
+
+    function showSuccess(message) {
+        const successDiv = document.getElementById('successMessage');
+        successDiv.textContent = message;
+        successDiv.style.display = 'block';
+        setTimeout(() => { successDiv.style.display = 'none'; }, 3000);
+    }
+
+    function hideMessages() {
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'none';
+    }
+
+    function togglePassword(fieldId, iconElement) {
+        const field = document.getElementById(fieldId);
+        if (field.type === 'password') {
+            field.type = 'text';
+            iconElement.classList.remove('fa-eye');
+            iconElement.classList.add('fa-eye-slash');
+        } else {
+            field.type = 'password';
+            iconElement.classList.remove('fa-eye-slash');
+            iconElement.classList.add('fa-eye');
+        }
+    }
+
+    // Local Storage User Management
+    function getUsers() {
+        const users = localStorage.getItem('cryptotax_users');
+        return users ? JSON.parse(users) : [];
+    }
+
+    function saveUsers(users) {
+        localStorage.setItem('cryptotax_users', JSON.stringify(users));
+    }
+
+    function saveCurrentUser(user) {
+        localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+    }
+
+    // Sign Up
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+        if (!email || !password || !confirmPassword) {
+            showError('Please fill in all fields');
+            return;
+        }
+        if (password !== confirmPassword) {
+            showError('Passwords do not match');
+            return;
+        }
+        if (password.length < 6) {
+            showError('Password must be at least 6 characters');
+            return;
+        }
+
+        const users = getUsers();
+        if (users.find(u => u.email === email)) {
+            showError('Email already registered. Please sign in.');
+            return;
+        }
+
+        const newUser = {
+            id: Date.now().toString(),
+            email: email,
+            password: btoa(password),
+            name: email.split('@')[0],
+            picture: `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}`,
+            createdAt: new Date().toISOString()
+        };
+
+        users.push(newUser);
+        saveUsers(users);
+        saveCurrentUser({ id: newUser.id, email: newUser.email, name: newUser.name, picture: newUser.picture });
+
+        showSuccess('Account created successfully! Redirecting...');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+    });
+
+    // Sign In
+    signinForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('signinEmail').value.trim();
+        const password = document.getElementById('signinPassword').value;
+
+        if (!email || !password) {
+            showError('Please enter email and password');
+            return;
+        }
+
+        const users = getUsers();
+        const user = users.find(u => u.email === email && u.password === btoa(password));
+
+        if (!user) {
+            showError('Invalid email or password');
+            return;
+        }
+
+        saveCurrentUser({ id: user.id, email: user.email, name: user.name, picture: user.picture });
+        showSuccess('Sign in successful! Redirecting...');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+    });
+
+    // Google Sign In
+    function handleGoogleCredentialResponse(response) {
+        try {
+            const data = JSON.parse(atob(response.credential.split('.')[1]));
+            const user = { id: data.sub, email: data.email, name: data.name, picture: data.picture, googleLogin: true };
+            
+            const users = getUsers();
+            if (!users.find(u => u.email === data.email)) {
+                users.push({ id: data.sub, email: data.email, name: data.name, picture: data.picture, googleLogin: true, createdAt: new Date().toISOString() });
+                saveUsers(users);
+            }
+            saveCurrentUser(user);
+            showSuccess('Google sign in successful! Redirecting...');
+            setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+        } catch (error) {
+            showError('Google sign in failed. Please try again.');
+        }
+    }
+
+    // Initialize Google Sign In
+    function initializeGoogleSignIn() {
+        if (typeof google !== 'undefined') {
+            google.accounts.id.initialize({
+                client_id: '39831574357-244ods19sr6ffqqcj0epkc6r8e6pucb3.apps.googleusercontent.com',
+                callback: handleGoogleCredentialResponse,
+                auto_select: false,
+                cancel_on_tap_outside: true
+            });
+            google.accounts.id.renderButton(
+                document.getElementById('googleSignInBtn'),
+                { type: 'standard', theme: 'outline', size: 'large', text: 'continue_with', shape: 'rectangular', logo_alignment: 'left', width: '400' }
+            );
+        }
+    }
+
+    const googleScript = document.createElement('script');
+    googleScript.src = 'https://accounts.google.com/gsi/client';
+    googleScript.async = true;
+    googleScript.defer = true;
+    googleScript.onload = initializeGoogleSignIn;
+    document.head.appendChild(googleScript);
+
+    // Check if already logged in
+    if (localStorage.getItem('cryptotax_current_user')) {
+        window.location.href = 'index.html';
+    }
+</script>
+</body>
+</html>
