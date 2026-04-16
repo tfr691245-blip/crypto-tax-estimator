@@ -65,29 +65,6 @@
             to { transform: rotate(0deg); }
         }
 
-        /* Floating Particles */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            background: rgba(247, 147, 26, 0.2);
-            border-radius: 50%;
-            animation: floatParticle 8s ease-in-out infinite;
-        }
-
-        @keyframes floatParticle {
-            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
-            50% { transform: translateY(-40px) translateX(20px); opacity: 0.5; }
-        }
-
         /* Main Container */
         .auth-container {
             width: 100%;
@@ -146,40 +123,22 @@
         .logo h2 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .logo p { font-size: 12px; color: #8E94B3; margin-top: 6px; }
 
-        /* Mode Toggle - Smooth Slider */
+        /* Mode Toggle - Smooth Slider like Tax Estimator */
         .mode-toggle {
             display: flex;
-            gap: 12px;
             background: rgba(5, 7, 10, 0.5);
-            padding: 6px;
+            padding: 4px;
             border-radius: 60px;
             margin-bottom: 32px;
             border: 1px solid rgba(247, 147, 26, 0.15);
             position: relative;
         }
 
-        .mode-toggle::before {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            width: calc(50% - 6px);
-            height: calc(100% - 12px);
-            background: linear-gradient(135deg, #F7931A, #FF6B00);
-            border-radius: 60px;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
-            z-index: 0;
-        }
-
-        .mode-toggle.signup-mode::before {
-            transform: translateX(100%);
-        }
-
         .mode-btn {
             flex: 1;
             padding: 12px 20px;
             border-radius: 60px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -192,7 +151,15 @@
             z-index: 1;
         }
 
-        .mode-btn.active { color: #05070A; }
+        .mode-btn.active {
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
+            color: #05070A;
+            box-shadow: 0 2px 8px rgba(247, 147, 26, 0.3);
+        }
+
+        @media (max-width: 550px) {
+            .mode-btn { padding: 10px 16px; font-size: 13px; }
+        }
 
         /* Form Styles */
         .form-group {
@@ -271,7 +238,7 @@
 
         .divider span { margin: 0 16px; }
 
-        /* Professional Google Button with G Icon */
+        /* Professional Google Button with G Icon + Text */
         .google-btn {
             width: 100%;
             padding: 14px 20px;
@@ -288,14 +255,18 @@
         }
 
         .google-icon {
-            width: 22px;
-            height: 22px;
-            background: conic-gradient(from -45deg, #EA4335 110deg, #4285F4 90deg 210deg, #34A853 210deg 290deg, #FBBC05 290deg) text;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 800;
-            font-size: 18px;
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #4285F4;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .google-text {
@@ -358,10 +329,12 @@
 
         .hidden { display: none !important; }
 
+        /* Touch-friendly for mobile */
         @media (max-width: 550px) {
-            .mode-btn { padding: 10px 16px; font-size: 13px; }
-            .submit-btn { padding: 14px; font-size: 15px; }
+            .submit-btn, .mode-btn, .google-btn { min-height: 48px; }
+            .form-group input { font-size: 16px; }
             .google-text { font-size: 14px; }
+            .google-icon { width: 22px; height: 22px; font-size: 13px; }
         }
     </style>
 </head>
@@ -370,7 +343,6 @@
     <div class="gradient-1"></div>
     <div class="gradient-2"></div>
 </div>
-<div class="particles" id="particles"></div>
 
 <div class="auth-container">
     <div class="auth-card">
@@ -382,7 +354,8 @@
             <p>Enterprise Authentication Portal</p>
         </div>
 
-        <div class="mode-toggle" id="modeToggle">
+        <!-- Mode Toggle - Smooth like Tax Estimator -->
+        <div class="mode-toggle">
             <button class="mode-btn active" id="signinModeBtn">Sign In</button>
             <button class="mode-btn" id="signupModeBtn">Sign Up</button>
         </div>
@@ -424,7 +397,7 @@
             <span>or continue with</span>
         </div>
 
-        <!-- Professional Google Button with G Icon -->
+        <!-- Professional Google Button with G Icon + Text -->
         <button id="googleSignInBtn" class="google-btn">
             <span class="google-icon">G</span>
             <span class="google-text" id="googleBtnText">Google Login</span>
@@ -437,24 +410,6 @@
 </div>
 
 <script>
-    // Create floating particles
-    function createParticles() {
-        const container = document.getElementById('particles');
-        for (let i = 0; i < 20; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            const size = Math.random() * 6 + 2;
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 8 + 's';
-            particle.style.animationDuration = (Math.random() * 6 + 5) + 's';
-            container.appendChild(particle);
-        }
-    }
-    createParticles();
-
     // Supabase Configuration
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
@@ -473,16 +428,14 @@
         }
     }
 
-    // Mode Toggle with Smooth Animation
+    // Mode Toggle
     const signinModeBtn = document.getElementById('signinModeBtn');
     const signupModeBtn = document.getElementById('signupModeBtn');
     const signinForm = document.getElementById('signinForm');
     const signupForm = document.getElementById('signupForm');
-    const modeToggle = document.getElementById('modeToggle');
 
     function setMode(mode) {
         if (mode === 'signin') {
-            modeToggle.classList.remove('signup-mode');
             signinModeBtn.classList.add('active');
             signupModeBtn.classList.remove('active');
             signinForm.classList.remove('hidden');
@@ -491,7 +444,6 @@
             document.getElementById('googleBtnText').innerText = 'Google Login';
             document.getElementById('switchBtn').onclick = () => setMode('signup');
         } else {
-            modeToggle.classList.add('signup-mode');
             signupModeBtn.classList.add('active');
             signinModeBtn.classList.remove('active');
             signupForm.classList.remove('hidden');
