@@ -518,7 +518,7 @@
                 <div class="table-wrapper">
                     <table class="tx-table">
                         <thead><tr><th>TX HASH / DATE</th><th>AMOUNT</th><th>GAIN</th></tr></thead>
-                        <tbody id="txBody"><td><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr></tbody>
+                        <tbody id="txBody"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Upload CSV or fetch wallet data</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -573,7 +573,7 @@
     let currentChain = BLOCKCHAINS[0];
     let currentMode = 'csv';
 
-    // RPC ENDPOINTS FOR OTHER CHAINS
+    // RPC ENDPOINTS
     function getRpcUrl(chainName) {
         const urls = {
             'Ethereum': 'https://eth.drpc.org',
@@ -589,7 +589,7 @@
         return urls[chainName] || 'https://eth.drpc.org';
     }
 
-    // Special function for Polygon with multiple fallback endpoints
+    // Polygon with fallback endpoints
     async function fetchPolygonData(address) {
         const endpoints = [
             'https://polygon.llamarpc.com',
@@ -602,7 +602,6 @@
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 8000);
-                
                 const response = await fetch(rpcUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -614,26 +613,18 @@
                     }),
                     signal: controller.signal
                 });
-                
                 clearTimeout(timeoutId);
-                
                 if (!response.ok) continue;
-                
                 const data = await response.json();
                 if (data.error) continue;
-                
                 const balanceWei = parseInt(data.result, 16);
                 return { balance: (balanceWei / 1e18).toFixed(8) };
-                
-            } catch (e) {
-                console.log(`Polygon RPC ${rpcUrl} failed:`, e.message);
-                continue;
-            }
+            } catch (e) { continue; }
         }
         throw new Error('All Polygon RPC endpoints failed');
     }
 
-    // Special function for Fantom with multiple fallback endpoints
+    // Fantom with fallback endpoints
     async function fetchFantomData(address) {
         const endpoints = [
             'https://rpc.ftm.tools',
@@ -647,7 +638,6 @@
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 8000);
-                
                 const response = await fetch(rpcUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -659,22 +649,13 @@
                     }),
                     signal: controller.signal
                 });
-                
                 clearTimeout(timeoutId);
-                
                 if (!response.ok) continue;
-                
                 const data = await response.json();
                 if (data.error) continue;
-                
                 const balanceWei = parseInt(data.result, 16);
-                console.log(`Fantom balance fetched from ${rpcUrl}: ${balanceWei / 1e18} FTM`);
                 return { balance: (balanceWei / 1e18).toFixed(8) };
-                
-            } catch (e) {
-                console.log(`Fantom RPC ${rpcUrl} failed:`, e.message);
-                continue;
-            }
+            } catch (e) { continue; }
         }
         throw new Error('All Fantom RPC endpoints failed');
     }
@@ -795,7 +776,7 @@
         fileInput.addEventListener('change', async (e) => { if (e.target.files[0]) await handleFile(e.target.files[0]); });
     }
 
-    // WORKING Solana
+    // WORKING API FUNCTIONS
     async function fetchSolanaData(address) {
         const response = await fetch('https://solana.publicnode.com', {
             method: 'POST',
@@ -828,24 +809,39 @@
         return { balance: (parseInt(data.result, 16) / 1e18).toFixed(8) };
     }
 
+    // MAIN FETCH FUNCTION WITH PROPER ADDRESS VALIDATION
     async function fetchWalletData() {
         const address = document.getElementById('addressInput').value.trim();
         if (!address) { alert('Please enter a wallet address'); return; }
+        
         const btn = document.getElementById('fetchBtn');
         const originalText = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<span class="loading-spinner"></span> Fetching...';
+        
         try {
             let result;
-            if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
+            
+            // Bitcoin address validation: starts with 1, 3, or bc1
+            const isBitcoinAddress = /^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$/.test(address);
+            
+            // Solana address validation: base58, 32-44 chars, no 0x prefix
+            const isSolanaAddress = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address) && !address.startsWith('0x');
+            
+            // EVM address validation: starts with 0x followed by 40 hex chars
+            const isEvmAddress = /^0x[a-fA-F0-9]{40}$/i.test(address);
+            
+            if (isBitcoinAddress) {
                 result = await fetchBitcoinData(address);
                 document.getElementById('balanceSymbol').innerHTML = 'BTC';
                 document.getElementById('addressNote').innerHTML = `📍 Bitcoin Address • Balance fetched`;
-            } else if (address.length === 44 && !address.startsWith('0x')) {
+            }
+            else if (isSolanaAddress) {
                 result = await fetchSolanaData(address);
                 document.getElementById('balanceSymbol').innerHTML = 'SOL';
                 document.getElementById('addressNote').innerHTML = `📍 Solana Address • Balance fetched`;
-            } else if (address.startsWith('0x')) {
+            }
+            else if (isEvmAddress) {
                 // Special handling for Polygon and Fantom
                 if (currentChain.name === 'Polygon') {
                     result = await fetchPolygonData(address);
@@ -856,11 +852,15 @@
                 }
                 document.getElementById('balanceSymbol').innerHTML = currentChain.symbol;
                 document.getElementById('addressNote').innerHTML = `📍 ${currentChain.name} Address • Balance fetched`;
-            } else {
-                throw new Error('Unrecognized address format');
             }
+            else {
+                throw new Error(`Invalid address format for ${currentChain.name}. Please enter a valid address.`);
+            }
+            
             let displayBalance = parseFloat(result.balance).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 8 });
             document.getElementById('balanceValue').innerHTML = displayBalance;
+            
+            // Get USD price
             try {
                 let coinId = 'bitcoin';
                 if (currentChain.name === 'Ethereum') coinId = 'ethereum';
@@ -876,12 +876,14 @@
                 else if (currentChain.name === 'Gnosis') coinId = 'gnosis';
                 else if (currentChain.name === 'Celo') coinId = 'celo';
                 else coinId = 'bitcoin';
+                
                 const priceRes = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`);
                 const priceData = await priceRes.json();
                 const price = priceData[coinId]?.usd || 0;
                 const usdValue = parseFloat(result.balance) * price;
                 document.getElementById('balanceUSD').innerHTML = `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
             } catch { document.getElementById('balanceUSD').innerHTML = `$0.00 USD`; }
+            
         } catch (error) {
             alert(`Error: ${error.message}`);
             document.getElementById('addressNote').innerHTML = `❌ ${error.message}`;
