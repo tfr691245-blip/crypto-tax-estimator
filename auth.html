@@ -119,12 +119,11 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Logic to prevent "Already Declared" error
 (function() {
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
     
-    // Check if global sb exists, otherwise create it
+    // PREVENT DUPLICATE DECLARATION - Check if already exists
     if (!window.sb) {
         window.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
