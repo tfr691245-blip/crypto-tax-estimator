@@ -571,7 +571,7 @@
         }
     });
 
-    // ============ SIGN UP WITH EMAIL CONFIRMATION ============
+    // ============ SIGN UP (WITH EMAIL CONFIRMATION - ADDED) ============
     signupForm.onsubmit = async (e) => {
         e.preventDefault();
         
@@ -587,14 +587,14 @@
             email: email,
             password: password,
             options: {
-                emailRedirectTo: 'https://elite.qzz.io/dashboard.html'
+                emailRedirectTo: 'https://elite.qzz.io/confirm.html'
             }
         });
 
         if (error) {
             showError(error.message);
         } else {
-            showSuccess('✅ Confirmation email sent! Please check your inbox and click the verification link to activate your account.');
+            showSuccess('✅ Confirmation email sent! Please check your inbox and click the verification link.');
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
             document.getElementById('signupConfirmPassword').value = '';
@@ -618,7 +618,7 @@
 
         if (error) {
             if (error.message.includes('Email not confirmed')) {
-                showError('⚠️ Please confirm your email first. Check your inbox and click the verification link we sent you.');
+                showError('⚠️ Please confirm your email first. Check your inbox for the verification link.');
             } else {
                 showError(error.message);
             }
@@ -638,7 +638,7 @@
         }
     };
 
-    // ============ GOOGLE SIGN IN ============
+    // ============ GOOGLE SIGN IN (WORKING) ============
     const googleBtn = document.getElementById('googleSignInBtn');
     
     googleBtn.addEventListener('click', async (e) => {
