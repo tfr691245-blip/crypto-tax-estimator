@@ -345,45 +345,69 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ONLY ONE SUPABASE DECLARATION - NO DUPLICATE
-const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-const themeToggle = document.getElementById('themeToggle');
-const icon = themeToggle.querySelector('i');
-
-function setTheme(theme) {
-    if (theme === 'light') {
-        document.body.classList.add('light');
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-        localStorage.setItem('theme', 'light');
-    } else {
-        document.body.classList.remove('light');
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-        localStorage.setItem('theme', 'dark');
-    }
-}
-
-const savedTheme = localStorage.getItem('theme');
-savedTheme === 'light' ? setTheme('light') : setTheme('dark');
-
-themeToggle.addEventListener('click', () => {
-    document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
-});
-
-const userInfo = document.getElementById('userInfo');
-const authBtn = document.getElementById('authBtn');
-
-async function loadUser() {
-    const { data: { user } } = await supabase.auth.getUser();
+// ============ INTENTIONAL: Handle OAuth Redirect First ============
+(async function initDashboard() {
+    const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
     
-    if (!user) {
-        window.location.href = 'auth.html';
+    // Create client only once
+    if (!window.sb) {
+        window.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+    const sb = window.sb;
+    
+    // ============ INTENTIONAL: Process OAuth Redirect Hash ============
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token')) {
+        const params = new URLSearchParams(hash.substring(1));
+        const access_token = params.get('access_token');
+        const refresh_token = params.get('refresh_token');
+        
+        if (access_token) {
+            await sb.auth.setSession({ access_token, refresh_token });
+            // Clean URL - remove hash
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }
+    
+    // ============ INTENTIONAL: Check if User is Logged In ============
+    const { data: { session } } = await sb.auth.getSession();
+    
+    if (!session) {
+        window.location.href = 'https://elite.qzz.io/auth.html';
         return;
     }
+    
+    const user = session.user;
+    
+    // ============ THEME TOGGLE ============
+    const themeToggle = document.getElementById('themeToggle');
+    const icon = themeToggle.querySelector('i');
+    
+    function setTheme(theme) {
+        if (theme === 'light') {
+            document.body.classList.add('light');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.body.classList.remove('light');
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+    
+    const savedTheme = localStorage.getItem('theme');
+    savedTheme === 'light' ? setTheme('light') : setTheme('dark');
+    
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
+    });
+    
+    // ============ DISPLAY USER INFO ============
+    const userInfo = document.getElementById('userInfo');
+    const authBtn = document.getElementById('authBtn');
     
     userInfo.classList.remove('hidden');
     authBtn.classList.add('hidden');
@@ -395,46 +419,54 @@ async function loadUser() {
     document.getElementById('userName').innerText = userName;
     document.getElementById('userAvatar').src = userAvatar;
     
+    // Save to localStorage for other pages
     localStorage.setItem('cryptotax_current_user', JSON.stringify({
         id: user.id,
         email: user.email,
         name: userName,
         picture: userAvatar
     }));
-}
-
-async function logout() {
-    await supabase.auth.signOut();
-    localStorage.removeItem('cryptotax_current_user');
-    window.location.href = 'index.html';
-}
-
-document.getElementById('logoutBtn').onclick = (e) => {
-    e.stopPropagation();
-    logout();
-};
-
-loadUser();
-
-const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || { totalTx: 0, totalGain: 0, totalLoss: 0, netGain: 0, recent: [] };
-document.getElementById('totalTx').innerText = txData.totalTx || 0;
-document.getElementById('totalGainDash').innerHTML = `$${txData.totalGain || 0}`;
-document.getElementById('totalLossDash').innerHTML = `$${txData.totalLoss || 0}`;
-document.getElementById('netGainDash').innerHTML = `$${txData.netGain || 0}`;
-
-const activityList = document.getElementById('activityList');
-if (txData.recent && txData.recent.length > 0) {
-    activityList.innerHTML = txData.recent.slice(0, 10).map(item => `
-        <div class="activity-item">
-            <div class="activity-icon"><i class="fas fa-file-csv"></i></div>
-            <div class="activity-detail">
-                <div class="activity-name">${item.name || 'CSV Upload'}</div>
-                <div class="activity-time">${item.date || new Date().toLocaleString()}</div>
+    
+    // ============ LOGOUT ============
+    window.logout = async function() {
+        await sb.auth.signOut();
+        localStorage.removeItem('cryptotax_current_user');
+        window.location.href = 'https://elite.qzz.io/index.html';
+    };
+    
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.stopPropagation();
+        window.logout();
+    };
+    
+    // ============ LOAD DASHBOARD DATA ============
+    const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || { 
+        totalTx: 0, 
+        totalGain: 0, 
+        totalLoss: 0, 
+        netGain: 0, 
+        recent: [] 
+    };
+    
+    document.getElementById('totalTx').innerText = txData.totalTx || 0;
+    document.getElementById('totalGainDash').innerHTML = `$${txData.totalGain || 0}`;
+    document.getElementById('totalLossDash').innerHTML = `$${txData.totalLoss || 0}`;
+    document.getElementById('netGainDash').innerHTML = `$${txData.netGain || 0}`;
+    
+    const activityList = document.getElementById('activityList');
+    if (txData.recent && txData.recent.length > 0) {
+        activityList.innerHTML = txData.recent.slice(0, 10).map(item => `
+            <div class="activity-item">
+                <div class="activity-icon"><i class="fas fa-file-csv"></i></div>
+                <div class="activity-detail">
+                    <div class="activity-name">${item.name || 'CSV Upload'}</div>
+                    <div class="activity-time">${item.date || new Date().toLocaleString()}</div>
+                </div>
+                <div class="activity-amount">${item.netGain ? `+$${item.netGain}` : ''}</div>
             </div>
-            <div class="activity-amount">${item.netGain ? `+$${item.netGain}` : ''}</div>
-        </div>
-    `).join('');
-}
+        `).join('');
+    }
+})();
 </script>
 </body>
 </html>
