@@ -452,13 +452,13 @@
 </div>
 
 <script>
-    // ============ SUPABASE CONFIGURATION (ONLY ONCE) ============
+    // ============ SUPABASE CONFIGURATION (ONLY ONCE - NO DUPLICATE) ============
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
     
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ============ THEME TOGGLE ============
+    // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
     
@@ -477,13 +477,21 @@
     }
     
     const savedTheme = localStorage.getItem('theme');
-    savedTheme === 'light' ? setTheme('light') : setTheme('dark');
+    if (savedTheme === 'light') {
+        setTheme('light');
+    } else {
+        setTheme('dark');
+    }
     
-    themeToggle.onclick = function() {
-        document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
-    };
+    themeToggle.addEventListener('click', function() {
+        if (document.body.classList.contains('light')) {
+            setTheme('dark');
+        } else {
+            setTheme('light');
+        }
+    });
 
-    // ============ PASSWORD TOGGLE ============
+    // Password Toggle
     window.togglePassword = function(fieldId, iconElement) {
         const field = document.getElementById(fieldId);
         if (field.type === 'password') {
@@ -497,7 +505,7 @@
         }
     };
 
-    // ============ MODE TOGGLE ============
+    // Mode Toggle
     const signinModeBtn = document.getElementById('signinModeBtn');
     const signupModeBtn = document.getElementById('signupModeBtn');
     const signinForm = document.getElementById('signinForm');
@@ -550,7 +558,7 @@
         document.getElementById('successMessage').style.display = 'none';
     }
 
-    // ============ FORGOT PASSWORD ============
+    // Forgot Password
     const forgotLink = document.getElementById('forgotPasswordLink');
     if (forgotLink) {
         forgotLink.onclick = async function(e) {
@@ -574,7 +582,7 @@
         };
     }
 
-    // ============ SIGN UP ============
+    // Sign Up
     signupForm.onsubmit = async function(e) {
         e.preventDefault();
         
@@ -605,7 +613,7 @@
         }
     };
 
-    // ============ SIGN IN ============
+    // Sign In
     signinForm.onsubmit = async function(e) {
         e.preventDefault();
         
@@ -641,7 +649,7 @@
         }
     };
 
-    // ============ GOOGLE SIGN IN ============
+    // Google Sign In
     const googleBtn = document.getElementById('googleSignInBtn');
     if (googleBtn) {
         googleBtn.onclick = async function(e) {
@@ -661,7 +669,7 @@
         };
     }
 
-    // ============ CHECK EXISTING SESSION ============
+    // Check existing session
     const checkSession = async function() {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
