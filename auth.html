@@ -22,7 +22,7 @@
             transition: background 0.3s ease;
         }
 
-        /* Dark mode background - NOT grey */
+        /* Dark mode - Professional */
         body:not(.light) {
             background: #0A0C15;
         }
@@ -32,14 +32,32 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(247, 147, 26, 0.25);
         }
+        
+        body:not(.light) .mode-toggle {
+            background: rgba(5, 7, 10, 0.6);
+            border: 1px solid rgba(247, 147, 26, 0.2);
+        }
+        
+        body:not(.light) .mode-btn {
+            color: #6C729B;
+        }
+        
+        body:not(.light) .mode-btn.active {
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
+            color: #05070A;
+        }
 
-        /* Light mode background */
+        /* Light mode */
         body.light {
             background: #F5F7FF;
         }
         body.light .auth-card {
             background: rgba(255, 255, 255, 0.95);
             border-color: rgba(247, 147, 26, 0.3);
+        }
+        body.light .mode-toggle {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(247, 147, 26, 0.2);
         }
         body.light .form-group input {
             background: rgba(0, 0, 0, 0.03);
@@ -57,6 +75,7 @@
             color: #6C729B;
         }
         body.light .mode-btn.active {
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
             color: #05070A;
         }
         body.light .logo p, body.light .switch-mode, body.light .forgot-password a {
@@ -233,14 +252,12 @@
         .logo h2 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .logo p { font-size: 12px; color: #8E94B3; margin-top: 6px; }
 
-        /* Mode Toggle */
+        /* Mode Toggle - Clean Dark */
         .mode-toggle {
             display: flex;
-            background: rgba(5, 7, 10, 0.5);
             padding: 4px;
             border-radius: 60px;
             margin-bottom: 32px;
-            border: 1px solid rgba(247, 147, 26, 0.15);
         }
 
         .mode-btn {
@@ -252,7 +269,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             background: transparent;
-            color: #6C729B;
             border: none;
             font-family: 'Outfit', sans-serif;
             text-align: center;
@@ -285,6 +301,11 @@
             font-family: 'Space Grotesk', monospace;
             outline: none;
             transition: all 0.3s ease;
+        }
+
+        body.light .form-group input {
+            background: rgba(0, 0, 0, 0.03);
+            color: #1A1F36;
         }
 
         .form-group input:focus {
@@ -373,6 +394,10 @@
             font-family: 'Outfit', sans-serif;
         }
 
+        body.light .google-btn {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
         .google-btn:hover {
             background: rgba(247, 147, 26, 0.08);
             border-color: #F7931A;
@@ -393,6 +418,10 @@
             font-weight: 600;
             color: #E8EDF5;
             letter-spacing: 0.3px;
+        }
+
+        body.light .google-text {
+            color: #1A1F36;
         }
 
         /* Switch Mode Link */
