@@ -6,6 +6,7 @@
     <title>CryptoTax | Authentication Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         * { -webkit-tap-highlight-color: transparent; }
@@ -22,7 +23,6 @@
             transition: background 0.3s ease;
         }
 
-        /* Dark mode - Professional */
         body:not(.light) {
             background: #0A0C15;
         }
@@ -47,7 +47,6 @@
             color: #05070A;
         }
 
-        /* Light mode */
         body.light {
             background: #F5F7FF;
         }
@@ -82,7 +81,6 @@
             color: #6C729B;
         }
 
-        /* Animated Background Orbs */
         .bg-orb {
             position: fixed;
             top: 0;
@@ -122,7 +120,6 @@
             50% { transform: translate(5%, 5%) scale(1.1); opacity: 0.8; }
         }
 
-        /* Top Bar */
         .top-bar {
             position: fixed;
             top: 0;
@@ -194,7 +191,6 @@
             transform: rotate(360deg);
         }
 
-        /* Main Container */
         .auth-container {
             width: 100%;
             max-width: 460px;
@@ -207,7 +203,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Glass Card */
         .auth-card {
             border-radius: 48px;
             padding: 48px 40px;
@@ -227,7 +222,6 @@
             .back-btn i, .theme-toggle i { font-size: 18px; }
         }
 
-        /* Logo */
         .logo {
             text-align: center;
             margin-bottom: 40px;
@@ -252,7 +246,6 @@
         .logo h2 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .logo p { font-size: 12px; color: #8E94B3; margin-top: 6px; }
 
-        /* Mode Toggle - Clean Dark */
         .mode-toggle {
             display: flex;
             padding: 4px;
@@ -284,7 +277,6 @@
             .mode-btn { padding: 10px 16px; font-size: 13px; }
         }
 
-        /* Form Styles */
         .form-group {
             margin-bottom: 20px;
             position: relative;
@@ -359,7 +351,6 @@
             transform: scale(0.98);
         }
 
-        /* Divider */
         .divider {
             display: flex;
             align-items: center;
@@ -378,7 +369,6 @@
 
         .divider span { margin: 0 16px; }
 
-        /* Google Button */
         .google-btn {
             width: 100%;
             padding: 14px 20px;
@@ -424,7 +414,6 @@
             color: #1A1F36;
         }
 
-        /* Switch Mode Link */
         .switch-mode {
             text-align: center;
             margin-top: 24px;
@@ -439,7 +428,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Messages */
         .error-message,
         .success-message {
             padding: 12px 16px;
@@ -507,7 +495,6 @@
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message"></div>
 
-        <!-- Sign In Form -->
         <form id="signinForm">
             <div class="form-group">
                 <input type="email" id="signinEmail" placeholder="Email address" required>
@@ -523,7 +510,6 @@
             <button type="submit" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
         </form>
 
-        <!-- Sign Up Form -->
         <form id="signupForm" class="hidden">
             <div class="form-group">
                 <input type="email" id="signupEmail" placeholder="Email address" required>
@@ -544,7 +530,6 @@
             <span>or continue with</span>
         </div>
 
-        <!-- Google Button -->
         <button id="googleSignInBtn" class="google-btn">
             <svg class="google-icon-img" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -562,7 +547,13 @@
 </div>
 
 <script>
-    // ============ THEME TOGGLE ============
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
     
@@ -587,7 +578,6 @@
         document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
     });
 
-    // ============ PASSWORD TOGGLE ============
     window.togglePassword = function(fieldId, iconElement) {
         const field = document.getElementById(fieldId);
         if (field.type === 'password') {
@@ -601,7 +591,7 @@
         }
     };
 
-    // ============ MODE TOGGLE ============
+    // Mode Toggle
     const signinModeBtn = document.getElementById('signinModeBtn');
     const signupModeBtn = document.getElementById('signupModeBtn');
     const signinForm = document.getElementById('signinForm');
@@ -637,14 +627,14 @@
         const el = document.getElementById('errorMessage');
         el.textContent = msg;
         el.style.display = 'block';
-        setTimeout(() => el.style.display = 'none', 4000);
+        setTimeout(() => el.style.display = 'none', 5000);
     }
 
     function showSuccess(msg) {
         const el = document.getElementById('successMessage');
         el.textContent = msg;
         el.style.display = 'block';
-        setTimeout(() => el.style.display = 'none', 3000);
+        setTimeout(() => el.style.display = 'none', 5000);
     }
 
     function hideMessages() {
@@ -652,21 +642,8 @@
         document.getElementById('successMessage').style.display = 'none';
     }
 
-    // ============ LOCAL STORAGE FUNCTIONS ============
-    function getUsers() { 
-        return JSON.parse(localStorage.getItem('cryptotax_users') || '[]'); 
-    }
-    
-    function saveUsers(users) { 
-        localStorage.setItem('cryptotax_users', JSON.stringify(users)); 
-    }
-    
-    function saveCurrentUser(user) { 
-        localStorage.setItem('cryptotax_current_user', JSON.stringify(user)); 
-    }
-
     // ============ FORGOT PASSWORD ============
-    document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+    document.getElementById('forgotPasswordLink').addEventListener('click', async (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
         
@@ -675,19 +652,19 @@
             return;
         }
         
-        const users = getUsers();
-        const user = users.find(u => u.email === email);
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + '/reset-password.html'
+        });
         
-        if (!user) {
-            showError('No account found with this email');
-            return;
+        if (error) {
+            showError(error.message);
+        } else {
+            showSuccess('Password reset link sent to your email!');
         }
-        
-        showSuccess(`Password reset link sent to ${email}`);
     });
 
-    // ============ SIGN UP ============
-    signupForm.onsubmit = (e) => {
+    // ============ SIGN UP WITH EMAIL CONFIRMATION ============
+    signupForm.onsubmit = async (e) => {
         e.preventDefault();
         
         const email = document.getElementById('signupEmail').value.trim();
@@ -698,35 +675,27 @@
         if (password !== confirm) return showError('Passwords do not match');
         if (password.length < 6) return showError('Password must be at least 6 characters');
 
-        const users = getUsers();
-        if (users.find(u => u.email === email)) {
-            return showError('Email already registered. Please sign in.');
-        }
-
-        const newUser = {
-            id: Date.now().toString(),
+        const { data, error } = await supabase.auth.signUp({
             email: email,
-            password: btoa(password),
-            name: email.split('@')[0],
-            picture: `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}`,
-            createdAt: new Date().toISOString(),
-            confirmed: true
-        };
-        
-        users.push(newUser);
-        saveUsers(users);
-        saveCurrentUser({ id: newUser.id, email: newUser.email, name: newUser.name, picture: newUser.picture });
-        
-        showSuccess('Account created successfully! Redirecting to dashboard...');
-        setTimeout(() => window.location.href = 'dashboard.html', 1500);
-        
-        document.getElementById('signupEmail').value = '';
-        document.getElementById('signupPassword').value = '';
-        document.getElementById('signupConfirmPassword').value = '';
+            password: password,
+            options: {
+                emailRedirectTo: window.location.origin + '/dashboard.html'
+            }
+        });
+
+        if (error) {
+            showError(error.message);
+        } else {
+            showSuccess('Confirmation email sent! Please check your inbox and click the link to verify your email.');
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirmPassword').value = '';
+            setTimeout(() => setMode('signin'), 4000);
+        }
     };
 
     // ============ SIGN IN ============
-    signinForm.onsubmit = (e) => {
+    signinForm.onsubmit = async (e) => {
         e.preventDefault();
         
         const email = document.getElementById('signinEmail').value.trim();
@@ -734,52 +703,69 @@
 
         if (!email || !password) return showError('Please enter email and password');
 
-        const users = getUsers();
-        const user = users.find(u => u.email === email && u.password === btoa(password));
-        
-        if (!user) {
-            return showError('Invalid email or password');
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            if (error.message.includes('Email not confirmed')) {
+                showError('Please confirm your email first. Check your inbox for the confirmation link!');
+            } else {
+                showError(error.message);
+            }
+            return;
         }
 
-        saveCurrentUser({ id: user.id, email: user.email, name: user.name, picture: user.picture });
-        showSuccess('Signed in! Redirecting to dashboard...');
-        setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        if (data.user) {
+            const user = {
+                id: data.user.id,
+                email: data.user.email,
+                name: data.user.user_metadata?.full_name || email.split('@')[0],
+                picture: data.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}`
+            };
+            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+            showSuccess('Signed in! Redirecting to dashboard...');
+            setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        }
     };
 
     // ============ GOOGLE SIGN IN ============
     const googleBtn = document.getElementById('googleSignInBtn');
     
-    googleBtn.addEventListener('click', (e) => {
+    googleBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         
-        const demoEmail = `user_${Math.random().toString(36).substring(2, 8)}@gmail.com`;
-        const demoName = demoEmail.split('@')[0];
-        
-        const users = getUsers();
-        
-        const user = {
-            id: Date.now().toString(),
-            email: demoEmail,
-            name: demoName,
-            picture: `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${demoName}`,
-            googleId: 'google_' + Date.now(),
-            confirmed: true,
-            createdAt: new Date().toISOString()
-        };
-        users.push(user);
-        saveUsers(users);
-        
-        saveCurrentUser({ id: user.id, email: user.email, name: user.name, picture: user.picture });
-        showSuccess('Google sign in successful! Redirecting to dashboard...');
-        setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        try {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin + '/dashboard.html'
+                }
+            });
+            
+            if (error) throw error;
+        } catch (error) {
+            showError('Google sign in failed: ' + error.message);
+        }
     });
 
-    // ============ CHECK EXISTING USER ============
-    const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
-    if (currentUser) {
-        window.location.href = 'dashboard.html';
-    }
+    // ============ CHECK EXISTING SESSION ============
+    const checkSession = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            const user = {
+                id: session.user.id,
+                email: session.user.email,
+                name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+                picture: session.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${session.user.email.split('@')[0]}`
+            };
+            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+            window.location.href = 'dashboard.html';
+        }
+    };
     
+    checkSession();
     setMode('signin');
 </script>
 </body>
