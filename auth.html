@@ -1,19 +1,684 @@
-// ============ GOOGLE SIGN IN - FIXED ============
-const googleBtn = document.getElementById('googleSignInBtn');
-if (googleBtn) {
-    googleBtn.onclick = async function(e) {
-        e.preventDefault();
-        
-        try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: 'https://elite.qzz.io/dashboard.html'
-                }
-            });
-            if (error) throw error;
-        } catch (err) {
-            alert('Google sign in failed: ' + err.message);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>CryptoTax | Authentication Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Outfit', 'Space Grotesk', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            background: #0A0C15;
+            transition: background 0.3s ease;
+        }
+
+        body:not(.light) { background: #0A0C15; }
+        body:not(.light) .auth-card { background: rgba(13, 15, 23, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(247, 147, 26, 0.25); }
+        body:not(.light) .mode-btn { color: #6C729B; }
+        body:not(.light) .mode-btn.active { background: linear-gradient(135deg, #F7931A, #FF6B00); color: #05070A; }
+
+        body.light { background: #F5F7FF; }
+        body.light .auth-card { background: rgba(255, 255, 255, 0.95); border-color: rgba(247, 147, 26, 0.3); }
+        body.light .form-group input { background: rgba(0, 0, 0, 0.03); color: #1A1F36; border-color: rgba(247, 147, 26, 0.2); }
+        body.light .google-btn { background: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.1); }
+        body.light .google-text { color: #1A1F36; }
+        body.light .mode-btn { color: #6C729B; }
+        body.light .mode-btn.active { background: linear-gradient(135deg, #F7931A, #FF6B00); color: #05070A; }
+        body.light .logo p, body.light .switch-mode, body.light .forgot-password a { color: #6C729B; }
+
+        .bg-orb {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-orb::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(247, 147, 26, 0.12), transparent 70%);
+            filter: blur(80px);
+            animation: float 12s ease-in-out infinite;
+        }
+
+        .bg-orb::after {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            right: 20%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(247, 147, 26, 0.08), transparent 70%);
+            filter: blur(80px);
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(5%, 5%) scale(1.1); opacity: 0.8; }
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: transparent;
+        }
+
+        .back-btn {
+            background: rgba(13, 15, 23, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(247, 147, 26, 0.3);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #F7931A;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        body.light .back-btn { background: rgba(255, 255, 255, 0.8); }
+        .back-btn:hover { transform: scale(1.05); border-color: #F7931A; }
+
+        .theme-toggle {
+            background: rgba(13, 15, 23, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(247, 147, 26, 0.3);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.light .theme-toggle { background: rgba(255, 255, 255, 0.8); }
+        .theme-toggle:hover { transform: rotate(15deg); border-color: #F7931A; }
+        .theme-toggle i, .back-btn i { font-size: 22px; color: #F7931A; }
+        body.light .theme-toggle i { transform: rotate(360deg); }
+
+        .auth-container {
+            width: 100%;
+            max-width: 460px;
+            margin: 20px;
+            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.4, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-card {
+            border-radius: 48px;
+            padding: 48px 40px;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+            transition: all 0.4s ease;
+        }
+
+        @media (max-width: 550px) {
+            .auth-card { padding: 32px 24px; border-radius: 36px; }
+            .top-bar { padding: 16px 20px; }
+            .back-btn, .theme-toggle { width: 42px; height: 42px; }
+            .back-btn i, .theme-toggle i { font-size: 18px; }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 16px;
+            box-shadow: 0 15px 35px rgba(247, 147, 26, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon:hover { transform: scale(1.03); }
+        .logo h2 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo p { font-size: 12px; color: #8E94B3; margin-top: 6px; }
+
+        .mode-toggle {
+            display: flex;
+            padding: 4px;
+            border-radius: 60px;
+            margin-bottom: 32px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            text-align: center;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
+            color: #05070A;
+            box-shadow: 0 2px 8px rgba(247, 147, 26, 0.3);
+        }
+
+        @media (max-width: 550px) {
+            .mode-btn { padding: 10px 16px; font-size: 13px; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(5, 7, 10, 0.6);
+            border: 1.5px solid rgba(247, 147, 26, 0.15);
+            border-radius: 20px;
+            font-size: 14px;
+            color: #E8EDF5;
+            font-family: 'Space Grotesk', monospace;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        body.light .form-group input { background: rgba(0, 0, 0, 0.03); color: #1A1F36; }
+
+        .form-group input:focus {
+            border-color: #F7931A;
+            box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.1);
+            transform: translateX(3px);
+        }
+
+        .form-group input::placeholder { color: #4A5568; }
+
+        .form-group i {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #F7931A;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #F7931A;
+            font-size: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #F7931A, #FF6B00);
+            border: none;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #05070A;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            margin-top: 12px;
+        }
+
+        .submit-btn:active { transform: scale(0.98); }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 28px 0;
+            color: #6C729B;
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(247, 147, 26, 0.15);
+        }
+
+        .divider span { margin: 0 16px; }
+
+        .google-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1.5px solid rgba(247, 147, 26, 0.25);
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body.light .google-btn { background: rgba(0, 0, 0, 0.02); }
+        .google-btn:hover { background: rgba(247, 147, 26, 0.08); border-color: #F7931A; transform: translateY(-2px); }
+        .google-btn:active { transform: scale(0.98); }
+
+        .google-icon-img { width: 22px; height: 22px; }
+        .google-text { font-size: 15px; font-weight: 600; color: #E8EDF5; letter-spacing: 0.3px; }
+        body.light .google-text { color: #1A1F36; }
+
+        .switch-mode {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+            color: #6C729B;
+        }
+
+        .switch-mode span {
+            color: #F7931A;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .error-message,
+        .success-message {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 12px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border-left: 3px solid #FF4444;
+            color: #FF6B6B;
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 3px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 550px) {
+            .submit-btn, .mode-btn, .google-btn { min-height: 48px; }
+            .form-group input { font-size: 16px; }
+            .google-text { font-size: 14px; }
+            .google-icon-img { width: 20px; height: 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-orb"></div>
+
+<div class="top-bar">
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
+</div>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <div class="logo-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h2>CRYPTOTAX</h2>
+            <p>Enterprise Authentication Portal</p>
+        </div>
+
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="signinModeBtn">Sign In</button>
+            <button class="mode-btn" id="signupModeBtn">Sign Up</button>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <form id="signinForm">
+            <div class="form-group">
+                <input type="email" id="signinEmail" placeholder="Email address" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="form-group">
+                <input type="password" id="signinPassword" placeholder="Password" required>
+                <i class="fas fa-eye" onclick="togglePassword('signinPassword', this)"></i>
+            </div>
+            <div class="forgot-password">
+                <a href="#" id="forgotPasswordLink">Forgot password?</a>
+            </div>
+            <button type="submit" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
+        </form>
+
+        <form id="signupForm" class="hidden">
+            <div class="form-group">
+                <input type="email" id="signupEmail" placeholder="Email address" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="form-group">
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <i class="fas fa-eye" onclick="togglePassword('signupPassword', this)"></i>
+            </div>
+            <div class="form-group">
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm password" required>
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <button type="submit" class="submit-btn">Create Account <i class="fas fa-user-plus"></i></button>
+        </form>
+
+        <div class="divider">
+            <span>or continue with</span>
+        </div>
+
+        <button id="googleSignInBtn" class="google-btn">
+            <svg class="google-icon-img" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            <span class="google-text" id="googleBtnText">Sign in with Google</span>
+        </button>
+
+        <div class="switch-mode">
+            <span id="switchText">Don't have an account? <span id="switchBtn">Sign Up</span></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============ SUPABASE CONFIGURATION ============
+    const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ============ THEME TOGGLE ============
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    function setTheme(theme) {
+        if (theme === 'light') {
+            document.body.classList.add('light');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.body.classList.remove('light');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+    
+    const savedTheme = localStorage.getItem('theme');
+    savedTheme === 'light' ? setTheme('light') : setTheme('dark');
+    
+    themeToggle.onclick = function() {
+        document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
+    };
+
+    // ============ PASSWORD TOGGLE ============
+    window.togglePassword = function(fieldId, iconElement) {
+        const field = document.getElementById(fieldId);
+        if (field.type === 'password') {
+            field.type = 'text';
+            iconElement.classList.remove('fa-eye');
+            iconElement.classList.add('fa-eye-slash');
+        } else {
+            field.type = 'password';
+            iconElement.classList.remove('fa-eye-slash');
+            iconElement.classList.add('fa-eye');
         }
     };
-}
+
+    // ============ MODE TOGGLE ============
+    const signinModeBtn = document.getElementById('signinModeBtn');
+    const signupModeBtn = document.getElementById('signupModeBtn');
+    const signinForm = document.getElementById('signinForm');
+    const signupForm = document.getElementById('signupForm');
+    const switchText = document.getElementById('switchText');
+    const googleBtnText = document.getElementById('googleBtnText');
+
+    function setMode(mode) {
+        if (mode === 'signin') {
+            signinModeBtn.classList.add('active');
+            signupModeBtn.classList.remove('active');
+            signinForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            switchText.innerHTML = 'Don\'t have an account? <span id="switchBtn">Sign Up</span>';
+            googleBtnText.innerText = 'Sign in with Google';
+            const newSwitchBtn = document.getElementById('switchBtn');
+            if (newSwitchBtn) newSwitchBtn.onclick = function() { setMode('signup'); };
+        } else {
+            signupModeBtn.classList.add('active');
+            signinModeBtn.classList.remove('active');
+            signupForm.classList.remove('hidden');
+            signinForm.classList.add('hidden');
+            switchText.innerHTML = 'Already have an account? <span id="switchBtn">Sign In</span>';
+            googleBtnText.innerText = 'Sign up with Google';
+            const newSwitchBtn = document.getElementById('switchBtn');
+            if (newSwitchBtn) newSwitchBtn.onclick = function() { setMode('signin'); };
+        }
+        hideMessages();
+    }
+
+    signinModeBtn.onclick = function() { setMode('signin'); };
+    signupModeBtn.onclick = function() { setMode('signup'); };
+
+    function showError(msg) {
+        const el = document.getElementById('errorMessage');
+        el.textContent = msg;
+        el.style.display = 'block';
+        setTimeout(function() { el.style.display = 'none'; }, 5000);
+    }
+
+    function showSuccess(msg) {
+        const el = document.getElementById('successMessage');
+        el.textContent = msg;
+        el.style.display = 'block';
+        setTimeout(function() { el.style.display = 'none'; }, 5000);
+    }
+
+    function hideMessages() {
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'none';
+    }
+
+    // ============ FORGOT PASSWORD ============
+    const forgotLink = document.getElementById('forgotPasswordLink');
+    if (forgotLink) {
+        forgotLink.onclick = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('signinEmail').value.trim();
+            
+            if (!email) {
+                showError('Please enter your email address');
+                return;
+            }
+            
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: 'https://elite.qzz.io/reset-password.html'
+            });
+            
+            if (error) {
+                showError(error.message);
+            } else {
+                showSuccess('Password reset link sent to your email!');
+            }
+        };
+    }
+
+    // ============ SIGN UP (WITH EMAIL CONFIRMATION) ============
+    signupForm.onsubmit = async function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const confirm = document.getElementById('signupConfirmPassword').value;
+
+        if (!email || !password || !confirm) return showError('Please fill in all fields');
+        if (password !== confirm) return showError('Passwords do not match');
+        if (password.length < 6) return showError('Password must be at least 6 characters');
+
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                emailRedirectTo: 'https://elite.qzz.io/dashboard.html'
+            }
+        });
+
+        if (error) {
+            showError(error.message);
+        } else {
+            showSuccess('✅ Confirmation email sent! Please check your inbox and click the verification link.');
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirmPassword').value = '';
+            setTimeout(function() { setMode('signin'); }, 4000);
+        }
+    };
+
+    // ============ SIGN IN ============
+    signinForm.onsubmit = async function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('signinEmail').value.trim();
+        const password = document.getElementById('signinPassword').value;
+
+        if (!email || !password) return showError('Please enter email and password');
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            if (error.message.includes('Email not confirmed')) {
+                showError('⚠️ Please confirm your email first. Check your inbox for the verification link.');
+            } else {
+                showError(error.message);
+            }
+            return;
+        }
+
+        if (data.user) {
+            const user = {
+                id: data.user.id,
+                email: data.user.email,
+                name: data.user.user_metadata?.full_name || email.split('@')[0],
+                picture: data.user.user_metadata?.avatar_url || 'https://ui-avatars.com/api/?background=F7931A&color=fff&name=' + email.split('@')[0]
+            };
+            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+            showSuccess('Signed in! Redirecting to dashboard...');
+            setTimeout(function() { window.location.href = 'https://elite.qzz.io/dashboard.html'; }, 1500);
+        }
+    };
+
+    // ============ GOOGLE SIGN IN - WORKING ============
+    const googleBtn = document.getElementById('googleSignInBtn');
+    if (googleBtn) {
+        googleBtn.onclick = async function(e) {
+            e.preventDefault();
+            
+            try {
+                const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: 'https://elite.qzz.io/dashboard.html'
+                    }
+                });
+                if (error) throw error;
+                // Supabase will redirect to Google OAuth page
+            } catch (err) {
+                showError('Google sign in failed: ' + err.message);
+            }
+        };
+    }
+
+    // ============ CHECK EXISTING SESSION ============
+    const checkSession = async function() {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            const user = {
+                id: session.user.id,
+                email: session.user.email,
+                name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+                picture: session.user.user_metadata?.avatar_url || 'https://ui-avatars.com/api/?background=F7931A&color=fff&name=' + session.user.email.split('@')[0]
+            };
+            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+            window.location.href = 'https://elite.qzz.io/dashboard.html';
+        }
+    };
+    
+    checkSession();
+    setMode('signin');
+</script>
+</body>
+</html>
