@@ -6,6 +6,7 @@
     <title>CryptoTax | User Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -74,7 +75,6 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
         @media (min-width: 768px) { .container { padding: 24px; } }
 
-        /* Navigation */
         .navbar {
             display: flex;
             flex-direction: column;
@@ -110,7 +110,6 @@
         .nav-link:hover { background: rgba(247, 147, 26, 0.1); color: var(--accent); }
         .nav-link.active { background: var(--accent-gradient); color: #05070A; box-shadow: var(--shadow); }
 
-        /* User Profile - NO DASHBOARD BUTTON */
         .user-info {
             display: flex;
             align-items: center;
@@ -152,7 +151,6 @@
         .theme-toggle i { font-size: 20px; transition: transform 0.5s ease; }
         body.light .theme-toggle i { transform: rotate(360deg); }
 
-        /* Dashboard Content */
         .welcome-section {
             background: linear-gradient(135deg, rgba(247, 147, 26, 0.08), rgba(255, 107, 0, 0.04));
             border-radius: 32px;
@@ -165,7 +163,6 @@
         .welcome-section h1 { font-size: 32px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
         .welcome-section p { color: var(--text-secondary); font-size: 15px; }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -196,7 +193,6 @@
         @media (min-width: 768px) { .stat-number { font-size: 44px; } }
         .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 8px; font-weight: 500; }
 
-        /* Activity Card */
         .activity-card {
             background: var(--bg-card);
             border-radius: 24px;
@@ -239,7 +235,6 @@
         .activity-time { font-size: 11px; color: var(--text-muted); }
         .activity-amount { font-weight: 700; color: #4CAF50; }
 
-        /* Footer */
         .footer {
             margin-top: 32px;
             padding: 20px 24px;
@@ -268,7 +263,6 @@
 <body>
 <div class="bg-orb"></div>
 <div class="container">
-    <!-- Navigation - NO DASHBOARD BUTTON -->
     <div class="navbar">
         <div class="logo" onclick="window.location.href='index.html'">
             <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
@@ -283,14 +277,12 @@
                 <a href="tax-estimator.html" class="nav-link">Estimator</a>
             </div>
             
-            <!-- User Profile -->
             <div id="userInfo" class="user-info hidden">
                 <img id="userAvatar" class="user-avatar" src="">
                 <span id="userName" class="user-name"></span>
                 <button id="logoutBtn" class="logout-btn" onclick="event.stopPropagation(); logout();">Exit</button>
             </div>
             
-            <!-- Account Button (shown when not logged in) -->
             <a href="auth.html" id="authBtn" class="nav-link account-btn">
                 <i class="fas fa-user-circle"></i> Account
             </a>
@@ -301,13 +293,11 @@
         </div>
     </div>
 
-    <!-- Welcome Section -->
     <div class="welcome-section">
         <h1>Welcome back, <span id="welcomeName">User</span>! 👋</h1>
         <p>Track your crypto tax activity and portfolio performance</p>
     </div>
 
-    <!-- Stats Grid -->
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-number" id="totalTx">0</div>
@@ -327,7 +317,6 @@
         </div>
     </div>
 
-    <!-- Recent Activity -->
     <div class="activity-card">
         <div class="activity-title">
             <i class="fas fa-history"></i> Recent Activity
@@ -344,7 +333,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <div class="footer">
         <span><i class="fas fa-shield-alt"></i> Secure • FIFO • Real-time</span>
         <div class="footer-social">
@@ -357,6 +345,11 @@
 </div>
 
 <script>
+    const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const icon = themeToggle.querySelector('i');
@@ -382,30 +375,49 @@
         document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
     });
 
-    // User Authentication
-    const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
+    // User Authentication - Get REAL user from Supabase
     const userInfo = document.getElementById('userInfo');
     const authBtn = document.getElementById('authBtn');
     
-    function logout() {
+    async function loadUser() {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+            window.location.href = 'auth.html';
+            return;
+        }
+        
+        userInfo.classList.remove('hidden');
+        authBtn.classList.add('hidden');
+        
+        const userName = user.user_metadata?.full_name || user.email.split('@')[0];
+        const userAvatar = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${user.email}`;
+        
+        document.getElementById('welcomeName').innerText = userName;
+        document.getElementById('userName').innerText = userName;
+        document.getElementById('userAvatar').src = userAvatar;
+        
+        // Also save to localStorage for other pages
+        localStorage.setItem('cryptotax_current_user', JSON.stringify({
+            id: user.id,
+            email: user.email,
+            name: userName,
+            picture: userAvatar
+        }));
+    }
+    
+    async function logout() {
+        await supabase.auth.signOut();
         localStorage.removeItem('cryptotax_current_user');
         window.location.href = 'index.html';
     }
     
-    if (currentUser) {
-        userInfo.classList.remove('hidden');
-        authBtn.classList.add('hidden');
-        document.getElementById('welcomeName').innerText = currentUser.name || currentUser.email.split('@')[0];
-        document.getElementById('userName').innerText = currentUser.name || currentUser.email.split('@')[0];
-        document.getElementById('userAvatar').src = currentUser.picture || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${currentUser.email}`;
-        document.getElementById('logoutBtn').onclick = (e) => {
-            e.stopPropagation();
-            logout();
-        };
-    } else {
-        userInfo.classList.add('hidden');
-        authBtn.classList.remove('hidden');
-    }
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.stopPropagation();
+        logout();
+    };
+    
+    loadUser();
 
     // Load Dashboard Data
     const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || { 
