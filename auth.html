@@ -452,13 +452,11 @@
 </div>
 
 <script>
-    // ============ SUPABASE CONFIGURATION (ONLY ONE DECLARATION) ============
+    // SUPABASE - ONLY ONE DECLARATION
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
-    
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
     
@@ -477,21 +475,14 @@
     }
     
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        setTheme('light');
-    } else {
-        setTheme('dark');
-    }
+    if (savedTheme === 'light') setTheme('light');
+    else setTheme('dark');
     
-    themeToggle.addEventListener('click', function() {
-        if (document.body.classList.contains('light')) {
-            setTheme('dark');
-        } else {
-            setTheme('light');
-        }
-    });
+    themeToggle.onclick = function() {
+        if (document.body.classList.contains('light')) setTheme('dark');
+        else setTheme('light');
+    };
 
-    // Password Toggle
     window.togglePassword = function(fieldId, iconElement) {
         const field = document.getElementById(fieldId);
         if (field.type === 'password') {
@@ -505,7 +496,6 @@
         }
     };
 
-    // Mode Toggle
     const signinModeBtn = document.getElementById('signinModeBtn');
     const signupModeBtn = document.getElementById('signupModeBtn');
     const signinForm = document.getElementById('signinForm');
@@ -558,34 +548,25 @@
         document.getElementById('successMessage').style.display = 'none';
     }
 
-    // Forgot Password
     const forgotLink = document.getElementById('forgotPasswordLink');
     if (forgotLink) {
         forgotLink.onclick = async function(e) {
             e.preventDefault();
             const email = document.getElementById('signinEmail').value.trim();
-            
             if (!email) {
                 showError('Please enter your email address');
                 return;
             }
-            
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: 'https://elite.qzz.io/reset-password.html'
             });
-            
-            if (error) {
-                showError(error.message);
-            } else {
-                showSuccess('Password reset link sent to your email!');
-            }
+            if (error) showError(error.message);
+            else showSuccess('Password reset link sent to your email!');
         };
     }
 
-    // Sign Up
     signupForm.onsubmit = async function(e) {
         e.preventDefault();
-        
         const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value;
         const confirm = document.getElementById('signupConfirmPassword').value;
@@ -594,17 +575,14 @@
         if (password !== confirm) return showError('Passwords do not match');
         if (password.length < 6) return showError('Password must be at least 6 characters');
 
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
             email: email,
             password: password,
-            options: {
-                emailRedirectTo: 'https://elite.qzz.io/confirm.html'
-            }
+            options: { emailRedirectTo: 'https://elite.qzz.io/confirm.html' }
         });
 
-        if (error) {
-            showError(error.message);
-        } else {
+        if (error) showError(error.message);
+        else {
             showSuccess('Confirmation email sent! Please check your inbox.');
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
@@ -613,26 +591,18 @@
         }
     };
 
-    // Sign In
     signinForm.onsubmit = async function(e) {
         e.preventDefault();
-        
         const email = document.getElementById('signinEmail').value.trim();
         const password = document.getElementById('signinPassword').value;
 
         if (!email || !password) return showError('Please enter email and password');
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
-            if (error.message.includes('Email not confirmed')) {
-                showError('Please confirm your email first. Check your inbox!');
-            } else {
-                showError(error.message);
-            }
+            if (error.message.includes('Email not confirmed')) showError('Please confirm your email first. Check your inbox!');
+            else showError(error.message);
             return;
         }
 
@@ -649,18 +619,14 @@
         }
     };
 
-    // Google Sign In
     const googleBtn = document.getElementById('googleSignInBtn');
     if (googleBtn) {
         googleBtn.onclick = async function(e) {
             e.preventDefault();
-            
             try {
                 const { error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
-                    options: {
-                        redirectTo: 'https://elite.qzz.io/dashboard.html'
-                    }
+                    options: { redirectTo: 'https://elite.qzz.io/dashboard.html' }
                 });
                 if (error) throw error;
             } catch (err) {
@@ -669,7 +635,6 @@
         };
     }
 
-    // Check existing session
     const checkSession = async function() {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
