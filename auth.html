@@ -474,7 +474,8 @@
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
     
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // FIXED: Removed 'const' to prevent duplicate declaration error
+    let supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ============ THEME TOGGLE ============
     const themeToggle = document.getElementById('themeToggle');
@@ -495,13 +496,22 @@
     }
     
     const savedTheme = localStorage.getItem('theme');
-    savedTheme === 'light' ? setTheme('light') : setTheme('dark');
+    if (savedTheme === 'light') {
+        setTheme('light');
+    } else {
+        setTheme('dark');
+    }
     
-    themeToggle.onclick = function() {
-        document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
+    themeToggle.onclick = function(e) {
+        e.preventDefault();
+        if (document.body.classList.contains('light')) {
+            setTheme('dark');
+        } else {
+            setTheme('light');
+        }
     };
 
-    // ============ PASSWORD TOGGLE (FIXED) ============
+    // ============ PASSWORD TOGGLE ============
     window.togglePassword = function(fieldId, iconElement) {
         const field = document.getElementById(fieldId);
         if (field.type === 'password') {
@@ -532,7 +542,10 @@
             switchText.innerHTML = 'Don\'t have an account? <span id="switchBtn">Sign Up</span>';
             googleBtnText.innerText = 'Sign in with Google';
             const newSwitchBtn = document.getElementById('switchBtn');
-            if (newSwitchBtn) newSwitchBtn.onclick = function() { setMode('signup'); };
+            if (newSwitchBtn) newSwitchBtn.onclick = function(e) { 
+                e.preventDefault();
+                setMode('signup'); 
+            };
         } else {
             signupModeBtn.classList.add('active');
             signinModeBtn.classList.remove('active');
@@ -541,13 +554,23 @@
             switchText.innerHTML = 'Already have an account? <span id="switchBtn">Sign In</span>';
             googleBtnText.innerText = 'Sign up with Google';
             const newSwitchBtn = document.getElementById('switchBtn');
-            if (newSwitchBtn) newSwitchBtn.onclick = function() { setMode('signin'); };
+            if (newSwitchBtn) newSwitchBtn.onclick = function(e) { 
+                e.preventDefault();
+                setMode('signin'); 
+            };
         }
         hideMessages();
     }
 
-    signinModeBtn.onclick = function() { setMode('signin'); };
-    signupModeBtn.onclick = function() { setMode('signup'); };
+    signinModeBtn.onclick = function(e) { 
+        e.preventDefault();
+        setMode('signin'); 
+    };
+    
+    signupModeBtn.onclick = function(e) { 
+        e.preventDefault();
+        setMode('signup'); 
+    };
 
     function showError(msg) {
         const el = document.getElementById('errorMessage');
@@ -734,7 +757,7 @@
         }
     };
 
-    // ============ GOOGLE SIGN IN (FIXED WITH POPUP HANDLING) ============
+    // ============ GOOGLE SIGN IN ============
     const googleBtn = document.getElementById('googleSignInBtn');
     const googleOriginalText = googleBtn.innerHTML;
     
@@ -753,8 +776,6 @@
                 });
                 
                 if (error) throw error;
-                
-                // Note: For OAuth redirect, the page will redirect, so we don't need to reset button state
             } catch (err) {
                 setButtonLoading(googleBtn, false, googleOriginalText);
                 
@@ -767,11 +788,10 @@
         };
     }
 
-    // ============ CHECK EXISTING SESSION (WITH REDIRECT PREVENTION) ============
+    // ============ CHECK EXISTING SESSION ============
     let isRedirecting = false;
     
     const checkSession = async function() {
-        // Don't check if we're already on dashboard or if redirecting
         if (isRedirecting) return;
         
         const { data: { session } } = await supabase.auth.getSession();
