@@ -6,6 +6,7 @@
     <title>CryptoTax | Authentication Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         * { -webkit-tap-highlight-color: transparent; }
@@ -399,7 +400,6 @@
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message"></div>
 
-        <!-- Sign In Form -->
         <form id="signinForm">
             <div class="form-group">
                 <input type="email" id="signinEmail" placeholder="Email address" required>
@@ -415,7 +415,6 @@
             <button type="submit" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
         </form>
 
-        <!-- Sign Up Form -->
         <form id="signupForm" class="hidden">
             <div class="form-group">
                 <input type="email" id="signupEmail" placeholder="Email address" required>
@@ -452,13 +451,9 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    // Wait for DOM to load
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM loaded - initializing...');
-        
-        // Supabase Configuration
+    (function() {
+        // Supabase Configuration - Using YOUR credentials
         const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
         
@@ -489,7 +484,7 @@
             document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
         });
         
-        // Password Toggle Function
+        // Password Toggle
         window.togglePassword = function(fieldId, iconElement) {
             const field = document.getElementById(fieldId);
             if (field.type === 'password') {
@@ -569,7 +564,7 @@
                 }
                 
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.origin + '/reset-password.html'
+                    redirectTo: 'https://elite.qzz.io/reset-password.html'
                 });
                 
                 if (error) {
@@ -596,7 +591,7 @@
                 email: email,
                 password: password,
                 options: {
-                    emailRedirectTo: window.location.origin + '/dashboard.html'
+                    emailRedirectTo: 'https://elite.qzz.io/dashboard.html'
                 }
             });
             
@@ -647,7 +642,7 @@
             }
         };
         
-        // Google Sign In
+        // Google Sign In - Fixed with correct redirect
         const googleBtn = document.getElementById('googleSignInBtn');
         if (googleBtn) {
             googleBtn.addEventListener('click', async function(e) {
@@ -657,13 +652,18 @@
                     const { data, error } = await supabase.auth.signInWithOAuth({
                         provider: 'google',
                         options: {
-                            redirectTo: window.location.origin + '/dashboard.html'
+                            redirectTo: 'https://elite.qzz.io/dashboard.html'
                         }
                     });
                     
                     if (error) throw error;
                 } catch (error) {
-                    showError('Google sign in failed: ' + error.message);
+                    console.error('Google OAuth Error:', error);
+                    if (error.message.includes('missing OAuth secret')) {
+                        showError('Google Login configuration pending. Please use email sign in for now.');
+                    } else {
+                        showError('Google sign in failed: ' + error.message);
+                    }
                 }
             });
         }
@@ -685,9 +685,7 @@
         
         checkSession();
         setMode('signin');
-        
-        console.log('All event listeners attached successfully');
-    });
+    })();
 </script>
 </body>
 </html>
