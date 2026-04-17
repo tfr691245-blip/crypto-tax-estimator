@@ -117,46 +117,53 @@
         <div class="switch-mode"><span id="switchText">Don't have an account? <span id="switchBtn">Sign Up</span></span></div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL='https://ihtazaanlobowggooghy.supabase.co';
-const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+(async function() {
+    const SUPABASE_URL='https://ihtazaanlobowggooghy.supabase.co';
+    const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
+    
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    await new Promise((resolve) => { script.onload = resolve; document.head.appendChild(script); });
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const themeToggle=document.getElementById('themeToggle');
-const themeIcon=themeToggle.querySelector('i');
-function setTheme(t){if(t==='light'){document.body.classList.add('light');themeIcon.classList.remove('fa-moon');themeIcon.classList.add('fa-sun');localStorage.setItem('theme','light')}else{document.body.classList.remove('light');themeIcon.classList.remove('fa-sun');themeIcon.classList.add('fa-moon');localStorage.setItem('theme','dark')}}
-const savedTheme=localStorage.getItem('theme');
-savedTheme==='light'?setTheme('light'):setTheme('dark');
-themeToggle.onclick=()=>document.body.classList.contains('light')?setTheme('dark'):setTheme('light');
+    const themeToggle=document.getElementById('themeToggle');
+    const themeIcon=themeToggle.querySelector('i');
+    function setTheme(t){if(t==='light'){document.body.classList.add('light');themeIcon.classList.remove('fa-moon');themeIcon.classList.add('fa-sun');localStorage.setItem('theme','light')}else{document.body.classList.remove('light');themeIcon.classList.remove('fa-sun');themeIcon.classList.add('fa-moon');localStorage.setItem('theme','dark')}}
+    const savedTheme=localStorage.getItem('theme');
+    savedTheme==='light'?setTheme('light'):setTheme('dark');
+    themeToggle.onclick=()=>document.body.classList.contains('light')?setTheme('dark'):setTheme('light');
 
-window.togglePassword=function(f,i){const d=document.getElementById(f);if(d.type==='password'){d.type='text';i.classList.remove('fa-eye');i.classList.add('fa-eye-slash')}else{d.type='password';i.classList.remove('fa-eye-slash');i.classList.add('fa-eye')}};
+    window.togglePassword=function(f,i){const d=document.getElementById(f);if(d.type==='password'){d.type='text';i.classList.remove('fa-eye');i.classList.add('fa-eye-slash')}else{d.type='password';i.classList.remove('fa-eye-slash');i.classList.add('fa-eye')}};
 
-const signinModeBtn=document.getElementById('signinModeBtn');
-const signupModeBtn=document.getElementById('signupModeBtn');
-const signinForm=document.getElementById('signinForm');
-const signupForm=document.getElementById('signupForm');
-const switchText=document.getElementById('switchText');
-const googleBtnText=document.getElementById('googleBtnText');
+    const signinModeBtn=document.getElementById('signinModeBtn');
+    const signupModeBtn=document.getElementById('signupModeBtn');
+    const signinForm=document.getElementById('signinForm');
+    const signupForm=document.getElementById('signupForm');
+    const switchText=document.getElementById('switchText');
+    const googleBtnText=document.getElementById('googleBtnText');
 
-function setMode(m){if(m==='signin'){signinModeBtn.classList.add('active');signupModeBtn.classList.remove('active');signinForm.classList.remove('hidden');signupForm.classList.add('hidden');switchText.innerHTML='Don\'t have an account? <span id="switchBtn">Sign Up</span>';googleBtnText.innerText='Sign in with Google';const b=document.getElementById('switchBtn');if(b)b.onclick=()=>setMode('signup')}else{signupModeBtn.classList.add('active');signinModeBtn.classList.remove('active');signupForm.classList.remove('hidden');signinForm.classList.add('hidden');switchText.innerHTML='Already have an account? <span id="switchBtn">Sign In</span>';googleBtnText.innerText='Sign up with Google';const b=document.getElementById('switchBtn');if(b)b.onclick=()=>setMode('signin')}hideMessages()}
-signinModeBtn.onclick=()=>setMode('signin');
-signupModeBtn.onclick=()=>setMode('signup');
+    function setMode(m){if(m==='signin'){signinModeBtn.classList.add('active');signupModeBtn.classList.remove('active');signinForm.classList.remove('hidden');signupForm.classList.add('hidden');switchText.innerHTML='Don\'t have an account? <span id="switchBtn">Sign Up</span>';googleBtnText.innerText='Sign in with Google';const b=document.getElementById('switchBtn');if(b)b.onclick=()=>setMode('signup')}else{signupModeBtn.classList.add('active');signinModeBtn.classList.remove('active');signupForm.classList.remove('hidden');signinForm.classList.add('hidden');switchText.innerHTML='Already have an account? <span id="switchBtn">Sign In</span>';googleBtnText.innerText='Sign up with Google';const b=document.getElementById('switchBtn');if(b)b.onclick=()=>setMode('signin')}hideMessages()}
+    signinModeBtn.onclick=()=>setMode('signin');
+    signupModeBtn.onclick=()=>setMode('signup');
 
-function showError(m){const e=document.getElementById('errorMessage');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',5000)}
-function showSuccess(m){const e=document.getElementById('successMessage');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',5000)}
-function hideMessages(){document.getElementById('errorMessage').style.display='none';document.getElementById('successMessage').style.display='none'}
+    function showError(m){const e=document.getElementById('errorMessage');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',5000)}
+    function showSuccess(m){const e=document.getElementById('successMessage');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',5000)}
+    function hideMessages(){document.getElementById('errorMessage').style.display='none';document.getElementById('successMessage').style.display='none'}
 
-document.getElementById('forgotPasswordLink').onclick=async(e)=>{e.preventDefault();const email=document.getElementById('signinEmail').value.trim();if(!email){showError('Please enter your email address');return}const{error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:'https://elite.qzz.io/reset-password.html'});error?showError(error.message):showSuccess('Password reset link sent to your email!')};
+    document.getElementById('forgotPasswordLink').onclick=async(e)=>{e.preventDefault();const email=document.getElementById('signinEmail').value.trim();if(!email){showError('Please enter your email address');return}const{error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:'https://elite.qzz.io/reset-password.html'});error?showError(error.message):showSuccess('Password reset link sent to your email!')};
 
-signupForm.onsubmit=async(e)=>{e.preventDefault();const email=document.getElementById('signupEmail').value.trim();const pwd=document.getElementById('signupPassword').value;const confirm=document.getElementById('signupConfirmPassword').value;if(!email||!pwd||!confirm)return showError('Please fill in all fields');if(pwd!==confirm)return showError('Passwords do not match');if(pwd.length<6)return showError('Password must be at least 6 characters');const{error}=await supabase.auth.signUp({email,password:pwd,options:{emailRedirectTo:'https://elite.qzz.io/confirm.html'}});if(error){showError(error.message)}else{showSuccess('Confirmation email sent! Please check your inbox.');document.getElementById('signupEmail').value='';document.getElementById('signupPassword').value='';document.getElementById('signupConfirmPassword').value='';setTimeout(()=>setMode('signin'),4000)}};
+    signupForm.onsubmit=async(e)=>{e.preventDefault();const email=document.getElementById('signupEmail').value.trim();const pwd=document.getElementById('signupPassword').value;const confirm=document.getElementById('signupConfirmPassword').value;if(!email||!pwd||!confirm)return showError('Please fill in all fields');if(pwd!==confirm)return showError('Passwords do not match');if(pwd.length<6)return showError('Password must be at least 6 characters');const{error}=await supabase.auth.signUp({email,password:pwd,options:{emailRedirectTo:'https://elite.qzz.io/confirm.html'}});if(error){showError(error.message)}else{showSuccess('Confirmation email sent! Please check your inbox.');document.getElementById('signupEmail').value='';document.getElementById('signupPassword').value='';document.getElementById('signupConfirmPassword').value='';setTimeout(()=>setMode('signin'),4000)}};
 
-signinForm.onsubmit=async(e)=>{e.preventDefault();const email=document.getElementById('signinEmail').value.trim();const pwd=document.getElementById('signinPassword').value;if(!email||!pwd)return showError('Please enter email and password');const{data,error}=await supabase.auth.signInWithPassword({email,password:pwd});if(error){if(error.message.includes('Email not confirmed'))showError('Please confirm your email first. Check your inbox!');else showError(error.message);return}if(data.user){const user={id:data.user.id,email:data.user.email,name:data.user.user_metadata?.full_name||email.split('@')[0],picture:data.user.user_metadata?.avatar_url||`https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}`};localStorage.setItem('cryptotax_current_user',JSON.stringify(user));showSuccess('Signed in! Redirecting...');setTimeout(()=>window.location.href='https://elite.qzz.io/dashboard.html',1500)}};
+    signinForm.onsubmit=async(e)=>{e.preventDefault();const email=document.getElementById('signinEmail').value.trim();const pwd=document.getElementById('signinPassword').value;if(!email||!pwd)return showError('Please enter email and password');const{data,error}=await supabase.auth.signInWithPassword({email,password:pwd});if(error){if(error.message.includes('Email not confirmed'))showError('Please confirm your email first. Check your inbox!');else showError(error.message);return}if(data.user){const user={id:data.user.id,email:data.user.email,name:data.user.user_metadata?.full_name||email.split('@')[0],picture:data.user.user_metadata?.avatar_url||`https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}`};localStorage.setItem('cryptotax_current_user',JSON.stringify(user));showSuccess('Signed in! Redirecting...');setTimeout(()=>window.location.href='https://elite.qzz.io/dashboard.html',1500)}};
 
-document.getElementById('googleSignInBtn').onclick=async(e)=>{e.preventDefault();try{const{error}=await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://elite.qzz.io/dashboard.html'}});if(error)throw error}catch(err){showError(err.message)}};
+    document.getElementById('googleSignInBtn').onclick=async(e)=>{e.preventDefault();try{const{error}=await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://elite.qzz.io/dashboard.html'}});if(error)throw error}catch(err){showError(err.message)}};
 
-(async()=>{const{data:{session}}=await supabase.auth.getSession();if(session){const user={id:session.user.id,email:session.user.email,name:session.user.user_metadata?.full_name||session.user.email.split('@')[0],picture:session.user.user_metadata?.avatar_url||`https://ui-avatars.com/api/?background=F7931A&color=fff&name=${session.user.email.split('@')[0]}`};localStorage.setItem('cryptotax_current_user',JSON.stringify(user));window.location.href='https://elite.qzz.io/dashboard.html'}})();
-setMode('signin');
+    const{data:{session}}=await supabase.auth.getSession();
+    if(session){const user={id:session.user.id,email:session.user.email,name:session.user.user_metadata?.full_name||session.user.email.split('@')[0],picture:session.user.user_metadata?.avatar_url||`https://ui-avatars.com/api/?background=F7931A&color=fff&name=${session.user.email.split('@')[0]}`};localStorage.setItem('cryptotax_current_user',JSON.stringify(user));window.location.href='https://elite.qzz.io/dashboard.html'}
+    setMode('signin');
+})();
 </script>
 </body>
 </html>
