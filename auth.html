@@ -452,7 +452,7 @@
 </div>
 
 <script>
-    // ============ SUPABASE CONFIGURATION ============
+    // ============ SUPABASE CONFIGURATION (ONLY ONCE) ============
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
     
@@ -550,7 +550,7 @@
         document.getElementById('successMessage').style.display = 'none';
     }
 
-    // ============ FORGOT PASSWORD - REAL SUPABASE ============
+    // ============ FORGOT PASSWORD ============
     const forgotLink = document.getElementById('forgotPasswordLink');
     if (forgotLink) {
         forgotLink.onclick = async function(e) {
@@ -574,7 +574,7 @@
         };
     }
 
-    // ============ SIGN UP - REAL SUPABASE WITH EMAIL CONFIRMATION ============
+    // ============ SIGN UP ============
     signupForm.onsubmit = async function(e) {
         e.preventDefault();
         
@@ -597,7 +597,7 @@
         if (error) {
             showError(error.message);
         } else {
-            showSuccess('✅ Confirmation email sent! Please check your inbox.');
+            showSuccess('Confirmation email sent! Please check your inbox.');
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
             document.getElementById('signupConfirmPassword').value = '';
@@ -605,7 +605,7 @@
         }
     };
 
-    // ============ SIGN IN - REAL SUPABASE ============
+    // ============ SIGN IN ============
     signinForm.onsubmit = async function(e) {
         e.preventDefault();
         
@@ -621,7 +621,7 @@
 
         if (error) {
             if (error.message.includes('Email not confirmed')) {
-                showError('⚠️ Please confirm your email first. Check your inbox.');
+                showError('Please confirm your email first. Check your inbox!');
             } else {
                 showError(error.message);
             }
@@ -641,7 +641,7 @@
         }
     };
 
-    // ============ GOOGLE SIGN IN - REAL SUPABASE (NO FAKE) ============
+    // ============ GOOGLE SIGN IN ============
     const googleBtn = document.getElementById('googleSignInBtn');
     if (googleBtn) {
         googleBtn.onclick = async function(e) {
