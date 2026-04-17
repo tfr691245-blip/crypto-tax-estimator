@@ -453,7 +453,10 @@
 
 <script>
     (function() {
-        // Supabase Configuration - Using YOUR credentials
+        // ============ YOUR DOMAIN ============
+        const SITE_URL = 'https://elite.qzz.io';
+        
+        // Supabase Configuration
         const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
         
@@ -551,7 +554,7 @@
             document.getElementById('successMessage').style.display = 'none';
         }
         
-        // Forgot Password
+        // ============ FORGOT PASSWORD - Using YOUR DOMAIN ============
         const forgotLink = document.getElementById('forgotPasswordLink');
         if (forgotLink) {
             forgotLink.addEventListener('click', async function(e) {
@@ -564,7 +567,7 @@
                 }
                 
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: 'https://elite.qzz.io/reset-password.html'
+                    redirectTo: SITE_URL + '/reset-password.html'
                 });
                 
                 if (error) {
@@ -575,7 +578,7 @@
             });
         }
         
-        // Sign Up
+        // ============ SIGN UP - Using YOUR DOMAIN ============
         signupForm.onsubmit = async function(e) {
             e.preventDefault();
             
@@ -591,7 +594,7 @@
                 email: email,
                 password: password,
                 options: {
-                    emailRedirectTo: 'https://elite.qzz.io/dashboard.html'
+                    emailRedirectTo: SITE_URL + '/dashboard.html'
                 }
             });
             
@@ -606,7 +609,7 @@
             }
         };
         
-        // Sign In
+        // ============ SIGN IN ============
         signinForm.onsubmit = async function(e) {
             e.preventDefault();
             
@@ -638,11 +641,11 @@
                 };
                 localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
                 showSuccess('Signed in! Redirecting to dashboard...');
-                setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
+                setTimeout(function() { window.location.href = SITE_URL + '/dashboard.html'; }, 1500);
             }
         };
         
-        // Google Sign In - Fixed with correct redirect
+        // ============ GOOGLE SIGN IN - Using YOUR DOMAIN ============
         const googleBtn = document.getElementById('googleSignInBtn');
         if (googleBtn) {
             googleBtn.addEventListener('click', async function(e) {
@@ -652,7 +655,7 @@
                     const { data, error } = await supabase.auth.signInWithOAuth({
                         provider: 'google',
                         options: {
-                            redirectTo: 'https://elite.qzz.io/dashboard.html'
+                            redirectTo: SITE_URL + '/dashboard.html'
                         }
                     });
                     
@@ -668,7 +671,7 @@
             });
         }
         
-        // Check existing session
+        // ============ CHECK EXISTING SESSION ============
         const checkSession = async function() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
@@ -679,7 +682,7 @@
                     picture: session.user.user_metadata?.avatar_url || 'https://ui-avatars.com/api/?background=F7931A&color=fff&name=' + session.user.email.split('@')[0]
                 };
                 localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
-                window.location.href = 'dashboard.html';
+                window.location.href = SITE_URL + '/dashboard.html';
             }
         };
         
