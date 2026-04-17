@@ -23,63 +23,19 @@
             transition: background 0.3s ease;
         }
 
-        body:not(.light) {
-            background: #0A0C15;
-        }
-        
-        body:not(.light) .auth-card {
-            background: rgba(13, 15, 23, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(247, 147, 26, 0.25);
-        }
-        
-        body:not(.light) .mode-toggle {
-            background: rgba(5, 7, 10, 0.6);
-            border: 1px solid rgba(247, 147, 26, 0.2);
-        }
-        
-        body:not(.light) .mode-btn {
-            color: #6C729B;
-        }
-        
-        body:not(.light) .mode-btn.active {
-            background: linear-gradient(135deg, #F7931A, #FF6B00);
-            color: #05070A;
-        }
+        body:not(.light) { background: #0A0C15; }
+        body:not(.light) .auth-card { background: rgba(13, 15, 23, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(247, 147, 26, 0.25); }
+        body:not(.light) .mode-btn { color: #6C729B; }
+        body:not(.light) .mode-btn.active { background: linear-gradient(135deg, #F7931A, #FF6B00); color: #05070A; }
 
-        body.light {
-            background: #F5F7FF;
-        }
-        body.light .auth-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: rgba(247, 147, 26, 0.3);
-        }
-        body.light .mode-toggle {
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(247, 147, 26, 0.2);
-        }
-        body.light .form-group input {
-            background: rgba(0, 0, 0, 0.03);
-            color: #1A1F36;
-            border-color: rgba(247, 147, 26, 0.2);
-        }
-        body.light .google-btn {
-            background: rgba(0, 0, 0, 0.02);
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-        body.light .google-text {
-            color: #1A1F36;
-        }
-        body.light .mode-btn {
-            color: #6C729B;
-        }
-        body.light .mode-btn.active {
-            background: linear-gradient(135deg, #F7931A, #FF6B00);
-            color: #05070A;
-        }
-        body.light .logo p, body.light .switch-mode, body.light .forgot-password a {
-            color: #6C729B;
-        }
+        body.light { background: #F5F7FF; }
+        body.light .auth-card { background: rgba(255, 255, 255, 0.95); border-color: rgba(247, 147, 26, 0.3); }
+        body.light .form-group input { background: rgba(0, 0, 0, 0.03); color: #1A1F36; border-color: rgba(247, 147, 26, 0.2); }
+        body.light .google-btn { background: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.1); }
+        body.light .google-text { color: #1A1F36; }
+        body.light .mode-btn { color: #6C729B; }
+        body.light .mode-btn.active { background: linear-gradient(135deg, #F7931A, #FF6B00); color: #05070A; }
+        body.light .logo p, body.light .switch-mode, body.light .forgot-password a { color: #6C729B; }
 
         .bg-orb {
             position: fixed;
@@ -150,14 +106,8 @@
             text-decoration: none;
         }
 
-        body.light .back-btn {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .back-btn:hover {
-            transform: scale(1.05);
-            border-color: #F7931A;
-        }
+        body.light .back-btn { background: rgba(255, 255, 255, 0.8); }
+        .back-btn:hover { transform: scale(1.05); border-color: #F7931A; }
 
         .theme-toggle {
             background: rgba(13, 15, 23, 0.6);
@@ -173,23 +123,10 @@
             transition: all 0.3s ease;
         }
 
-        body.light .theme-toggle {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .theme-toggle:hover {
-            transform: rotate(15deg);
-            border-color: #F7931A;
-        }
-
-        .theme-toggle i, .back-btn i {
-            font-size: 22px;
-            color: #F7931A;
-        }
-
-        body.light .theme-toggle i {
-            transform: rotate(360deg);
-        }
+        body.light .theme-toggle { background: rgba(255, 255, 255, 0.8); }
+        .theme-toggle:hover { transform: rotate(15deg); border-color: #F7931A; }
+        .theme-toggle i, .back-btn i { font-size: 22px; color: #F7931A; }
+        body.light .theme-toggle i { transform: rotate(360deg); }
 
         .auth-container {
             width: 100%;
@@ -208,11 +145,6 @@
             padding: 48px 40px;
             box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
             transition: all 0.4s ease;
-        }
-
-        .auth-card:hover {
-            border-color: rgba(247, 147, 26, 0.45);
-            box-shadow: 0 40px 80px -20px rgba(247, 147, 26, 0.15);
         }
 
         @media (max-width: 550px) {
@@ -295,10 +227,7 @@
             transition: all 0.3s ease;
         }
 
-        body.light .form-group input {
-            background: rgba(0, 0, 0, 0.03);
-            color: #1A1F36;
-        }
+        body.light .form-group input { background: rgba(0, 0, 0, 0.03); color: #1A1F36; }
 
         .form-group input:focus {
             border-color: #F7931A;
@@ -332,6 +261,16 @@
             cursor: pointer;
         }
 
+        .resend-btn {
+            background: transparent;
+            border: none;
+            color: #F7931A;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+            text-decoration: underline;
+        }
+
         .submit-btn {
             width: 100%;
             padding: 16px;
@@ -347,9 +286,7 @@
             margin-top: 12px;
         }
 
-        .submit-btn:active {
-            transform: scale(0.98);
-        }
+        .submit-btn:active { transform: scale(0.98); }
 
         .divider {
             display: flex;
@@ -384,35 +321,13 @@
             font-family: 'Outfit', sans-serif;
         }
 
-        body.light .google-btn {
-            background: rgba(0, 0, 0, 0.02);
-        }
+        body.light .google-btn { background: rgba(0, 0, 0, 0.02); }
+        .google-btn:hover { background: rgba(247, 147, 26, 0.08); border-color: #F7931A; transform: translateY(-2px); }
+        .google-btn:active { transform: scale(0.98); }
 
-        .google-btn:hover {
-            background: rgba(247, 147, 26, 0.08);
-            border-color: #F7931A;
-            transform: translateY(-2px);
-        }
-
-        .google-btn:active {
-            transform: scale(0.98);
-        }
-
-        .google-icon-img {
-            width: 22px;
-            height: 22px;
-        }
-
-        .google-text {
-            font-size: 15px;
-            font-weight: 600;
-            color: #E8EDF5;
-            letter-spacing: 0.3px;
-        }
-
-        body.light .google-text {
-            color: #1A1F36;
-        }
+        .google-icon-img { width: 22px; height: 22px; }
+        .google-text { font-size: 15px; font-weight: 600; color: #E8EDF5; letter-spacing: 0.3px; }
+        body.light .google-text { color: #1A1F36; }
 
         .switch-mode {
             text-align: center;
@@ -524,6 +439,9 @@
                 <i class="fas fa-check-circle"></i>
             </div>
             <button type="submit" class="submit-btn">Create Account <i class="fas fa-user-plus"></i></button>
+            <div class="forgot-password" style="text-align: center; margin-top: 12px;">
+                <button type="button" id="resendConfirmBtn" class="resend-btn" style="display: none;">Resend confirmation email</button>
+            </div>
         </form>
 
         <div class="divider">
@@ -598,6 +516,8 @@
     const signupForm = document.getElementById('signupForm');
     const switchText = document.getElementById('switchText');
     const googleBtnText = document.getElementById('googleBtnText');
+    const resendBtn = document.getElementById('resendConfirmBtn');
+    let lastSignedUpEmail = '';
 
     function setMode(mode) {
         if (mode === 'signin') {
@@ -608,6 +528,7 @@
             switchText.innerHTML = `Don't have an account? <span id="switchBtn">Sign Up</span>`;
             googleBtnText.innerText = 'Sign in with Google';
             document.getElementById('switchBtn').onclick = () => setMode('signup');
+            if (resendBtn) resendBtn.style.display = 'none';
         } else {
             signupModeBtn.classList.add('active');
             signinModeBtn.classList.remove('active');
@@ -642,7 +563,7 @@
         document.getElementById('successMessage').style.display = 'none';
     }
 
-    // ============ FORGOT PASSWORD ============
+    // Forgot Password
     document.getElementById('forgotPasswordLink').addEventListener('click', async (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
@@ -663,7 +584,23 @@
         }
     });
 
-    // ============ SIGN UP WITH EMAIL CONFIRMATION ============
+    // Resend Confirmation
+    resendBtn.addEventListener('click', async () => {
+        if (!lastSignedUpEmail) return;
+        
+        const { error } = await supabase.auth.resend({
+            type: 'signup',
+            email: lastSignedUpEmail
+        });
+        
+        if (error) {
+            showError(error.message);
+        } else {
+            showSuccess('Confirmation email resent! Please check your inbox.');
+        }
+    });
+
+    // Sign Up with Email Confirmation
     signupForm.onsubmit = async (e) => {
         e.preventDefault();
         
@@ -686,7 +623,9 @@
         if (error) {
             showError(error.message);
         } else {
-            showSuccess('Confirmation email sent! Please check your inbox and click the link to verify your email.');
+            lastSignedUpEmail = email;
+            resendBtn.style.display = 'inline-block';
+            showSuccess('✅ Confirmation email sent! Please check your inbox and click the verification link. Then sign in.');
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
             document.getElementById('signupConfirmPassword').value = '';
@@ -694,7 +633,7 @@
         }
     };
 
-    // ============ SIGN IN ============
+    // Sign In
     signinForm.onsubmit = async (e) => {
         e.preventDefault();
         
@@ -710,7 +649,9 @@
 
         if (error) {
             if (error.message.includes('Email not confirmed')) {
-                showError('Please confirm your email first. Check your inbox for the confirmation link!');
+                showError('⚠️ Please confirm your email first. Check your inbox and click the verification link.');
+                lastSignedUpEmail = email;
+                resendBtn.style.display = 'inline-block';
             } else {
                 showError(error.message);
             }
@@ -730,7 +671,7 @@
         }
     };
 
-    // ============ GOOGLE SIGN IN ============
+    // Google Sign In
     const googleBtn = document.getElementById('googleSignInBtn');
     
     googleBtn.addEventListener('click', async (e) => {
@@ -750,7 +691,7 @@
         }
     });
 
-    // ============ CHECK EXISTING SESSION ============
+    // Check existing session
     const checkSession = async () => {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
