@@ -277,6 +277,10 @@
         }
 
         .submit-btn:active { transform: scale(0.98); }
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
 
         .divider {
             display: flex;
@@ -314,6 +318,10 @@
         body.light .google-btn { background: rgba(0, 0, 0, 0.02); }
         .google-btn:hover { background: rgba(247, 147, 26, 0.08); border-color: #F7931A; transform: translateY(-2px); }
         .google-btn:active { transform: scale(0.98); }
+        .google-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
 
         .google-icon-img { width: 22px; height: 22px; }
         .google-text { font-size: 15px; font-weight: 600; color: #E8EDF5; letter-spacing: 0.3px; }
@@ -361,6 +369,16 @@
         }
 
         .hidden { display: none !important; }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         @media (max-width: 550px) {
             .submit-btn, .mode-btn, .google-btn { min-height: 48px; }
@@ -412,7 +430,7 @@
             <div class="forgot-password">
                 <a href="#" id="forgotPasswordLink">Forgot password?</a>
             </div>
-            <button type="submit" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
+            <button type="submit" class="submit-btn" id="signinSubmitBtn">Sign In <i class="fas fa-arrow-right"></i></button>
         </form>
 
         <form id="signupForm" class="hidden">
@@ -426,9 +444,9 @@
             </div>
             <div class="form-group">
                 <input type="password" id="signupConfirmPassword" placeholder="Confirm password" required>
-                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-eye" onclick="togglePassword('signupConfirmPassword', this)"></i>
             </div>
-            <button type="submit" class="submit-btn">Create Account <i class="fas fa-user-plus"></i></button>
+            <button type="submit" class="submit-btn" id="signupSubmitBtn">Create Account <i class="fas fa-user-plus"></i></button>
         </form>
 
         <div class="divider">
@@ -483,7 +501,7 @@
         document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
     };
 
-    // ============ PASSWORD TOGGLE ============
+    // ============ PASSWORD TOGGLE (FIXED) ============
     window.togglePassword = function(fieldId, iconElement) {
         const field = document.getElementById(fieldId);
         if (field.type === 'password') {
@@ -535,14 +553,22 @@
         const el = document.getElementById('errorMessage');
         el.textContent = msg;
         el.style.display = 'block';
-        setTimeout(function() { el.style.display = 'none'; }, 5000);
+        setTimeout(function() { 
+            if (el.style.display === 'block') {
+                el.style.display = 'none';
+            }
+        }, 5000);
     }
 
     function showSuccess(msg) {
         const el = document.getElementById('successMessage');
         el.textContent = msg;
         el.style.display = 'block';
-        setTimeout(function() { el.style.display = 'none'; }, 5000);
+        setTimeout(function() { 
+            if (el.style.display === 'block') {
+                el.style.display = 'none';
+            }
+        }, 5000);
     }
 
     function hideMessages() {
@@ -550,7 +576,32 @@
         document.getElementById('successMessage').style.display = 'none';
     }
 
-    // ============ FORGOT PASSWORD - REAL SUPABASE ============
+    // ============ LOADING STATES ============
+    function setButtonLoading(button, isLoading, originalText) {
+        if (isLoading) {
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner spinner"></i> Loading...';
+        } else {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
+    }
+
+    // ============ EMAIL VALIDATION ============
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+        return emailRegex.test(email);
+    }
+
+    // ============ PASSWORD STRENGTH VALIDATION ============
+    function validatePasswordStrength(password) {
+        if (password.length < 6) return 'Password must be at least 6 characters';
+        if (!/[A-Z]/.test(password)) return 'Password must contain at least one uppercase letter';
+        if (!/[0-9]/.test(password)) return 'Password must contain at least one number';
+        return null;
+    }
+
+    // ============ FORGOT PASSWORD ============
     const forgotLink = document.getElementById('forgotPasswordLink');
     if (forgotLink) {
         forgotLink.onclick = async function(e) {
@@ -562,8 +613,13 @@
                 return;
             }
             
+            if (!validateEmail(email)) {
+                showError('Please enter a valid email address');
+                return;
+            }
+            
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: 'https://elite.qzz.io/reset-password.html'
+                redirectTo: window.location.origin + '/reset-password.html'
             });
             
             if (error) {
@@ -574,7 +630,10 @@
         };
     }
 
-    // ============ SIGN UP - REAL SUPABASE WITH EMAIL CONFIRMATION ============
+    // ============ SIGN UP ============
+    const signupSubmitBtn = document.getElementById('signupSubmitBtn');
+    const signupOriginalText = signupSubmitBtn.innerHTML;
+    
     signupForm.onsubmit = async function(e) {
         e.preventDefault();
         
@@ -582,17 +641,34 @@
         const password = document.getElementById('signupPassword').value;
         const confirm = document.getElementById('signupConfirmPassword').value;
 
-        if (!email || !password || !confirm) return showError('Please fill in all fields');
-        if (password !== confirm) return showError('Passwords do not match');
-        if (password.length < 6) return showError('Password must be at least 6 characters');
+        if (!email || !password || !confirm) {
+            return showError('Please fill in all fields');
+        }
+        
+        if (!validateEmail(email)) {
+            return showError('Please enter a valid email address');
+        }
+        
+        if (password !== confirm) {
+            return showError('Passwords do not match');
+        }
+        
+        const passwordError = validatePasswordStrength(password);
+        if (passwordError) {
+            return showError(passwordError);
+        }
+
+        setButtonLoading(signupSubmitBtn, true, signupOriginalText);
 
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
             options: {
-                emailRedirectTo: 'https://elite.qzz.io/confirm.html'
+                emailRedirectTo: window.location.origin + '/confirm.html'
             }
         });
+
+        setButtonLoading(signupSubmitBtn, false, signupOriginalText);
 
         if (error) {
             showError(error.message);
@@ -605,23 +681,38 @@
         }
     };
 
-    // ============ SIGN IN - REAL SUPABASE ============
+    // ============ SIGN IN ============
+    const signinSubmitBtn = document.getElementById('signinSubmitBtn');
+    const signinOriginalText = signinSubmitBtn.innerHTML;
+    
     signinForm.onsubmit = async function(e) {
         e.preventDefault();
         
         const email = document.getElementById('signinEmail').value.trim();
         const password = document.getElementById('signinPassword').value;
 
-        if (!email || !password) return showError('Please enter email and password');
+        if (!email || !password) {
+            return showError('Please enter email and password');
+        }
+        
+        if (!validateEmail(email)) {
+            return showError('Please enter a valid email address');
+        }
+
+        setButtonLoading(signinSubmitBtn, true, signinOriginalText);
 
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password
         });
 
+        setButtonLoading(signinSubmitBtn, false, signinOriginalText);
+
         if (error) {
             if (error.message.includes('Email not confirmed')) {
                 showError('⚠️ Please confirm your email first. Check your inbox.');
+            } else if (error.message.includes('Invalid login credentials')) {
+                showError('Invalid email or password. Please try again.');
             } else {
                 showError(error.message);
             }
@@ -637,34 +728,55 @@
             };
             localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
             showSuccess('Signed in! Redirecting...');
-            setTimeout(function() { window.location.href = 'https://elite.qzz.io/dashboard.html'; }, 1500);
+            setTimeout(function() { 
+                window.location.href = window.location.origin + '/dashboard.html';
+            }, 1500);
         }
     };
 
-    // ============ GOOGLE SIGN IN - REAL SUPABASE (NO FAKE) ============
+    // ============ GOOGLE SIGN IN (FIXED WITH POPUP HANDLING) ============
     const googleBtn = document.getElementById('googleSignInBtn');
+    const googleOriginalText = googleBtn.innerHTML;
+    
     if (googleBtn) {
         googleBtn.onclick = async function(e) {
             e.preventDefault();
             
+            setButtonLoading(googleBtn, true, googleOriginalText);
+            
             try {
-                const { error } = await supabase.auth.signInWithOAuth({
+                const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: 'https://elite.qzz.io/dashboard.html'
+                        redirectTo: window.location.origin + '/dashboard.html'
                     }
                 });
+                
                 if (error) throw error;
+                
+                // Note: For OAuth redirect, the page will redirect, so we don't need to reset button state
             } catch (err) {
-                showError(err.message);
+                setButtonLoading(googleBtn, false, googleOriginalText);
+                
+                if (err.message.includes('popup') || err.message.includes('blocked')) {
+                    showError('Please allow popups for this site to sign in with Google');
+                } else {
+                    showError(err.message);
+                }
             }
         };
     }
 
-    // ============ CHECK EXISTING SESSION ============
+    // ============ CHECK EXISTING SESSION (WITH REDIRECT PREVENTION) ============
+    let isRedirecting = false;
+    
     const checkSession = async function() {
+        // Don't check if we're already on dashboard or if redirecting
+        if (isRedirecting) return;
+        
         const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
+        if (session && !window.location.pathname.includes('dashboard')) {
+            isRedirecting = true;
             const user = {
                 id: session.user.id,
                 email: session.user.email,
@@ -672,7 +784,7 @@
                 picture: session.user.user_metadata?.avatar_url || 'https://ui-avatars.com/api/?background=F7931A&color=fff&name=' + session.user.email.split('@')[0]
             };
             localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
-            window.location.href = 'https://elite.qzz.io/dashboard.html';
+            window.location.href = window.location.origin + '/dashboard.html';
         }
     };
     
