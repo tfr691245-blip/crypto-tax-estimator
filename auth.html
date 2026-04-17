@@ -119,16 +119,18 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// INTENTIONAL: Create Supabase client only once, prevent duplicate declaration
 (function() {
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
     
-    // PREVENT DUPLICATE DECLARATION - Check if already exists
+    // Check if already exists - INTENTIONAL: prevent duplicate declaration error
     if (!window.sb) {
         window.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
     const sb = window.sb;
 
+    // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
     function setTheme(t) {
