@@ -196,7 +196,17 @@
         }
         .blockchain-item:hover { background: rgba(247,147,26,0.05); }
         .blockchain-item.active { background: linear-gradient(90deg, rgba(247,147,26,0.1), transparent); border-left: 3px solid var(--accent); }
-        .chain-icon-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: var(--bg-input); padding: 4px; }
+        .chain-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #05070A;
+        }
         .chain-name { font-weight: 700; font-size: 13px; }
         .chain-network { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
 
@@ -294,7 +304,7 @@
             font-size: 14px;
             outline: none;
         }
-        .address-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(247,147,26,0.1); }
+        .address-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(247,147,26,0.1); outline: 2px solid rgba(247,147,26,0.2); }
         .fetch-btn {
             background: var(--accent-gradient);
             border: none;
@@ -305,6 +315,7 @@
             color: #05070A;
             cursor: pointer;
         }
+        .fetch-btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .address-note { font-size: 12px; color: var(--accent); font-family: monospace; background: rgba(247,147,26,0.05); padding: 10px 14px; border-radius: 12px; text-align: center; }
 
         /* Tax Summary */
@@ -407,8 +418,9 @@
                         <input type="file" id="csvFile" accept=".csv" class="file-input">
                     </div>
                     <div class="csv-format-example">
-                        <strong>CSV Format:</strong> date,type,amount,price<br>
-                        Example: 2024-01-01,buy,0.5,20000
+                        <strong>Supported CSV Formats:</strong> Most exchange exports work!<br>
+                        Required columns: date, type (buy/sell), amount, price<br>
+                        <span style="font-size: 10px;">Example: 2024-01-01,buy,0.5,20000</span>
                     </div>
                 </div>
             </div>
@@ -446,7 +458,7 @@
                 <div class="table-wrapper">
                     <table class="tx-table">
                         <thead><tr><th>DATE</th><th>AMOUNT</th><th>GAIN</th></tr></thead>
-                        <tbody id="txBody"><tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px;">Upload CSV or fetch wallet数据</td></tr>?</tbody>
+                        <tbody id="txBody"><tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px;">Upload CSV or fetch wallet data</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -495,21 +507,21 @@
         authBtn.classList.remove('hidden');
     }
 
-    // ============ BLOCKCHAINS ============
+    // ============ BLOCKCHAINS (Fixed with Font Awesome icons) ============
     const BLOCKCHAINS = [
-        { name: "Bitcoin", symbol: "BTC", icon: "/images/btc.png", network: "Bitcoin Mainnet", type: "bitcoin" },
-        { name: "Ethereum", symbol: "ETH", icon: "/images/eth.png", network: "Ethereum Mainnet", type: "evm" },
-        { name: "Binance Smart Chain", symbol: "BNB", icon: "/images/bnb.png", network: "BSC Mainnet", type: "evm" },
-        { name: "Solana", symbol: "SOL", icon: "/images/sol.png", network: "Solana Mainnet", type: "solana" },
-        { name: "Polygon", symbol: "MATIC", icon: "/images/poly.png", network: "Polygon PoS", type: "evm" },
-        { name: "Avalanche", symbol: "AVAX", icon: "/images/avax.png", network: "Avalanche C-Chain", type: "evm" },
-        { name: "Arbitrum", symbol: "ETH", icon: "/images/arb.png", network: "Arbitrum One", type: "evm" },
-        { name: "Optimism", symbol: "OP", icon: "/images/op.png", network: "Optimism Mainnet", type: "evm" },
-        { name: "Base", symbol: "ETH", icon: "/images/base.png", network: "Base Mainnet", type: "evm" },
-        { name: "Fantom", symbol: "FTM", icon: "/images/ftm.png", network: "Fantom Opera", type: "evm" },
-        { name: "Cronos", symbol: "CRO", icon: "/images/cro.png", network: "Cronos Mainnet", type: "evm" },
-        { name: "Gnosis", symbol: "xDAI", icon: "/images/gno.png", network: "Gnosis Chain", type: "evm" },
-        { name: "Celo", symbol: "CELO", icon: "/images/celo.png", network: "Celo Mainnet", type: "evm" }
+        { name: "Bitcoin", symbol: "BTC", icon: "fa-bitcoin", network: "Bitcoin Mainnet", type: "bitcoin" },
+        { name: "Ethereum", symbol: "ETH", icon: "fa-ethereum", network: "Ethereum Mainnet", type: "evm" },
+        { name: "Binance Smart Chain", symbol: "BNB", icon: "fa-chart-line", network: "BSC Mainnet", type: "evm" },
+        { name: "Solana", symbol: "SOL", icon: "fa-bolt", network: "Solana Mainnet", type: "solana" },
+        { name: "Polygon", symbol: "MATIC", icon: "fa-chart-line", network: "Polygon PoS", type: "evm" },
+        { name: "Avalanche", symbol: "AVAX", icon: "fa-chart-line", network: "Avalanche C-Chain", type: "evm" },
+        { name: "Arbitrum", symbol: "ETH", icon: "fa-chart-line", network: "Arbitrum One", type: "evm" },
+        { name: "Optimism", symbol: "OP", icon: "fa-chart-line", network: "Optimism Mainnet", type: "evm" },
+        { name: "Base", symbol: "ETH", icon: "fa-chart-line", network: "Base Mainnet", type: "evm" },
+        { name: "Fantom", symbol: "FTM", icon: "fa-chart-line", network: "Fantom Opera", type: "evm" },
+        { name: "Cronos", symbol: "CRO", icon: "fa-chart-line", network: "Cronos Mainnet", type: "evm" },
+        { name: "Gnosis", symbol: "xDAI", icon: "fa-chart-line", network: "Gnosis Chain", type: "evm" },
+        { name: "Celo", symbol: "CELO", icon: "fa-chart-line", network: "Celo Mainnet", type: "evm" }
     ];
 
     let currentChain = BLOCKCHAINS[0];
@@ -604,6 +616,97 @@
         localStorage.setItem('cryptotax_tx_data', JSON.stringify(txData));
     }
 
+    // Improved CSV Parser with loading state
+    async function processCSV(file) {
+        const dropzone = document.getElementById('csvDropzone');
+        const originalHTML = dropzone.innerHTML;
+        
+        // Show loading state
+        dropzone.innerHTML = `
+            <div class="csv-illustration">
+                <div class="loading-spinner" style="width: 48px; height: 48px; border-width: 3px;"></div>
+            </div>
+            <div class="csv-title">Processing CSV...</div>
+            <div class="csv-subtitle">Please wait while we analyze your transactions</div>
+        `;
+        
+        try {
+            const text = await file.text();
+            const lines = text.trim().split('\n');
+            const headers = lines[0].toLowerCase().split(',');
+            
+            // Auto-detect column mappings
+            const dateIdx = headers.findIndex(h => h.includes('date') || h.includes('timestamp'));
+            const typeIdx = headers.findIndex(h => h.includes('type') || h.includes('side') || h.includes('action'));
+            const amountIdx = headers.findIndex(h => h.includes('amount') || h.includes('quantity') || h.includes('size'));
+            const priceIdx = headers.findIndex(h => h.includes('price') || h.includes('rate') || h.includes('cost'));
+            
+            if (dateIdx === -1 || typeIdx === -1 || amountIdx === -1 || priceIdx === -1) {
+                throw new Error('Could not detect required columns. Please ensure your CSV has date, type, amount, and price columns.');
+            }
+            
+            const transactions = [];
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                if (values.length < 4) continue;
+                
+                let type = values[typeIdx].toLowerCase().trim();
+                if (type === 'buy' || type === 'sell' || type === 'BUY' || type === 'SELL') {
+                    type = type.toLowerCase();
+                } else if (type.includes('buy') || type.includes('purchase')) {
+                    type = 'buy';
+                } else if (type.includes('sell') || type.includes('sale')) {
+                    type = 'sell';
+                } else {
+                    continue;
+                }
+                
+                const transaction = {
+                    date: values[dateIdx].trim(),
+                    type: type,
+                    amount: parseFloat(values[amountIdx]),
+                    price: parseFloat(values[priceIdx])
+                };
+                
+                if (!isNaN(transaction.amount) && !isNaN(transaction.price)) {
+                    transactions.push(transaction);
+                }
+            }
+            
+            if (transactions.length === 0) {
+                throw new Error('No valid transactions found in CSV. Please check the format.');
+            }
+            
+            showFileNameInDropzone(file);
+            const taxResult = calculateFIFOTax(transactions);
+            updateTaxSummary(taxResult);
+            
+            const txBody = document.getElementById('txBody');
+            txBody.innerHTML = transactions.slice(0, 20).map(tx => `
+                <tr>
+                    <td style="padding:10px 8px;">${tx.date}<br><span style="font-size:10px;color:var(--text-muted);">${tx.type.toUpperCase()}</span></td>
+                    <td style="padding:10px 8px;">${tx.amount} @ $${tx.price}</td>
+                    <td style="padding:10px 8px;${tx.type === 'sell' ? (tx.amount*tx.price>0?'color:#4CAF50':'color:#FF6B6B') : 'color:var(--text-muted)'}">${tx.type === 'sell' ? `$${(tx.amount*tx.price).toFixed(2)}` : '—'}</td>
+                </tr>
+            `).join('');
+            
+            if (transactions.length > 20) {
+                txBody.innerHTML += `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:16px;">+ ${transactions.length-20} more transactions</td></tr>`;
+            }
+            
+            document.getElementById('txCount').innerHTML = `${transactions.length} transactions`;
+            
+            const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || {};
+            txData.totalTx = transactions.length;
+            txData.recent = [{ name: file.name, date: new Date().toLocaleString(), netGain: taxResult.netGain }, ...(txData.recent || [])].slice(0, 10);
+            localStorage.setItem('cryptotax_tx_data', JSON.stringify(txData));
+            
+        } catch (error) {
+            alert(`Error processing CSV: ${error.message}`);
+            resetDropzone();
+        }
+    }
+
     const defaultDropzoneHTML = `
         <div class="csv-illustration">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
@@ -638,41 +741,6 @@
         dropzone.style.borderColor = '#4CAF50';
         dropzone.style.background = 'rgba(76,175,80,0.03)';
         dropzone.setAttribute('data-has-file', 'true');
-    }
-
-    async function processCSV(file) {
-        const text = await file.text();
-        const lines = text.trim().split('\n');
-        const transactions = lines.slice(1).map(line => {
-            const [date, type, amount, price] = line.split(',');
-            return { date, type: type?.toLowerCase().trim(), amount: parseFloat(amount), price: parseFloat(price) };
-        }).filter(tx => !isNaN(tx.amount) && !isNaN(tx.price) && (tx.type === 'buy' || tx.type === 'sell'));
-        
-        if (transactions.length === 0) { alert('Invalid CSV format'); resetDropzone(); return; }
-        
-        showFileNameInDropzone(file);
-        const taxResult = calculateFIFOTax(transactions);
-        updateTaxSummary(taxResult);
-        
-        const txBody = document.getElementById('txBody');
-        txBody.innerHTML = transactions.slice(0, 20).map(tx => `
-            <tr>
-                <td style="padding:10px 8px;">${tx.date}<br><span style="font-size:10px;color:var(--text-muted);">${tx.type.toUpperCase()}</span></td>
-                <td style="padding:10px 8px;">${tx.amount} @ $${tx.price}</td>
-                <td style="padding:10px 8px;${tx.type === 'sell' ? (tx.amount*tx.price>0?'color:#4CAF50':'color:#FF6B6B') : 'color:var(--text-muted)'}">${tx.type === 'sell' ? `$${(tx.amount*tx.price).toFixed(2)}` : '—'}</td>
-            </tr>
-        `).join('');
-        
-        if (transactions.length > 20) {
-            txBody.innerHTML += `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:16px;">+ ${transactions.length-20} more transactions</td></tr>`;
-        }
-        
-        document.getElementById('txCount').innerHTML = `${transactions.length} transactions`;
-        
-        const txData = JSON.parse(localStorage.getItem('cryptotax_tx_data')) || {};
-        txData.totalTx = transactions.length;
-        txData.recent = [{ name: file.name, date: new Date().toLocaleString(), netGain: taxResult.netGain }, ...(txData.recent || [])].slice(0, 10);
-        localStorage.setItem('cryptotax_tx_data', JSON.stringify(txData));
     }
 
     function setupCSVUpload() {
@@ -751,7 +819,7 @@
         const btn = document.getElementById('fetchBtn');
         const originalText = btn.innerHTML;
         btn.disabled = true;
-        btn.innerHTML = '<span class="loading-spinner"></span>';
+        btn.innerHTML = '<span class="loading-spinner"></span> Fetching...';
         try {
             let result;
             if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
@@ -810,7 +878,7 @@
         const container = document.getElementById('blockchainList');
         container.innerHTML = BLOCKCHAINS.map(chain => `
             <div class="blockchain-item ${currentChain.name === chain.name ? 'active' : ''}" data-name="${chain.name}" data-symbol="${chain.symbol}" data-type="${chain.type}">
-                <img class="chain-icon-img" src="${chain.icon}" alt="${chain.name}" onerror="this.style.display='none';">
+                <div class="chain-icon"><i class="fab ${chain.icon}"></i></div>
                 <div><div class="chain-name">${chain.name}</div><div class="chain-network">${chain.network}</div></div>
                 <div style="margin-left:auto;color:var(--accent);">${chain.symbol}</div>
             </div>
