@@ -374,7 +374,7 @@
     const { data: { session } } = await sb.auth.getSession();
     
     if (!session) {
-        window.location.href = 'https://elite.qzz.io/auth.html';
+        window.location.href = 'auth.html';
         return;
     }
     
@@ -431,7 +431,7 @@
     window.logout = async function() {
         await sb.auth.signOut();
         localStorage.removeItem('cryptotax_current_user');
-        window.location.href = 'https://elite.qzz.io/index.html';
+        window.location.href = 'index.html';
     };
     
     document.getElementById('logoutBtn').onclick = (e) => {
