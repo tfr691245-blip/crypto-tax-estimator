@@ -2,107 +2,219 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CryptoTax | Precision Crypto Accounting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>CryptoTax | Professional Crypto Tax Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --primary: #F7931A; --secondary: #FF6B00; --bg: #05070A; --card: #0D0F17; --text: #E8EDF5; --muted: #8E94B3; }
-        body.light { --bg: #F5F7FF; --card: #FFFFFF; --text: #1A1F36; --muted: #6C729B; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; transition: 0.3s ease; }
-        .nav { position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(5,7,10,0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(247,147,26,0.1); }
-        body.light .nav { background: rgba(255,255,255,0.8); }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #F7931A, #FF6B00); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #05070A; font-size: 20px; }
-        .logo-text { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; color: transparent; }
-        .nav-links { display: flex; gap: 32px; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: 15px; transition: 0.3s; }
-        .nav-links a:hover { color: var(--primary); }
-        .auth-btns { display: flex; gap: 16px; align-items: center; }
-        .btn-outline { padding: 10px 24px; border-radius: 60px; border: 1.5px solid var(--primary); color: var(--primary); text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.3s; }
-        .btn-primary { padding: 11px 26px; border-radius: 60px; background: linear-gradient(135deg, #F7931A, #FF6B00); color: #05070A; text-decoration: none; font-weight: 700; font-size: 14px; box-shadow: 0 4px 15px rgba(247,147,26,0.3); }
-        .hero { min-height: 100vh; display: flex; align-items: center; padding: 0 5%; position: relative; }
-        .hero-content { max-width: 800px; z-index: 1; margin-top: 60px; }
-        .hero h1 { font-size: 72px; font-weight: 900; line-height: 1.1; margin-bottom: 24px; font-family: 'Space Grotesk', sans-serif; }
-        .hero h1 span { background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; color: transparent; }
-        .hero p { font-size: 20px; color: var(--muted); margin-bottom: 40px; max-width: 600px; }
-        .hero-btns { display: flex; gap: 20px; }
-        .hero-btn-lg { padding: 18px 40px; border-radius: 60px; font-size: 18px; font-weight: 700; text-decoration: none; transition: 0.3s; }
-        .theme-toggle, .mobile-menu-btn { width: 45px; height: 45px; border-radius: 50%; border: 1px solid rgba(247,147,26,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--primary); font-size: 18px; }
-        .mobile-menu-btn { display: none; }
-        @media (max-width: 968px) {
-            .nav-links, .auth-btns { display: none; }
-            .mobile-menu-btn { display: flex; }
-            .hero h1 { font-size: 48px; }
+        
+        :root {
+            --bg-primary: #0A0C15;
+            --bg-secondary: #0D0F17;
+            --bg-card: #0D0F17;
+            --text-primary: #E8EDF5;
+            --text-secondary: #8E94B3;
+            --text-muted: #6C729B;
+            --border-color: #1A1E2C;
+            --border-light: rgba(247, 147, 26, 0.15);
+            --accent: #F7931A;
+            --accent-gradient: linear-gradient(135deg, #F7931A, #FF6B00);
+            --card-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        body.light {
+            --bg-primary: #F5F7FF;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1F36;
+            --text-secondary: #4E5971;
+            --text-muted: #6C729B;
+            --border-color: #E2E8F0;
+            --border-light: rgba(247, 147, 26, 0.1);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 12, 21, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        body.light .navbar {
+            background: rgba(245, 247, 255, 0.8);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #05070A;
+            box-shadow: 0 4px 15px rgba(247, 147, 26, 0.3);
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #F7931A, #FFD166);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .theme-toggle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .auth-btn {
+            padding: 12px 28px;
+            border-radius: 60px;
+            background: var(--accent-gradient);
+            color: #05070A;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(247, 147, 26, 0.2);
+            border: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 16px 6px 6px;
+            background: var(--bg-secondary);
+            border-radius: 60px;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <nav class="nav">
+    <nav class="navbar">
         <a href="index.html" class="logo">
             <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
             <span class="logo-text">CRYPTOTAX</span>
         </a>
-        <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="tax-estimator.html">Tax Estimator</a>
-            <a href="#pricing">Pricing</a>
-        </div>
-        <div class="auth-btns">
+        <div class="nav-right">
             <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></div>
-            <a href="auth.html" class="btn-outline">Sign In</a>
-            <a href="auth.html" class="btn-primary">Get Started</a>
-        </div>
-        <div class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></div>
-    </nav>
-
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Crypto Taxes <span>Simplified</span> for the Modern Era.</h1>
-            <p>Institutional-grade crypto tax reporting for individuals and enterprises. Seamlessly sync 500+ exchanges and wallets.</p>
-            <div class="hero-btns">
-                <a href="auth.html" class="hero-btn-lg btn-primary">Start Free Trial</a>
-                <a href="tax-estimator.html" class="hero-btn-lg btn-outline" style="border-width: 2px;">Try Estimator</a>
+            <a href="auth.html" class="auth-btn" id="authBtn">Get Started</a>
+            <div class="user-info hidden" id="userInfo" onclick="location.href='dashboard.html'">
+                <img src="" alt="" class="user-avatar" id="userAvatar">
+                <span class="user-name" id="userName">User</span>
+                <i class="fas fa-sign-out-alt" style="margin-left: 8px; color: var(--text-muted); font-size: 12px;" id="logoutBtn"></i>
             </div>
         </div>
-    </section>
+    </nav>
 
     <script>
-    (function() {
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const icon = themeToggle.querySelector('i');
-        
-        if (localStorage.getItem('theme') === 'light') {
-            document.body.classList.add('light');
-            icon.classList.replace('fa-moon', 'fa-sun');
-        }
-
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light');
-            const isLight = document.body.classList.contains('light');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            icon.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
-        });
-
-        // Supabase session check
-        const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                const authBtns = document.querySelector('.auth-btns');
-                const btnPrimary = authBtns.querySelector('.btn-primary');
-                const btnOutline = authBtns.querySelector('.btn-outline');
-                if(btnPrimary) btnPrimary.innerText = 'Dashboard';
-                if(btnPrimary) btnPrimary.href = 'dashboard.html';
-                if(btnOutline) btnOutline.style.display = 'none';
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            function setTheme(theme) {
+                if (theme === 'light') {
+                    document.body.classList.add('light');
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.body.classList.remove('light');
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'dark');
+                }
             }
-        });
-    })();
+            
+            const savedTheme = localStorage.getItem('theme');
+            savedTheme === 'light' ? setTheme('light') : setTheme('dark');
+            
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
+            });
+
+            const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
+            const userInfo = document.getElementById('userInfo');
+            const authBtn = document.getElementById('authBtn');
+            
+            if (currentUser) {
+                userInfo.classList.remove('hidden');
+                authBtn.classList.add('hidden');
+                document.getElementById('userName').innerText = currentUser.name || currentUser.email.split('@')[0];
+                document.getElementById('userAvatar').src = currentUser.picture || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${currentUser.email}`;
+                document.getElementById('logoutBtn').onclick = (e) => {
+                    e.stopPropagation();
+                    localStorage.removeItem('cryptotax_current_user');
+                    window.location.reload();
+                };
+            }
+        })();
     </script>
 </body>
 </html>
