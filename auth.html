@@ -66,7 +66,6 @@
     <div id="errorMessage" class="error-message"></div>
     <div id="successMessage" class="success-message"></div>
     
-    <!-- Sign In Form -->
     <form id="signinForm">
         <div class="form-group">
             <input type="email" id="signinEmail" placeholder="Email address" required>
@@ -82,7 +81,6 @@
         <button type="submit" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
     </form>
     
-    <!-- Sign Up Form -->
     <form id="signupForm" class="hidden">
         <div class="form-group">
             <input type="email" id="signupEmail" placeholder="Email address" required>
@@ -111,157 +109,121 @@
 </div>
 
 <script>
-// Supabase config
-const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
+(function() {
+    const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Initializing within scoped closure to prevent global collision
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Theme
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'light') document.body.classList.add('light');
-document.getElementById('themeToggle').onclick = () => {
-    document.body.classList.toggle('light');
-    localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
-};
+    // Theme logic
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') document.body.classList.add('light');
+    document.getElementById('themeToggle').onclick = () => {
+        document.body.classList.toggle('light');
+        localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    };
 
-// Password toggle - fixed
-document.querySelectorAll('.toggle-password').forEach(icon => {
-    icon.addEventListener('click', function() {
-        const targetId = this.getAttribute('data-target');
-        const input = document.getElementById(targetId);
-        if (input.type === 'password') {
-            input.type = 'text';
-            this.classList.remove('fa-eye');
-            this.classList.add('fa-eye-slash');
+    // Password visibility toggle
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            }
+        });
+    });
+
+    const signinModeBtn = document.getElementById('signinModeBtn');
+    const signupModeBtn = document.getElementById('signupModeBtn');
+    const signinForm = document.getElementById('signinForm');
+    const signupForm = document.getElementById('signupForm');
+    const switchText = document.getElementById('switchText');
+    const errorDiv = document.getElementById('errorMessage');
+    const successDiv = document.getElementById('successMessage');
+
+    function showError(msg) {
+        errorDiv.textContent = msg;
+        errorDiv.style.display = 'block';
+        setTimeout(() => errorDiv.style.display = 'none', 5000);
+    }
+
+    function showSuccess(msg) {
+        successDiv.textContent = msg;
+        successDiv.style.display = 'block';
+        setTimeout(() => successDiv.style.display = 'none', 5000);
+    }
+
+    function setMode(mode) {
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+        if (mode === 'signin') {
+            signinModeBtn.classList.add('active');
+            signupModeBtn.classList.remove('active');
+            signinForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            switchText.innerHTML = 'Don\'t have an account? <span id="switchBtn">Sign Up</span>';
+            document.querySelector('.google-text').innerText = 'Sign in with Google';
+            document.getElementById('switchBtn')?.addEventListener('click', () => setMode('signup'));
         } else {
-            input.type = 'password';
-            this.classList.remove('fa-eye-slash');
-            this.classList.add('fa-eye');
+            signupModeBtn.classList.add('active');
+            signinModeBtn.classList.remove('active');
+            signupForm.classList.remove('hidden');
+            signinForm.classList.add('hidden');
+            switchText.innerHTML = 'Already have an account? <span id="switchBtn">Sign In</span>';
+            document.querySelector('.google-text').innerText = 'Sign up with Google';
+            document.getElementById('switchBtn')?.addEventListener('click', () => setMode('signin'));
         }
-    });
-});
-
-// UI elements
-const signinModeBtn = document.getElementById('signinModeBtn');
-const signupModeBtn = document.getElementById('signupModeBtn');
-const signinForm = document.getElementById('signinForm');
-const signupForm = document.getElementById('signupForm');
-const switchText = document.getElementById('switchText');
-const errorDiv = document.getElementById('errorMessage');
-const successDiv = document.getElementById('successMessage');
-
-function showError(msg) {
-    errorDiv.textContent = msg;
-    errorDiv.style.display = 'block';
-    setTimeout(() => errorDiv.style.display = 'none', 5000);
-}
-
-function showSuccess(msg) {
-    successDiv.textContent = msg;
-    successDiv.style.display = 'block';
-    setTimeout(() => successDiv.style.display = 'none', 5000);
-}
-
-function hideMessages() {
-    errorDiv.style.display = 'none';
-    successDiv.style.display = 'none';
-}
-
-function setMode(mode) {
-    hideMessages();
-    if (mode === 'signin') {
-        signinModeBtn.classList.add('active');
-        signupModeBtn.classList.remove('active');
-        signinForm.classList.remove('hidden');
-        signupForm.classList.add('hidden');
-        switchText.innerHTML = 'Don\'t have an account? <span id="switchBtn">Sign Up</span>';
-        document.querySelector('.google-text').innerText = 'Sign in with Google';
-        document.getElementById('switchBtn')?.addEventListener('click', () => setMode('signup'));
-    } else {
-        signupModeBtn.classList.add('active');
-        signinModeBtn.classList.remove('active');
-        signupForm.classList.remove('hidden');
-        signinForm.classList.add('hidden');
-        switchText.innerHTML = 'Already have an account? <span id="switchBtn">Sign In</span>';
-        document.querySelector('.google-text').innerText = 'Sign up with Google';
-        document.getElementById('switchBtn')?.addEventListener('click', () => setMode('signin'));
     }
-}
 
-signinModeBtn.onclick = () => setMode('signin');
-signupModeBtn.onclick = () => setMode('signup');
-setMode('signin');
+    signinModeBtn.onclick = () => setMode('signin');
+    signupModeBtn.onclick = () => setMode('signup');
+    setMode('signin');
 
-// Forgot Password
-document.getElementById('forgotPasswordLink').onclick = async () => {
-    const email = document.getElementById('signinEmail').value.trim();
-    if (!email) return showError('Please enter your email address');
-    
-    const redirectUrl = `${window.location.origin}/reset-password.html`;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirectUrl });
-    error ? showError(error.message) : showSuccess('Password reset link sent! Check your email.');
-};
+    document.getElementById('forgotPasswordLink').onclick = async () => {
+        const email = document.getElementById('signinEmail').value.trim();
+        if (!email) return showError('Please enter your email address');
+        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password.html` });
+        error ? showError(error.message) : showSuccess('Password reset link sent!');
+    };
 
-// Sign Up
-document.getElementById('signupForm').onsubmit = async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('signupEmail').value.trim();
-    const password = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirmPassword').value;
-    
-    if (!email || !password) return showError('Please fill all fields');
-    if (password !== confirm) return showError('Passwords do not match');
-    if (password.length < 6) return showError('Password must be at least 6 characters');
-    
-    const redirectUrl = `${window.location.origin}/confirm.html`;
-    const { error } = await supabase.auth.signUp({ 
-        email, 
-        password, 
-        options: { emailRedirectTo: redirectUrl } 
+    document.getElementById('signupForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const confirm = document.getElementById('signupConfirmPassword').value;
+        if (password !== confirm) return showError('Passwords do not match');
+        const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/confirm.html` } });
+        error ? showError(error.message) : showSuccess('Confirmation email sent!');
+    };
+
+    document.getElementById('signinForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('signinEmail').value.trim();
+        const password = document.getElementById('signinPassword').value;
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) return showError(error.message);
+        if (data.user) {
+            localStorage.setItem('cryptotax_current_user', JSON.stringify({ id: data.user.id, email: data.user.email }));
+            window.location.href = `${window.location.origin}/dashboard.html`;
+        }
+    };
+
+    document.getElementById('googleSignInBtn').onclick = async () => {
+        await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/dashboard.html` } });
+    };
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) window.location.href = `${window.location.origin}/dashboard.html`;
     });
-    
-    error ? showError(error.message) : showSuccess('Confirmation email sent! Check your inbox.');
-};
-
-// Sign In
-document.getElementById('signinForm').onsubmit = async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('signinEmail').value.trim();
-    const password = document.getElementById('signinPassword').value;
-    
-    if (!email || !password) return showError('Please enter email and password');
-    
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) return showError(error.message);
-    
-    if (data.user) {
-        localStorage.setItem('cryptotax_current_user', JSON.stringify({
-            id: data.user.id,
-            email: data.user.email,
-            name: data.user.email.split('@')[0]
-        }));
-        showSuccess('Signed in! Redirecting...');
-        setTimeout(() => window.location.href = `${window.location.origin}/dashboard.html`, 1500);
-    }
-};
-
-// Google Sign In
-document.getElementById('googleSignInBtn').onclick = async () => {
-    const redirectUrl = `${window.location.origin}/dashboard.html`;
-    const { error } = await supabase.auth.signInWithOAuth({ 
-        provider: 'google', 
-        options: { redirectTo: redirectUrl } 
-    });
-    if (error) showError(error.message);
-};
-
-// Check existing session
-supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) {
-        window.location.href = `${window.location.origin}/dashboard.html`;
-    }
-});
+})();
 </script>
 </body>
 </html>
