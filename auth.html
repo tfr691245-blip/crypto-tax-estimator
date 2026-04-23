@@ -113,39 +113,34 @@
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
 
-    // Initializing within scoped closure to prevent global collision
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Theme logic
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') document.body.classList.add('light');
-    document.getElementById('themeToggle').onclick = () => {
+    
+    themeToggle.onclick = () => {
         document.body.classList.toggle('light');
         localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
     };
 
-    // Password visibility toggle
+    // Password Visibility
     document.querySelectorAll('.toggle-password').forEach(icon => {
-        icon.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
-            const input = document.getElementById(targetId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                this.classList.remove('fa-eye');
-                this.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                this.classList.remove('fa-eye-slash');
-                this.classList.add('fa-eye');
-            }
-        });
+        icon.onclick = function() {
+            const input = document.getElementById(this.dataset.target);
+            input.type = input.type === 'password' ? 'text' : 'password';
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        };
     });
 
+    // Form Switching
     const signinModeBtn = document.getElementById('signinModeBtn');
     const signupModeBtn = document.getElementById('signupModeBtn');
     const signinForm = document.getElementById('signinForm');
     const signupForm = document.getElementById('signupForm');
-    const switchText = document.getElementById('switchText');
+    const switchBtn = document.getElementById('switchBtn');
     const errorDiv = document.getElementById('errorMessage');
     const successDiv = document.getElementById('successMessage');
 
@@ -161,32 +156,28 @@
         setTimeout(() => successDiv.style.display = 'none', 5000);
     }
 
-    function setMode(mode) {
-        errorDiv.style.display = 'none';
-        successDiv.style.display = 'none';
-        if (mode === 'signin') {
-            signinModeBtn.classList.add('active');
-            signupModeBtn.classList.remove('active');
-            signinForm.classList.remove('hidden');
-            signupForm.classList.add('hidden');
-            switchText.innerHTML = 'Don\'t have an account? <span id="switchBtn">Sign Up</span>';
-            document.querySelector('.google-text').innerText = 'Sign in with Google';
-            document.getElementById('switchBtn')?.addEventListener('click', () => setMode('signup'));
-        } else {
-            signupModeBtn.classList.add('active');
-            signinModeBtn.classList.remove('active');
-            signupForm.classList.remove('hidden');
+    function toggleMode(mode) {
+        if (mode === 'signup') {
             signinForm.classList.add('hidden');
-            switchText.innerHTML = 'Already have an account? <span id="switchBtn">Sign In</span>';
-            document.querySelector('.google-text').innerText = 'Sign up with Google';
-            document.getElementById('switchBtn')?.addEventListener('click', () => setMode('signin'));
+            signupForm.classList.remove('hidden');
+            signinModeBtn.classList.remove('active');
+            signupModeBtn.classList.add('active');
+            document.getElementById('switchText').innerHTML = 'Already have an account? <span id="switchBtn">Sign In</span>';
+        } else {
+            signupForm.classList.add('hidden');
+            signinForm.classList.remove('hidden');
+            signupModeBtn.classList.remove('active');
+            signinModeBtn.classList.add('active');
+            document.getElementById('switchText').innerHTML = 'Don\'t have an account? <span id="switchBtn">Sign Up</span>';
         }
+        document.getElementById('switchBtn').onclick = () => toggleMode(mode === 'signup' ? 'signin' : 'signup');
     }
 
-    signinModeBtn.onclick = () => setMode('signin');
-    signupModeBtn.onclick = () => setMode('signup');
-    setMode('signin');
+    signinModeBtn.onclick = () => toggleMode('signin');
+    signupModeBtn.onclick = () => toggleMode('signup');
+    switchBtn.onclick = () => toggleMode('signup');
 
+    // Reset Password
     document.getElementById('forgotPasswordLink').onclick = async () => {
         const email = document.getElementById('signinEmail').value.trim();
         if (!email) return showError('Please enter your email address');
@@ -194,6 +185,7 @@
         error ? showError(error.message) : showSuccess('Password reset link sent!');
     };
 
+    // Sign Up
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -204,6 +196,7 @@
         error ? showError(error.message) : showSuccess('Confirmation email sent!');
     };
 
+    // Sign In
     document.getElementById('signinForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
@@ -212,16 +205,17 @@
         if (error) return showError(error.message);
         if (data.user) {
             localStorage.setItem('cryptotax_current_user', JSON.stringify({ id: data.user.id, email: data.user.email }));
-            window.location.href = `${window.location.origin}/dashboard.html`;
+            window.location.href = 'dashboard.html';
         }
     };
 
+    // Google
     document.getElementById('googleSignInBtn').onclick = async () => {
         await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/dashboard.html` } });
     };
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) window.location.href = `${window.location.origin}/dashboard.html`;
+        if (session) window.location.href = 'dashboard.html';
     });
 })();
 </script>
