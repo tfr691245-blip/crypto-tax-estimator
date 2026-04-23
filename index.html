@@ -2,486 +2,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>CryptoTax | Professional Crypto Tax Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CryptoTax | Precision Crypto Accounting</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        :root { --primary: #F7931A; --secondary: #FF6B00; --bg: #05070A; --card: #0D0F17; --text: #E8EDF5; --muted: #8E94B3; }
+        body.light { --bg: #F5F7FF; --card: #FFFFFF; --text: #1A1F36; --muted: #6C729B; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --bg-primary: #0A0C15;
-            --bg-secondary: #0D0F17;
-            --bg-card: #0D0F17;
-            --text-primary: #E8EDF5;
-            --text-secondary: #8E94B3;
-            --text-muted: #6C729B;
-            --border-color: #1A1E2C;
-            --border-light: rgba(247, 147, 26, 0.15);
-            --accent: #F7931A;
-            --accent-gradient: linear-gradient(135deg, #F7931A 0%, #E07C0A 100%);
-            --shadow: 0 8px 20px rgba(247, 147, 26, 0.25);
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; transition: 0.3s ease; }
+        .nav { position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(5,7,10,0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(247,147,26,0.1); }
+        body.light .nav { background: rgba(255,255,255,0.8); }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #F7931A, #FF6B00); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #05070A; font-size: 20px; }
+        .logo-text { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; color: transparent; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: 15px; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        .auth-btns { display: flex; gap: 16px; align-items: center; }
+        .btn-outline { padding: 10px 24px; border-radius: 60px; border: 1.5px solid var(--primary); color: var(--primary); text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.3s; }
+        .btn-primary { padding: 11px 26px; border-radius: 60px; background: linear-gradient(135deg, #F7931A, #FF6B00); color: #05070A; text-decoration: none; font-weight: 700; font-size: 14px; box-shadow: 0 4px 15px rgba(247,147,26,0.3); }
+        .hero { min-height: 100vh; display: flex; align-items: center; padding: 0 5%; position: relative; }
+        .hero-content { max-width: 800px; z-index: 1; margin-top: 60px; }
+        .hero h1 { font-size: 72px; font-weight: 900; line-height: 1.1; margin-bottom: 24px; font-family: 'Space Grotesk', sans-serif; }
+        .hero h1 span { background: linear-gradient(135deg, #F7931A, #FFD166); -webkit-background-clip: text; color: transparent; }
+        .hero p { font-size: 20px; color: var(--muted); margin-bottom: 40px; max-width: 600px; }
+        .hero-btns { display: flex; gap: 20px; }
+        .hero-btn-lg { padding: 18px 40px; border-radius: 60px; font-size: 18px; font-weight: 700; text-decoration: none; transition: 0.3s; }
+        .theme-toggle, .mobile-menu-btn { width: 45px; height: 45px; border-radius: 50%; border: 1px solid rgba(247,147,26,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--primary); font-size: 18px; }
+        .mobile-menu-btn { display: none; }
+        @media (max-width: 968px) {
+            .nav-links, .auth-btns { display: none; }
+            .mobile-menu-btn { display: flex; }
+            .hero h1 { font-size: 48px; }
         }
-
-        body.light {
-            --bg-primary: #F5F7FF;
-            --bg-secondary: #FFFFFF;
-            --bg-card: #FFFFFF;
-            --text-primary: #1A1F36;
-            --text-secondary: #4A5568;
-            --text-muted: #718096;
-            --border-color: #E2E8F0;
-            --border-light: rgba(247, 147, 26, 0.2);
-        }
-
-        html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            font-family: 'Outfit', 'Space Grotesk', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.5;
-            min-height: 100vh;
-            overflow-x: hidden;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        body:not(.light) .bg-orb {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background: #0A0C15;
-        }
-
-        body:not(.light) .bg-orb::before {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(circle, rgba(247, 147, 26, 0.12), transparent 70%);
-            filter: blur(80px);
-            animation: float 12s ease-in-out infinite;
-        }
-
-        @keyframes float { 0%,100% { transform: translate(0,0) scale(1); opacity: 0.5; } 50% { transform: translate(5%,5%) scale(1.1); opacity: 0.8; } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
-        @media (min-width: 768px) { .container { padding: 24px; } }
-
-        /* Navigation */
-        .navbar {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 32px;
-            padding: 16px;
-            background: var(--bg-secondary);
-            border-radius: 24px;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-
-        @media (min-width: 768px) {
-            .navbar { flex-direction: row; justify-content: space-between; text-align: left; padding: 16px 24px; margin-bottom: 48px; }
-        }
-
-        .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .logo-icon { width: 44px; height: 44px; background: var(--accent-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: var(--shadow); }
-        .logo-text h1 { font-size: 24px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .logo-text p { font-size: 11px; color: var(--accent); letter-spacing: 1px; font-weight: 500; }
-
-        .nav-right { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px; width: 100%; flex-wrap: wrap; }
-        @media (min-width: 768px) { .nav-right { margin-top: 0; width: auto; } }
-
-        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 8px 20px;
-            border-radius: 40px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-        .nav-link:hover { background: rgba(247, 147, 26, 0.1); color: var(--accent); }
-        .nav-link.active { background: var(--accent-gradient); color: #05070A; box-shadow: var(--shadow); }
-
-        /* User Profile */
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(247, 147, 26, 0.1);
-            padding: 5px 16px 5px 8px;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .user-info:hover { background: rgba(247, 147, 26, 0.2); }
-        .user-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
-        .user-name { font-size: 14px; font-weight: 600; color: var(--accent); }
-        .logout-btn {
-            background: transparent;
-            border: 1px solid rgba(247, 147, 26, 0.3);
-            color: var(--accent);
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .logout-btn:hover { background: rgba(247, 147, 26, 0.1); }
-
-        /* Account Button */
-        .account-btn {
-            background: rgba(247, 147, 26, 0.15);
-            border: 1px solid rgba(247, 147, 26, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .account-btn i { font-size: 14px; }
-
-        /* Theme Toggle */
-        .theme-toggle {
-            background: rgba(5, 7, 10, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .theme-toggle:hover { transform: rotate(15deg); border-color: var(--accent); }
-        .theme-toggle i { font-size: 20px; transition: transform 0.5s ease; }
-        body.light .theme-toggle i { transform: rotate(360deg); }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, rgba(247, 147, 26, 0.05), rgba(224, 124, 10, 0.02));
-            border-radius: 48px;
-            border: 1px solid var(--border-light);
-            margin-bottom: 48px;
-            animation: fadeInUp 0.6s ease-out;
-        }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(247, 147, 26, 0.1);
-            padding: 8px 20px;
-            border-radius: 60px;
-            margin-bottom: 28px;
-            font-size: 13px;
-            color: var(--accent);
-            font-weight: 500;
-        }
-        .hero h2 { font-size: 48px; font-weight: 800; margin-bottom: 20px; letter-spacing: -1px; }
-        @media (min-width: 768px) { .hero h2 { font-size: 72px; } }
-        .gradient-text { background: linear-gradient(135deg, #F7931A 0%, #FFD166 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .hero p { color: var(--text-secondary); max-width: 600px; margin: 0 auto 32px; font-size: 16px; line-height: 1.6; }
-        
-        .btn-estimator {
-            background: var(--accent-gradient);
-            border: none;
-            padding: 14px 36px;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 16px;
-            color: #05070A;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-        }
-        .btn-estimator:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(247, 147, 26, 0.4); }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 60px;
-        }
-        @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
-        .stat-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 28px 20px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-        .stat-card:hover { border-color: var(--accent); transform: translateY(-5px); }
-        .stat-number { font-size: 40px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
-
-        /* Features Grid */
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        .section-title h3 { font-size: 32px; font-weight: 700; margin-bottom: 12px; letter-spacing: -1px; }
-        .section-title p { color: var(--text-secondary); font-size: 16px; }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-            margin-bottom: 60px;
-        }
-        @media (min-width: 768px) { .features-grid { grid-template-columns: repeat(3, 1fr); } }
-        .feature-card {
-            background: var(--bg-card);
-            border-radius: 28px;
-            padding: 36px 28px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-        .feature-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .feature-icon { width: 72px; height: 72px; background: linear-gradient(135deg, rgba(247, 147, 26, 0.15), rgba(255, 107, 0, 0.08)); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 24px; }
-        .feature-card h4 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
-        .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
-
-        /* CTA Section */
-        .cta-section {
-            background: linear-gradient(135deg, rgba(247, 147, 26, 0.08), rgba(255, 107, 0, 0.04));
-            border-radius: 48px;
-            padding: 60px 40px;
-            text-align: center;
-            margin-bottom: 60px;
-            border: 1px solid var(--border-light);
-        }
-        .cta-section h3 { font-size: 32px; font-weight: 700; margin-bottom: 16px; }
-        .cta-section p { color: var(--text-secondary); margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; }
-
-        /* Disclaimer */
-        .disclaimer {
-            background: rgba(247, 147, 26, 0.04);
-            border: 1px solid var(--border-light);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 30px;
-        }
-        .disclaimer-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; }
-        .disclaimer-header i { font-size: 20px; color: var(--accent); }
-        .disclaimer-header span { font-size: 13px; font-weight: 700; color: var(--accent); }
-        .disclaimer-text { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.5; max-width: 800px; margin: 0 auto; }
-        .disclaimer-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-top: 18px; font-size: 11px; }
-        .badge-check { color: #4CAF50; }
-        .badge-cross { color: #FF6B6B; }
-
-        /* Footer */
-        .footer {
-            padding: 24px 20px;
-            background: var(--bg-secondary);
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            font-size: 13px;
-            color: var(--text-muted);
-            text-align: center;
-        }
-        @media (min-width: 768px) { .footer { flex-direction: row; justify-content: space-between; } }
-        .footer-social { display: flex; gap: 20px; }
-        .footer-social a { color: var(--text-muted); transition: all 0.3s ease; font-size: 18px; }
-        .footer-social a:hover { color: var(--accent); }
-
-        .hidden { display: none !important; }
-        
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
     </style>
 </head>
 <body>
-<div class="bg-orb"></div>
-<div class="container">
-    <!-- Navigation -->
-    <div class="navbar">
-        <div class="logo" onclick="window.location.href='index.html'">
+    <nav class="nav">
+        <a href="index.html" class="logo">
             <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
-            <div class="logo-text">
-                <h1>CRYPTOTAX</h1>
-                <p>ENTERPRISE GRADE</p>
-            </div>
-        </div>
-        <div class="nav-right">
-            <div class="nav-links">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="tax-estimator.html" class="nav-link">Estimator</a>
-            </div>
-            
-            <!-- User Profile (shown when logged in) -->
-            <div id="userInfo" class="user-info hidden" onclick="window.location.href='dashboard.html'">
-                <img id="userAvatar" class="user-avatar" src="">
-                <span id="userName" class="user-name"></span>
-                <button id="logoutBtn" class="logout-btn" onclick="event.stopPropagation(); logout();">Exit</button>
-            </div>
-            
-            <!-- Account Button (shown when not logged in) -->
-            <a href="auth.html" id="authBtn" class="nav-link account-btn">
-                <i class="fas fa-user-circle"></i> Account
-            </a>
-            
-            <div class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
-    <div class="hero">
-        <div class="hero-badge">
-            <i class="fas fa-bolt"></i>
-            <span>Powered by FIFO Methodology</span>
-        </div>
-        <h2>Crypto Tax<br><span class="gradient-text">Made Simple</span></h2>
-        <p>Calculate capital gains across 15+ blockchains. Upload CSV or connect wallets for instant tax insights.</p>
-        <a href="tax-estimator.html" class="btn-estimator">
-            <i class="fas fa-rocket"></i> Launch Estimator <i class="fas fa-arrow-right"></i>
+            <span class="logo-text">CRYPTOTAX</span>
         </a>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-        <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Blockchains</div></div>
-        <div class="stat-card"><div class="stat-number">FIFO</div><div class="stat-label">Standard</div></div>
-        <div class="stat-card"><div class="stat-number">Real</div><div class="stat-label">Time Data</div></div>
-        <div class="stat-card"><div class="stat-number">Instant</div><div class="stat-label">Results</div></div>
-    </div>
-
-    <!-- Features Section -->
-    <div class="section-title">
-        <h3>Enterprise Features</h3>
-        <p>Everything you need for accurate crypto tax reporting</p>
-    </div>
-
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-file-csv"></i></div>
-            <h4>CSV Import</h4>
-            <p>Upload transaction history from any exchange or wallet. Support for all major platforms.</p>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="tax-estimator.html">Tax Estimator</a>
+            <a href="#pricing">Pricing</a>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-wallet"></i></div>
-            <h4>Wallet Connect</h4>
-            <p>Fetch real-time balance across 15+ blockchain networks including Bitcoin, Ethereum, BSC.</p>
+        <div class="auth-btns">
+            <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></div>
+            <a href="auth.html" class="btn-outline">Sign In</a>
+            <a href="auth.html" class="btn-primary">Get Started</a>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-calculator"></i></div>
-            <h4>FIFO Method</h4>
-            <p>Professional capital gains calculation using First-In First-Out accounting standard.</p>
-        </div>
-    </div>
+        <div class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></div>
+    </nav>
 
-    <!-- CTA Section -->
-    <div class="cta-section">
-        <h3>Ready to Calculate?</h3>
-        <p>Get started in seconds. Upload your CSV or connect a wallet.</p>
-        <a href="tax-estimator.html" class="btn-estimator">
-            <i class="fas fa-chart-simple"></i> Start Calculating <i class="fas fa-arrow-right"></i>
-        </a>
-    </div>
-
-    <!-- Disclaimer -->
-    <div class="disclaimer">
-        <div class="disclaimer-header">
-            <i class="fas fa-scale-balanced"></i>
-            <span>TAX DISCLAIMER</span>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Crypto Taxes <span>Simplified</span> for the Modern Era.</h1>
+            <p>Institutional-grade crypto tax reporting for individuals and enterprises. Seamlessly sync 500+ exchanges and wallets.</p>
+            <div class="hero-btns">
+                <a href="auth.html" class="hero-btn-lg btn-primary">Start Free Trial</a>
+                <a href="tax-estimator.html" class="hero-btn-lg btn-outline" style="border-width: 2px;">Try Estimator</a>
+            </div>
         </div>
-        <p class="disclaimer-text">
-            CryptoTax provides capital gains calculations using FIFO methodology. Does NOT calculate country-specific tax rates or file taxes.
-            <strong style="color: var(--accent);">Consult a qualified tax professional.</strong>
-        </p>
-        <div class="disclaimer-badges">
-            <span><i class="fas fa-check-circle badge-check"></i> Net gain/loss</span>
-            <span><i class="fas fa-check-circle badge-check"></i> FIFO method</span>
-            <span><i class="fas fa-times-circle badge-cross"></i> Not tax filing</span>
-        </div>
-    </div>
+    </section>
 
-    <!-- Footer -->
-    <div class="footer">
-        <span><i class="fas fa-shield-alt"></i> Secure • FIFO • Real-time</span>
-        <div class="footer-social">
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-github"></i></a>
-            <a href="#"><i class="fab fa-discord"></i></a>
-        </div>
-        <span>© 2026 CryptoTax</span>
-    </div>
-</div>
-
-<script>
-    // Theme Toggle
-    const themeToggle = document.getElementById('themeToggle');
-    const icon = themeToggle.querySelector('i');
-    
-    function setTheme(theme) {
-        if (theme === 'light') {
+    <script>
+    (function() {
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+        
+        if (localStorage.getItem('theme') === 'light') {
             document.body.classList.add('light');
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.body.classList.remove('light');
-            icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');
-            localStorage.setItem('theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
         }
-    }
-    
-    const savedTheme = localStorage.getItem('theme');
-    savedTheme === 'light' ? setTheme('light') : setTheme('dark');
-    
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.contains('light') ? setTheme('dark') : setTheme('light');
-    });
 
-    // User Authentication
-    const currentUser = JSON.parse(localStorage.getItem('cryptotax_current_user'));
-    const userInfo = document.getElementById('userInfo');
-    const authBtn = document.getElementById('authBtn');
-    
-    function logout() {
-        localStorage.removeItem('cryptotax_current_user');
-        window.location.reload();
-    }
-    
-    if (currentUser) {
-        userInfo.classList.remove('hidden');
-        authBtn.classList.add('hidden');
-        document.getElementById('userName').innerText = currentUser.name || currentUser.email.split('@')[0];
-        document.getElementById('userAvatar').src = currentUser.picture || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${currentUser.email}`;
-        document.getElementById('logoutBtn').onclick = (e) => {
-            e.stopPropagation();
-            logout();
-        };
-    } else {
-        userInfo.classList.add('hidden');
-        authBtn.classList.remove('hidden');
-    }
-</script>
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light');
+            const isLight = document.body.classList.contains('light');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            icon.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
+        });
+
+        // Supabase session check
+        const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib3dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                const authBtns = document.querySelector('.auth-btns');
+                const btnPrimary = authBtns.querySelector('.btn-primary');
+                const btnOutline = authBtns.querySelector('.btn-outline');
+                if(btnPrimary) btnPrimary.innerText = 'Dashboard';
+                if(btnPrimary) btnPrimary.href = 'dashboard.html';
+                if(btnOutline) btnOutline.style.display = 'none';
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
