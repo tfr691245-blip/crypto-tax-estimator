@@ -24,14 +24,57 @@
         
         body.light { background:#F5F7FF; }
         
-        /* Full width container */
+        /* Top Bar - Universal */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: transparent;
+        }
+        
+        .back-btn, .theme-toggle {
+            width: 48px;
+            height: 48px;
+            background: rgba(13, 15, 23, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(247, 147, 26, 0.3);
+            color: #F7931A;
+            text-decoration: none;
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover, .theme-toggle:hover {
+            transform: scale(1.05);
+            border-color: #F7931A;
+        }
+        
+        body.light .back-btn, body.light .theme-toggle {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        @media (max-width: 550px) {
+            .top-bar { padding: 16px 20px; }
+            .back-btn, .theme-toggle { width: 42px; height: 42px; font-size: 18px; }
+        }
+        
         .auth-wrapper {
             width:100%;
             max-width:1400px;
             margin:0 auto;
         }
         
-        /* Wide card layout */
         .auth-card {
             background:rgba(13,15,23,.85);
             backdrop-filter:blur(20px);
@@ -44,7 +87,6 @@
         
         body.light .auth-card { background:rgba(255,255,255,.95); }
         
-        /* Two column layout for wide screen */
         .auth-content {
             display:flex;
             gap:60px;
@@ -285,38 +327,6 @@
         
         .hidden { display:none!important; }
         
-        .top-bar {
-            position:fixed;
-            top:0;
-            left:0;
-            right:0;
-            padding:20px 32px;
-            display:flex;
-            justify-content:space-between;
-            z-index:100;
-            background:transparent;
-        }
-        
-        .back-btn,.theme-toggle {
-            width:48px;
-            height:48px;
-            background:rgba(13,15,23,.6);
-            backdrop-filter:blur(10px);
-            border-radius:50%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            cursor:pointer;
-            border:1px solid rgba(247,147,26,.3);
-            color:#F7931A;
-            text-decoration:none;
-            font-size:22px;
-        }
-        
-        body.light .back-btn,body.light .theme-toggle {
-            background:rgba(255,255,255,.8);
-        }
-        
         .bg-orb {
             position:fixed;
             top:0;
@@ -359,9 +369,15 @@
 </head>
 <body>
 <div class="bg-orb"></div>
+
+<!-- TOP BAR - Same on all pages -->
 <div class="top-bar">
-    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
-    <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></div>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
 </div>
 
 <div class="auth-wrapper">
@@ -394,7 +410,7 @@
                     <div class="forgot-password">
                         <a href="#" id="forgotPasswordLink">Forgot password?</a>
                     </div>
-                    <button type="submit" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
+                    <button type="submit" id="signinBtn" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
                 </form>
                 
                 <form id="signupForm" class="hidden">
@@ -410,7 +426,7 @@
                         <input type="password" id="signupConfirmPassword" placeholder="Confirm password" required>
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <button type="submit" class="submit-btn">Create Account <i class="fas fa-user-plus"></i></button>
+                    <button type="submit" id="signupBtn" class="submit-btn">Create Account <i class="fas fa-user-plus"></i></button>
                 </form>
             </div>
             
@@ -552,8 +568,7 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // Sign Up - FIXED: Proper error for existing accounts
-    document.getElementById('signupForm').querySelector('.submit-btn').id = 'signupBtn';
+    // Sign Up
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -576,10 +591,7 @@
         setLoading('signupBtn', false);
         
         if (error) {
-            // CHECK FOR EXISTING USER ERROR
-            if (error.message && error.message.includes('already registered')) {
-                showError('An account with this email already exists. Please sign in instead.');
-            } else if (error.message && error.message.includes('User already registered')) {
+            if (error.message && (error.message.includes('already registered') || error.message.includes('User already registered'))) {
                 showError('An account with this email already exists. Please sign in instead.');
             } else {
                 showError(error.message);
@@ -594,7 +606,6 @@
     };
 
     // Sign In
-    document.getElementById('signinForm').querySelector('.submit-btn').id = 'signinBtn';
     document.getElementById('signinForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
