@@ -73,7 +73,6 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
         @media (min-width: 768px) { .container { padding: 24px; } }
 
-        /* Navigation - Same as index.html with back button */
         .navbar {
             display: flex;
             flex-direction: column;
@@ -155,7 +154,6 @@
         .theme-toggle i { font-size: 20px; transition: transform 0.5s ease; }
         body.light .theme-toggle i { transform: rotate(360deg); }
 
-        /* Auth Card */
         .auth-card {
             max-width: 500px;
             margin: 0 auto;
@@ -387,7 +385,6 @@
 <div class="bg-orb"></div>
 
 <div class="container">
-    <!-- Navigation - Same as index.html with BACK BUTTON -->
     <div class="navbar">
         <div class="nav-left">
             <a href="index.html" class="back-btn">
@@ -412,7 +409,6 @@
         </div>
     </div>
 
-    <!-- Auth Card -->
     <div class="auth-card">
         <div class="auth-header">
             <h2>Welcome Back</h2>
@@ -427,7 +423,6 @@
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message"></div>
 
-        <!-- Sign In Form -->
         <form id="signinForm">
             <div class="form-group">
                 <input type="email" id="signinEmail" placeholder="Email address" required>
@@ -443,7 +438,6 @@
             <button type="submit" id="signinBtn" class="submit-btn">Sign In <i class="fas fa-arrow-right"></i></button>
         </form>
 
-        <!-- Sign Up Form -->
         <form id="signupForm" class="hidden">
             <div class="form-group">
                 <input type="email" id="signupEmail" placeholder="Email address" required>
@@ -591,22 +585,7 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // CHECK IF EMAIL EXISTS BEFORE SIGNUP
-    async function emailExists(email) {
-        try {
-            // Try to sign in - if user exists, we get a specific error
-            const { error } = await sb.auth.signInWithPassword({ email, password: 'dummy-password-that-will-fail' });
-            // If error is "Invalid login credentials", email exists
-            if (error && error.message.includes('Invalid login credentials')) {
-                return true;
-            }
-            return false;
-        } catch (e) {
-            return false;
-        }
-    }
-
-    // Sign Up - Check if email exists FIRST
+    // SIGN UP - FIXED: Catch "User already registered" error
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -619,16 +598,6 @@
         
         setLoading('signupBtn', true);
         
-        // FIRST: Check if email already exists
-        const exists = await emailExists(email);
-        
-        if (exists) {
-            setLoading('signupBtn', false);
-            showError('Account already exists with this email. Please sign in instead.');
-            return;
-        }
-        
-        // SECOND: If email doesn't exist, create account
         const redirectUrl = window.location.origin + '/confirm.html';
         const { data, error } = await sb.auth.signUp({ 
             email, 
@@ -638,9 +607,14 @@
         
         setLoading('signupBtn', false);
         
+        // CHECK FOR EMAIL ALREADY EXISTS ERROR
         if (error) {
-            showError(error.message);
-        } else if (data && data.user) {
+            if (error.message === 'User already registered') {
+                showError('Account already exists with this email. Please sign in instead.');
+            } else {
+                showError(error.message);
+            }
+        } else {
             showSuccess('Confirmation email sent! Please check your inbox.');
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
