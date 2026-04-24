@@ -591,7 +591,22 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // Sign Up - FIXED: Check error response properly
+    // CHECK IF EMAIL EXISTS BEFORE SIGNUP
+    async function emailExists(email) {
+        try {
+            // Try to sign in - if user exists, we get a specific error
+            const { error } = await sb.auth.signInWithPassword({ email, password: 'dummy-password-that-will-fail' });
+            // If error is "Invalid login credentials", email exists
+            if (error && error.message.includes('Invalid login credentials')) {
+                return true;
+            }
+            return false;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // Sign Up - Check if email exists FIRST
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -604,6 +619,16 @@
         
         setLoading('signupBtn', true);
         
+        // FIRST: Check if email already exists
+        const exists = await emailExists(email);
+        
+        if (exists) {
+            setLoading('signupBtn', false);
+            showError('Account already exists with this email. Please sign in instead.');
+            return;
+        }
+        
+        // SECOND: If email doesn't exist, create account
         const redirectUrl = window.location.origin + '/confirm.html';
         const { data, error } = await sb.auth.signUp({ 
             email, 
@@ -613,24 +638,14 @@
         
         setLoading('signupBtn', false);
         
-        // CHECK: If user already exists, Supabase returns error
         if (error) {
-            if (error.message && error.message.toLowerCase().includes('already registered')) {
-                showError('Account already exists with this email. Please sign in instead.');
-            } else if (error.message && error.message.toLowerCase().includes('user already registered')) {
-                showError('Account already exists with this email. Please sign in instead.');
-            } else {
-                showError(error.message);
-            }
-        } else {
-            // Only show success if user was actually created
-            if (data && data.user) {
-                showSuccess('Confirmation email sent! Please check your inbox.');
-                document.getElementById('signupEmail').value = '';
-                document.getElementById('signupPassword').value = '';
-                document.getElementById('signupConfirmPassword').value = '';
-                setTimeout(() => setMode('signin'), 4000);
-            }
+            showError(error.message);
+        } else if (data && data.user) {
+            showSuccess('Confirmation email sent! Please check your inbox.');
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirmPassword').value = '';
+            setTimeout(() => setMode('signin'), 4000);
         }
     };
 
