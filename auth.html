@@ -585,7 +585,7 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // SIGN UP - FIXED: Catch "User already registered" error
+    // Sign Up - FIXED: Better error message checking
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -607,9 +607,13 @@
         
         setLoading('signupBtn', false);
         
-        // CHECK FOR EMAIL ALREADY EXISTS ERROR
+        // Check for existing email error with multiple possible messages
         if (error) {
-            if (error.message === 'User already registered') {
+            const errorMsg = error.message.toLowerCase();
+            if (errorMsg.includes('already registered') || 
+                errorMsg.includes('user already exists') ||
+                errorMsg.includes('already registered') ||
+                errorMsg.includes('already in use')) {
                 showError('Account already exists with this email. Please sign in instead.');
             } else {
                 showError(error.message);
