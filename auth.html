@@ -585,7 +585,25 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // SIGN UP - FIXED: Catch ALL variations of "already registered" error
+    // FUNCTION: Check if email already exists in Supabase
+    async function emailExists(email) {
+        try {
+            // Try to sign in with a dummy password - if user exists, we get "Invalid login credentials"
+            // If user does NOT exist, we get "User not found"
+            const { error } = await sb.auth.signInWithPassword({ email, password: 'dummy-password-12345' });
+            
+            // If error is "Invalid login credentials", email EXISTS (user found but password wrong)
+            if (error && error.message === 'Invalid login credentials') {
+                return true;
+            }
+            // If error is "User not found", email does NOT exist
+            return false;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // SIGN UP - Check if email exists FIRST using the function above
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -598,6 +616,16 @@
         
         setLoading('signupBtn', true);
         
+        // FIRST: Check if email already exists
+        const exists = await emailExists(email);
+        
+        if (exists) {
+            setLoading('signupBtn', false);
+            showError('Account already exists with this email. Please sign in instead.');
+            return;
+        }
+        
+        // SECOND: If email doesn't exist, create account
         const redirectUrl = window.location.origin + '/confirm.html';
         const { data, error } = await sb.auth.signUp({ 
             email, 
@@ -607,23 +635,14 @@
         
         setLoading('signupBtn', false);
         
-        // CHECK FOR EMAIL ALREADY EXISTS ERROR - Multiple possible error messages
         if (error) {
-            const errorMsgLower = error.message.toLowerCase();
-            if (errorMsgLower.includes('already registered') || errorMsgLower.includes('user already registered')) {
-                showError('Account already exists with this email. Please sign in instead.');
-            } else {
-                showError(error.message);
-            }
+            showError(error.message);
         } else if (data && data.user) {
             showSuccess('Confirmation email sent! Please check your inbox.');
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
             document.getElementById('signupConfirmPassword').value = '';
             setTimeout(() => setMode('signin'), 4000);
-        } else {
-            // User might already exist but no error returned (edge case)
-            showError('Account already exists with this email. Please sign in instead.');
         }
     };
 
