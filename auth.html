@@ -585,7 +585,29 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // RESEND CONFIRMATION EMAIL - Called when user tries to sign up with existing unconfirmed email
+    // CHECK IF USER IS CONFIRMED
+    async function isUserConfirmed(email) {
+        try {
+            // Try to send OTP - if user is confirmed, this will send magic link
+            // If user is unconfirmed, this will resend confirmation
+            // We need a different approach
+            const { data: { session } } = await sb.auth.getSession();
+            // Can't directly check without admin API
+            // Alternative: Try to sign in with dummy password
+            const { error } = await sb.auth.signInWithPassword({ email, password: 'dummy-password-12345' });
+            if (error && error.message === 'Invalid login credentials') {
+                // User exists, but we don't know if confirmed
+                // Try to send magic link - if user is confirmed, they'll get magic link
+                // If unconfirmed, they'll get confirmation email
+                return null; // Unknown status
+            }
+            return false;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // RESEND CONFIRMATION EMAIL
     async function resendConfirmationEmail(email) {
         const redirectUrl = window.location.origin + '/confirm.html';
         const { error } = await sb.auth.signInWithOtp({
@@ -596,7 +618,7 @@
         return true;
     }
 
-    // SIGN UP - ALWAYS send email, NEVER say "Account already exists"
+    // SIGN UP
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -619,13 +641,18 @@
         setLoading('signupBtn', false);
         
         if (error) {
-            // If user already exists (even unconfirmed), RESEND confirmation email
             if (error.message === 'User already registered') {
+                // Try to resend confirmation email
                 try {
                     await resendConfirmationEmail(email);
                     showSuccess('Verification email resent! Please check your inbox and confirm your email.');
                 } catch (resendError) {
-                    showError('Account already exists. Please sign in or reset your password.');
+                    // If resend fails, user might be confirmed (Google login)
+                    if (resendError && resendError.message === 'User already registered') {
+                        showError('Account already exists with this email. Please sign in instead.');
+                    } else {
+                        showError('Account already exists. Please sign in or reset your password.');
+                    }
                 }
             } else {
                 showError(error.message);
@@ -639,7 +666,7 @@
         }
     };
 
-    // Sign In - Check if email is confirmed
+    // Sign In
     document.getElementById('signinForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
@@ -674,7 +701,7 @@
         }
     };
 
-    // Google Sign In - Creates confirmed user directly
+    // Google Sign In
     document.getElementById('googleSignInBtn').onclick = async (e) => {
         e.preventDefault();
         try {
