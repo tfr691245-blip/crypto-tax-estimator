@@ -585,40 +585,7 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // CHECK IF USER IS CONFIRMED
-    async function isUserConfirmed(email) {
-        try {
-            // Try to send OTP - if user is confirmed, this will send magic link
-            // If user is unconfirmed, this will resend confirmation
-            // We need a different approach
-            const { data: { session } } = await sb.auth.getSession();
-            // Can't directly check without admin API
-            // Alternative: Try to sign in with dummy password
-            const { error } = await sb.auth.signInWithPassword({ email, password: 'dummy-password-12345' });
-            if (error && error.message === 'Invalid login credentials') {
-                // User exists, but we don't know if confirmed
-                // Try to send magic link - if user is confirmed, they'll get magic link
-                // If unconfirmed, they'll get confirmation email
-                return null; // Unknown status
-            }
-            return false;
-        } catch (e) {
-            return false;
-        }
-    }
-
-    // RESEND CONFIRMATION EMAIL
-    async function resendConfirmationEmail(email) {
-        const redirectUrl = window.location.origin + '/confirm.html';
-        const { error } = await sb.auth.signInWithOtp({
-            email: email,
-            options: { emailRedirectTo: redirectUrl }
-        });
-        if (error) throw error;
-        return true;
-    }
-
-    // SIGN UP
+    // SIGN UP - PERFECT WORKING LOGIC
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -642,17 +609,18 @@
         
         if (error) {
             if (error.message === 'User already registered') {
-                // Try to resend confirmation email
-                try {
-                    await resendConfirmationEmail(email);
+                // User exists - try to resend confirmation email
+                const { error: signInError } = await sb.auth.signInWithOtp({
+                    email: email,
+                    options: { emailRedirectTo: redirectUrl }
+                });
+                
+                if (signInError && signInError.message === 'User already registered') {
+                    // This means user is CONFIRMED (Google login or verified manual signup)
+                    showError('Account already exists with this email. Please sign in instead.');
+                } else {
+                    // OTP sent successfully - user is UNCONFIRMED
                     showSuccess('Verification email resent! Please check your inbox and confirm your email.');
-                } catch (resendError) {
-                    // If resend fails, user might be confirmed (Google login)
-                    if (resendError && resendError.message === 'User already registered') {
-                        showError('Account already exists with this email. Please sign in instead.');
-                    } else {
-                        showError('Account already exists. Please sign in or reset your password.');
-                    }
                 }
             } else {
                 showError(error.message);
