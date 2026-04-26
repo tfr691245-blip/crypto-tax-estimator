@@ -411,8 +411,8 @@
 
     <div class="auth-card">
         <div class="auth-header">
-            <h2 id="headerTitle">Welcome Back</h2>
-            <p id="headerSub">Sign in to your account or create a new one</p>
+            <h2>Welcome Back</h2>
+            <p>Sign in to your account or create a new one</p>
         </div>
 
         <div class="mode-toggle">
@@ -475,7 +475,7 @@
     
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // --- UI Logic ---
+    // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
     function setTheme(t) {
@@ -513,25 +513,24 @@
     const signinForm = document.getElementById('signinForm');
     const signupForm = document.getElementById('signupForm');
     const switchText = document.getElementById('switchText');
-    const headerTitle = document.getElementById('headerTitle');
 
     function setMode(m) {
         if (m === 'signin') {
-            headerTitle.innerText = "Welcome Back";
             signinModeBtn.classList.add('active');
             signupModeBtn.classList.remove('active');
             signinForm.classList.remove('hidden');
             signupForm.classList.add('hidden');
             switchText.innerHTML = 'Don\'t have an account? <span id="switchBtn">Sign Up</span>';
-            document.getElementById('switchBtn').onclick = () => setMode('signup');
+            const b = document.getElementById('switchBtn');
+            if (b) b.onclick = () => setMode('signup');
         } else {
-            headerTitle.innerText = "Create Account";
             signupModeBtn.classList.add('active');
             signinModeBtn.classList.remove('active');
             signupForm.classList.remove('hidden');
             signinForm.classList.add('hidden');
             switchText.innerHTML = 'Already have an account? <span id="switchBtn">Sign In</span>';
-            document.getElementById('switchBtn').onclick = () => setMode('signin');
+            const b = document.getElementById('switchBtn');
+            if (b) b.onclick = () => setMode('signin');
         }
         hideMessages();
     }
@@ -541,13 +540,15 @@
 
     function showError(m) {
         const e = document.getElementById('errorMessage');
-        e.textContent = m; e.style.display = 'block';
+        e.textContent = m;
+        e.style.display = 'block';
         setTimeout(() => e.style.display = 'none', 5000);
     }
 
     function showSuccess(m) {
         const e = document.getElementById('successMessage');
-        e.textContent = m; e.style.display = 'block';
+        e.textContent = m;
+        e.style.display = 'block';
         setTimeout(() => e.style.display = 'none', 5000);
     }
 
@@ -558,98 +559,142 @@
 
     function setLoading(btnId, loading) {
         const btn = document.getElementById(btnId);
-        btn.disabled = loading;
         if (loading) {
+            btn.disabled = true;
             btn.innerHTML = '<span class="loading-spinner"></span> Processing...';
         } else {
-            btn.innerHTML = (btnId === 'signinBtn') ? 'Sign In <i class="fas fa-arrow-right"></i>' : 'Create Account <i class="fas fa-user-plus"></i>';
+            btn.disabled = false;
+            if (btnId === 'signinBtn') {
+                btn.innerHTML = 'Sign In <i class="fas fa-arrow-right"></i>';
+            } else if (btnId === 'signupBtn') {
+                btn.innerHTML = 'Create Account <i class="fas fa-user-plus"></i>';
+            }
         }
     }
 
-    // --- Auth Actions ---
-
-    // Password Reset
+    // Forgot Password
     document.getElementById('forgotPasswordLink').onclick = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
-        if (!email) return showError('Please enter your email address');
-        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/reset-password.html' });
+        if (!email) {
+            showError('Please enter your email address');
+            return;
+        }
+        const redirectUrl = window.location.origin + '/reset-password.html';
+        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: redirectUrl });
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // SIGN UP Logic (Handles new users and infinite resends for unconfirmed)
-    signupForm.onsubmit = async (e) => {
+    // SIGN UP - CORRECT LOGIC
+    document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
         const pwd = document.getElementById('signupPassword').value;
         const confirm = document.getElementById('signupConfirmPassword').value;
         
+        if (!email || !pwd || !confirm) return showError('Please fill in all fields');
         if (pwd !== confirm) return showError('Passwords do not match');
         if (pwd.length < 6) return showError('Password must be at least 6 characters');
         
         setLoading('signupBtn', true);
-        const redirectUrl = window.location.origin + '/confirm.html';
         
+        const redirectUrl = window.location.origin + '/confirm.html';
         const { data, error } = await sb.auth.signUp({ 
-            email, password: pwd, options: { emailRedirectTo: redirectUrl } 
+            email, 
+            password: pwd, 
+            options: { emailRedirectTo: redirectUrl } 
         });
         
+        setLoading('signupBtn', false);
+        
         if (error) {
-            // Check if user is unconfirmed - Resend logic
-            if (error.message.includes('already registered') || error.status === 400) {
-                const { error: resendError } = await sb.auth.resend({
-                    type: 'signup', email, options: { emailRedirectTo: redirectUrl }
+            if (error.message === 'User already registered') {
+                // Try to send magic link - this will send email regardless of confirmed status
+                const { error: otpError } = await sb.auth.signInWithOtp({
+                    email: email,
+                    options: { emailRedirectTo: redirectUrl }
                 });
-                resendError ? showError('Account verified. Please Sign In.') : showSuccess('Verification email resent! Check your inbox.');
+                
+                if (otpError) {
+                    showError('Unable to send verification email. Please try again.');
+                } else {
+                    showSuccess('Verification email sent! Please check your inbox.');
+                }
             } else {
                 showError(error.message);
             }
-        } else if (data?.user) {
-            showSuccess('Confirmation email sent! Please verify your email.');
-            signupForm.reset();
+        } else if (data && data.user) {
+            showSuccess('Confirmation email sent! Please check your inbox to verify your email.');
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirmPassword').value = '';
             setTimeout(() => setMode('signin'), 4000);
         }
-        setLoading('signupBtn', false);
     };
 
-    // SIGN IN Logic
-    signinForm.onsubmit = async (e) => {
+    // Sign In
+    document.getElementById('signinForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
         const pwd = document.getElementById('signinPassword').value;
+        if (!email || !pwd) return showError('Please enter email and password');
         
         setLoading('signinBtn', true);
         const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
         setLoading('signinBtn', false);
         
         if (error) {
-            error.message.includes('confirmed') ? showError('Confirm your email first. Check your inbox.') : showError('Invalid login credentials');
+            if (error.message.includes('Email not confirmed')) {
+                showError('Please confirm your email first. Check your inbox.');
+            } else if (error.message.includes('Invalid login credentials')) {
+                showError('Invalid email or password');
+            } else {
+                showError(error.message);
+            }
             return;
         }
         
         if (data.user) {
-            localStorage.setItem('cryptotax_current_user', JSON.stringify({
-                id: data.user.id, email: data.user.email, name: email.split('@')[0]
-            }));
+            const user = { 
+                id: data.user.id, 
+                email: data.user.email, 
+                name: data.user.user_metadata?.full_name || email.split('@')[0], 
+                picture: data.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}` 
+            };
+            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
             showSuccess('Signed in! Redirecting...');
             setTimeout(() => window.location.href = window.location.origin + '/dashboard.html', 1500);
         }
     };
 
-    // GOOGLE OAuth Logic
+    // Google Sign In
     document.getElementById('googleSignInBtn').onclick = async (e) => {
         e.preventDefault();
-        const { error } = await sb.auth.signInWithOAuth({ 
-            provider: 'google', 
-            options: { redirectTo: window.location.origin + '/dashboard.html', queryParams: { prompt: 'select_account' } } 
-        });
-        if (error) showError(error.message);
+        try {
+            const redirectUrl = window.location.origin + '/dashboard.html';
+            const { error } = await sb.auth.signInWithOAuth({ 
+                provider: 'google', 
+                options: { redirectTo: redirectUrl, queryParams: { prompt: 'select_account' } } 
+            });
+            if (error) throw error;
+        } catch (err) {
+            showError(err.message);
+        }
     };
 
-    // Auto-login Check
+    // Check existing session
     (async () => {
         const { data: { session } } = await sb.auth.getSession();
-        if (session) window.location.href = window.location.origin + '/dashboard.html';
+        if (session) {
+            const user = { 
+                id: session.user.id, 
+                email: session.user.email, 
+                name: session.user.user_metadata?.full_name || session.user.email.split('@')[0], 
+                picture: session.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${session.user.email.split('@')[0]}` 
+            };
+            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+            window.location.href = window.location.origin + '/dashboard.html';
+        }
     })();
     
     setMode('signin');
