@@ -585,15 +585,34 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // CHECK IF EMAIL EXISTS IN SUPABASE (using SignIn attempt)
-    async function emailExistsAndConfirmed(email) {
+    // CHECK USER STATUS USING SUPABASE ADMIN API
+    // Since we can't access auth.users directly, we use the signup attempt method
+    async function checkUserStatus(email) {
         try {
-            // Try to sign in with a dummy password
-            const { error } = await sb.auth.signInWithPassword({ email, password: 'dummy-password-12345' });
+            // Try to sign up with dummy data to check if user exists
+            // This will fail with specific error messages
+            const { error } = await sb.auth.signUp({ 
+                email, 
+                password: 'dummy-password-12345',
+                options: { emailRedirectTo: window.location.origin + '/confirm.html' }
+            });
             
-            // If error is "Invalid login credentials", email EXISTS (user found)
-            if (error && error.message === 'Invalid login credentials') {
-                return { exists: true, confirmed: true };
+            if (error) {
+                if (error.message === 'User already registered') {
+                    // User exists - now try to send OTP to check if confirmed
+                    const { error: otpError } = await sb.auth.signInWithOtp({
+                        email: email,
+                        options: { emailRedirectTo: window.location.origin + '/confirm.html' }
+                    });
+                    
+                    if (otpError && otpError.message === 'User already registered') {
+                        // OTP failed - user is CONFIRMED (has password or Google account)
+                        return { exists: true, confirmed: true };
+                    } else if (!otpError) {
+                        // OTP succeeded - user is UNCONFIRMED
+                        return { exists: true, confirmed: false };
+                    }
+                }
             }
             return { exists: false, confirmed: false };
         } catch (e) {
@@ -601,7 +620,7 @@
         }
     }
 
-    // RESEND CONFIRMATION EMAIL
+    // RESEND CONFIRMATION EMAIL for unconfirmed users
     async function resendConfirmationEmail(email) {
         const redirectUrl = window.location.origin + '/confirm.html';
         const { error } = await sb.auth.signInWithOtp({
@@ -612,7 +631,7 @@
         return true;
     }
 
-    // SIGN UP - FIXED: Check if email exists BEFORE trying to sign up
+    // SIGN UP - Check user status and handle appropriately
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -625,17 +644,28 @@
         
         setLoading('signupBtn', true);
         
-        // FIRST: Check if email already exists in Supabase
-        const { exists, confirmed } = await emailExistsAndConfirmed(email);
+        // FIRST: Check if user exists and status
+        const userStatus = await checkUserStatus(email);
         
-        if (exists) {
+        if (userStatus.exists) {
             setLoading('signupBtn', false);
-            // Email already exists - show "Account already exists"
-            showError('Account already exists with this email. Please sign in instead.');
+            
+            if (userStatus.confirmed) {
+                // User is confirmed (Google login or verified manual signup)
+                showError('Account already exists with this email. Please sign in instead.');
+            } else {
+                // User is unconfirmed - resend confirmation email
+                try {
+                    await resendConfirmationEmail(email);
+                    showSuccess('Verification email resent! Please check your inbox and confirm your email.');
+                } catch (err) {
+                    showError('Unable to resend verification email. Please try again.');
+                }
+            }
             return;
         }
         
-        // SECOND: If email doesn't exist, create account
+        // SECOND: Create new account
         const redirectUrl = window.location.origin + '/confirm.html';
         const { data, error } = await sb.auth.signUp({ 
             email, 
@@ -670,6 +700,13 @@
         if (error) {
             if (error.message.includes('Email not confirmed')) {
                 showError('Please confirm your email first. Check your inbox.');
+                // Option to resend confirmation
+                setTimeout(async () => {
+                    if (confirm('Email not confirmed. Resend confirmation link?')) {
+                        await resendConfirmationEmail(email);
+                        showSuccess('Confirmation email resent! Check your inbox.');
+                    }
+                }, 100);
             } else if (error.message.includes('Invalid login credentials')) {
                 showError('Invalid email or password');
             } else {
