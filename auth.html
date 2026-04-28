@@ -596,39 +596,75 @@
         return true;
     }
 
-    // CHECK USER STATUS by trying to sign in
+    // CHECK USER STATUS BY TRYING TO SIGN UP
+    // Supabase returns specific errors that tell us the status
     async function checkUserStatus(email) {
         try {
-            // Try to sign in with a dummy password
-            const { error } = await sb.auth.signInWithPassword({ email, password: 'dummy-password-12345' });
-            
-            if (error) {
-                if (error.message === 'Invalid login credentials') {
-                    // User EXISTS and HAS a password (confirmed)
-                    return { exists: true, confirmed: true, hasPassword: true };
-                } else if (error.message === 'Email not confirmed') {
-                    // User EXISTS but email NOT confirmed
-                    return { exists: true, confirmed: false, hasPassword: true };
-                }
-            }
-            return { exists: false, confirmed: false, hasPassword: false };
-        } catch (e) {
-            return { exists: false, confirmed: false, hasPassword: false };
-        }
-    }
-
-    // CHECK IF USER EXISTS FROM GOOGLE (no password)
-    async function checkGoogleUserExists(email) {
-        try {
-            // Try to send OTP - if user exists but has no password (Google only)
-            const { error } = await sb.auth.signInWithOtp({
-                email: email,
+            // Try to sign up with a dummy request
+            const { error } = await sb.auth.signUp({ 
+                email, 
+                password: 'dummy-password-12345',
                 options: { emailRedirectTo: window.location.origin + '/confirm.html' }
             });
             
-            if (error && error.message === 'User already registered') {
-                // User exists via Google (has no password)
-                return true;
+            if (error) {
+                if (error.message === 'User already registered') {
+                    // User exists - now check if confirmed by trying to send OTP
+                    const { error: otpError } = await sb.auth.signInWithOtp({
+                        email: email,
+                        options: { emailRedirectTo: window.location.origin + '/confirm.html' }
+                    });
+                    
+                    if (otpError && otpError.message === 'User already registered') {
+                        // User has a password (manual signup) and is confirmed
+                        // OR user is Google account (no password)
+                        // We need to distinguish Google accounts
+                        return { exists: true, confirmed: true, isGoogle: false };
+                    } else if (!otpError) {
+                        // OTP sent successfully - user is UNCONFIRMED (manual signup, didn't click link)
+                        return { exists: true, confirmed: false, isGoogle: false };
+                    }
+                }
+            }
+            return { exists: false, confirmed: false, isGoogle: false };
+        } catch (e) {
+            return { exists: false, confirmed: false, isGoogle: false };
+        }
+    }
+
+    // SPECIAL CHECK FOR GOOGLE ACCOUNTS
+    // Google accounts have no password, so signInWithPassword returns "Invalid login credentials"
+    // But new users also return same error. We need to check if user exists by trying to send OTP
+    async function isGoogleAccount(email) {
+        try {
+            // First check if user exists at all
+            const { error: signUpError } = await sb.auth.signUp({ 
+                email, 
+                password: 'dummy-password-12345',
+                options: { emailRedirectTo: window.location.origin + '/confirm.html' }
+            });
+            
+            if (signUpError && signUpError.message === 'User already registered') {
+                // User exists. Now try to send OTP
+                const { error: otpError } = await sb.auth.signInWithOtp({
+                    email: email,
+                    options: { emailRedirectTo: window.location.origin + '/confirm.html' }
+                });
+                
+                if (otpError && otpError.message === 'User already registered') {
+                    // OTP failed. This means user has a password (manual) OR is Google?
+                    // Try to sign in with dummy password to check
+                    const { error: signInError } = await sb.auth.signInWithPassword({ 
+                        email, 
+                        password: 'dummy-password-12345' 
+                    });
+                    
+                    if (signInError && signInError.message === 'Invalid login credentials') {
+                        // Could be Google account OR wrong password for manual account
+                        // We cannot know for sure without admin API
+                        return true; // Assume it's Google
+                    }
+                }
             }
             return false;
         } catch (e) {
@@ -636,7 +672,8 @@
         }
     }
 
-    // SIGN UP - COMPLETE FIX
+    // SIMPLER APPROACH: Just try the signup and handle the error
+    // This is the only reliable way without admin API
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -649,37 +686,6 @@
         
         setLoading('signupBtn', true);
         
-        // FIRST: Check if user exists via password sign-in attempt
-        const userStatus = await checkUserStatus(email);
-        
-        if (userStatus.exists) {
-            setLoading('signupBtn', false);
-            
-            if (userStatus.confirmed) {
-                // User has password and is confirmed
-                showError('Account already exists with this email. Please sign in instead.');
-            } else {
-                // User exists but email not confirmed - resend
-                try {
-                    await resendConfirmationEmail(email);
-                    showSuccess('Verification email resent! Please check your inbox.');
-                } catch (err) {
-                    showError('Unable to resend verification email. Please try again.');
-                }
-            }
-            return;
-        }
-        
-        // SECOND: Check if user exists via Google (no password)
-        const isGoogleUser = await checkGoogleUserExists(email);
-        
-        if (isGoogleUser) {
-            setLoading('signupBtn', false);
-            showError('Account already exists with this email (signed up via Google). Please sign in with Google instead.');
-            return;
-        }
-        
-        // THIRD: Create new account
         const redirectUrl = window.location.origin + '/confirm.html';
         const { data, error } = await sb.auth.signUp({ 
             email, 
@@ -690,7 +696,40 @@
         setLoading('signupBtn', false);
         
         if (error) {
-            showError(error.message);
+            if (error.message === 'User already registered') {
+                // User exists. Try to resend confirmation email
+                const { error: otpError } = await sb.auth.signInWithOtp({
+                    email: email,
+                    options: { emailRedirectTo: redirectUrl }
+                });
+                
+                if (otpError && otpError.message === 'User already registered') {
+                    // User has a password (manual) or is Google account
+                    // Try one more thing: check if user can sign in with password
+                    const { error: signInError } = await sb.auth.signInWithPassword({ 
+                        email, 
+                        password: pwd 
+                    });
+                    
+                    if (signInError && signInError.message === 'Invalid login credentials') {
+                        // Password wrong - might be Google account or wrong password
+                        showError('Account already exists with this email. Please sign in instead.');
+                    } else if (signInError && signInError.message === 'Email not confirmed') {
+                        // User exists but not confirmed - resend
+                        await resendConfirmationEmail(email);
+                        showSuccess('Verification email resent! Please check your inbox.');
+                    } else {
+                        showError('Account already exists. Please sign in.');
+                    }
+                } else if (!otpError) {
+                    // OTP sent successfully - user is UNCONFIRMED
+                    showSuccess('Verification email resent! Please check your inbox.');
+                } else {
+                    showError('Account already exists. Please sign in.');
+                }
+            } else {
+                showError(error.message);
+            }
         } else if (data && data.user) {
             showSuccess('Confirmation email sent! Please check your inbox to verify your email.');
             document.getElementById('signupEmail').value = '';
