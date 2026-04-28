@@ -258,7 +258,7 @@
 
         .forgot-password a {
             color: var(--accent);
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             text-decoration: none;
         }
@@ -274,7 +274,7 @@
             color: #05070A;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .submit-btn:hover {
@@ -320,7 +320,7 @@
             justify-content: center;
             gap: 12px;
             font-family: 'Outfit', sans-serif;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         .google-btn:hover {
@@ -475,7 +475,7 @@
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib2dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
     
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const EDGE_FUNCTION_URL = 'https://ihtazaanlobowggooghy.supabase.co/functions/v1/check-user';
 
     // Theme Toggle
@@ -614,7 +614,7 @@
         if (error) throw error;
     }
 
-    // SIGN UP - YOUR 2 INSTRUCTIONS
+    // SIGN UP - FIXED
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -627,41 +627,45 @@
         
         setLoading('signupBtn', true);
         
-        const userStatus = await checkUserStatus(email);
-        
-        if (userStatus.exists) {
+        try {
+            const userStatus = await checkUserStatus(email);
+            
+            if (userStatus.exists) {
+                setLoading('signupBtn', false);
+                if (userStatus.confirmed) {
+                    showError('Account already exists with this email. Please sign in instead.');
+                } else {
+                    try {
+                        await resendConfirmationEmail(email);
+                        showSuccess('Verification email resent! Please check your inbox.');
+                    } catch (err) {
+                        showError('Unable to resend verification. Please try again.');
+                    }
+                }
+                return;
+            }
+            
+            const redirectUrl = window.location.origin + '/confirm.html';
+            const { data, error } = await sb.auth.signUp({ 
+                email, 
+                password: pwd, 
+                options: { emailRedirectTo: redirectUrl } 
+            });
+            
             setLoading('signupBtn', false);
             
-            if (userStatus.confirmed) {
-                showError('Account already exists with this email. Please sign in instead.');
-            } else {
-                try {
-                    await resendConfirmationEmail(email);
-                    showSuccess('Verification email resent! Please check your inbox.');
-                } catch (err) {
-                    showError('Unable to resend verification. Please try again.');
-                }
+            if (error) {
+                showError(error.message);
+            } else if (data && data.user) {
+                showSuccess('Confirmation email sent! Please check your inbox to verify your email.');
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPassword').value = '';
+                document.getElementById('signupConfirmPassword').value = '';
+                setTimeout(() => setMode('signin'), 4000);
             }
-            return;
-        }
-        
-        const redirectUrl = window.location.origin + '/confirm.html';
-        const { data, error } = await sb.auth.signUp({ 
-            email, 
-            password: pwd, 
-            options: { emailRedirectTo: redirectUrl } 
-        });
-        
-        setLoading('signupBtn', false);
-        
-        if (error) {
-            showError(error.message);
-        } else if (data && data.user) {
-            showSuccess('Confirmation email sent! Please check your inbox to verify your email.');
-            document.getElementById('signupEmail').value = '';
-            document.getElementById('signupPassword').value = '';
-            document.getElementById('signupConfirmPassword').value = '';
-            setTimeout(() => setMode('signin'), 4000);
+        } catch (err) {
+            setLoading('signupBtn', false);
+            showError('Network error. Please try again.');
         }
     };
 
