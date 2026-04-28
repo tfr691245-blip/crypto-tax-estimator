@@ -585,7 +585,34 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // SIGN UP - CORRECT LOGIC
+    // CHECK IF EMAIL EXISTS IN SUPABASE (using SignIn attempt)
+    async function emailExistsAndConfirmed(email) {
+        try {
+            // Try to sign in with a dummy password
+            const { error } = await sb.auth.signInWithPassword({ email, password: 'dummy-password-12345' });
+            
+            // If error is "Invalid login credentials", email EXISTS (user found)
+            if (error && error.message === 'Invalid login credentials') {
+                return { exists: true, confirmed: true };
+            }
+            return { exists: false, confirmed: false };
+        } catch (e) {
+            return { exists: false, confirmed: false };
+        }
+    }
+
+    // RESEND CONFIRMATION EMAIL
+    async function resendConfirmationEmail(email) {
+        const redirectUrl = window.location.origin + '/confirm.html';
+        const { error } = await sb.auth.signInWithOtp({
+            email: email,
+            options: { emailRedirectTo: redirectUrl }
+        });
+        if (error) throw error;
+        return true;
+    }
+
+    // SIGN UP - FIXED: Check if email exists BEFORE trying to sign up
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -598,6 +625,17 @@
         
         setLoading('signupBtn', true);
         
+        // FIRST: Check if email already exists in Supabase
+        const { exists, confirmed } = await emailExistsAndConfirmed(email);
+        
+        if (exists) {
+            setLoading('signupBtn', false);
+            // Email already exists - show "Account already exists"
+            showError('Account already exists with this email. Please sign in instead.');
+            return;
+        }
+        
+        // SECOND: If email doesn't exist, create account
         const redirectUrl = window.location.origin + '/confirm.html';
         const { data, error } = await sb.auth.signUp({ 
             email, 
@@ -608,21 +646,7 @@
         setLoading('signupBtn', false);
         
         if (error) {
-            if (error.message === 'User already registered') {
-                // Try to send magic link - this will send email regardless of confirmed status
-                const { error: otpError } = await sb.auth.signInWithOtp({
-                    email: email,
-                    options: { emailRedirectTo: redirectUrl }
-                });
-                
-                if (otpError) {
-                    showError('Unable to send verification email. Please try again.');
-                } else {
-                    showSuccess('Verification email sent! Please check your inbox.');
-                }
-            } else {
-                showError(error.message);
-            }
+            showError(error.message);
         } else if (data && data.user) {
             showSuccess('Confirmation email sent! Please check your inbox to verify your email.');
             document.getElementById('signupEmail').value = '';
