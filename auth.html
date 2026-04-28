@@ -258,7 +258,7 @@
 
         .forgot-password a {
             color: var(--accent);
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             text-decoration: none;
         }
@@ -274,6 +274,7 @@
             color: #05070A;
             cursor: pointer;
             transition: all 0.3s;
+            margin-top: 10px;
         }
 
         .submit-btn:hover {
@@ -319,6 +320,7 @@
             justify-content: center;
             gap: 12px;
             font-family: 'Outfit', sans-serif;
+            margin-top: 10px;
         }
 
         .google-btn:hover {
@@ -573,30 +575,6 @@
         }
     }
 
-    // CHECK USER STATUS VIA EDGE FUNCTION
-    async function checkUserStatus(email) {
-        try {
-            const response = await fetch(EDGE_FUNCTION_URL, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
-                body: JSON.stringify({ email })
-            });
-            
-            if (!response.ok) {
-                throw new Error('Failed to check user status');
-            }
-            
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            console.error('Error checking user status:', error);
-            return { exists: false, confirmed: false };
-        }
-    }
-
     // Forgot Password
     document.getElementById('forgotPasswordLink').onclick = async (e) => {
         e.preventDefault();
@@ -610,7 +588,33 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // SIGN UP - YOUR 2 INSTRUCTIONS IMPLEMENTED
+    // CHECK USER STATUS VIA EDGE FUNCTION
+    async function checkUserStatus(email) {
+        try {
+            const response = await fetch(EDGE_FUNCTION_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error('Error checking user:', error);
+            return { exists: false, confirmed: false };
+        }
+    }
+
+    // RESEND CONFIRMATION EMAIL
+    async function resendConfirmationEmail(email) {
+        const redirectUrl = window.location.origin + '/confirm.html';
+        const { error } = await sb.auth.signInWithOtp({
+            email: email,
+            options: { emailRedirectTo: redirectUrl }
+        });
+        if (error) throw error;
+    }
+
+    // SIGN UP - YOUR 2 INSTRUCTIONS
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -623,23 +627,16 @@
         
         setLoading('signupBtn', true);
         
-        // STEP 1: Check if email exists and its confirmation status
         const userStatus = await checkUserStatus(email);
         
         if (userStatus.exists) {
             setLoading('signupBtn', false);
             
             if (userStatus.confirmed) {
-                // INSTRUCTION 1: Email is CONFIRMED → Show "Account already exists"
                 showError('Account already exists with this email. Please sign in instead.');
             } else {
-                // INSTRUCTION 2: Email exists but UNCONFIRMED → Resend confirmation email
                 try {
-                    const redirectUrl = window.location.origin + '/confirm.html';
-                    await sb.auth.signInWithOtp({ 
-                        email, 
-                        options: { emailRedirectTo: redirectUrl } 
-                    });
+                    await resendConfirmationEmail(email);
                     showSuccess('Verification email resent! Please check your inbox.');
                 } catch (err) {
                     showError('Unable to resend verification. Please try again.');
@@ -648,7 +645,6 @@
             return;
         }
         
-        // STEP 2: New email → Create account and send confirmation email
         const redirectUrl = window.location.origin + '/confirm.html';
         const { data, error } = await sb.auth.signUp({ 
             email, 
@@ -661,7 +657,6 @@
         if (error) {
             showError(error.message);
         } else if (data && data.user) {
-            // INSTRUCTION 2: New email → Send confirmation
             showSuccess('Confirmation email sent! Please check your inbox to verify your email.');
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
@@ -705,7 +700,7 @@
         }
     };
 
-    // Google Sign In (KEPT AS IS - NO CHANGES)
+    // Google Sign In
     document.getElementById('googleSignInBtn').onclick = async (e) => {
         e.preventDefault();
         try {
