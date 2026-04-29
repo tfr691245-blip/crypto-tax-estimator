@@ -473,7 +473,7 @@
 <script>
 (function() {
     const SUPABASE_URL = 'https://ihtazaanlobowggooghy.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlodGF6YWFubG9ib2dnZ29vZ2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjI2NTIsImV4cCI6MjA5MTIzODY1Mn0.fFKUYOkVEkciFmNjp1oEffzPsAXroApks0fQgCoE_oY';
+    const SUPABASE_ANON_KEY = 'sb_publishable_EPW94vVp-DG8wbGQDqwCag_s1K6MzJC';  // ✅ UPDATED PUBLISHABLE KEY
     
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const EDGE_FUNCTION_URL = 'https://ihtazaanlobowggooghy.supabase.co/functions/v1/check-user';
@@ -588,55 +588,33 @@
         error ? showError(error.message) : showSuccess('Password reset link sent to your email!');
     };
 
-    // ENHANCED EDGE FUNCTION - Better error handling
+    // CHECK USER STATUS VIA EDGE FUNCTION
     async function checkUserStatus(email) {
         try {
-            console.log('Checking user status for:', email);
-            
             const response = await fetch(EDGE_FUNCTION_URL, {
                 method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email })
             });
-            
-            if (!response.ok) {
-                console.error('Edge function HTTP error:', response.status, response.statusText);
-                throw new Error(`Edge function returned ${response.status}: ${response.statusText}`);
-            }
-            
             const result = await response.json();
-            console.log('Edge function result:', result);
             return result;
-            
         } catch (error) {
             console.error('Error checking user:', error);
-            // Return safe defaults instead of throwing
-            return { exists: false, confirmed: false, error: error.message };
+            return { exists: false, confirmed: false };
         }
     }
 
     // RESEND CONFIRMATION EMAIL
     async function resendConfirmationEmail(email) {
-        const redirectUrl = 'https://elite.qzz.io/confirm.html';
-        console.log('Resending confirmation email to:', email, 'with redirect:', redirectUrl);
-        
+        const redirectUrl = window.location.origin + '/confirm.html';
         const { error } = await sb.auth.signInWithOtp({
             email: email,
             options: { emailRedirectTo: redirectUrl }
         });
-        
-        if (error) {
-            console.error('Error resending confirmation:', error);
-            throw error;
-        }
-        
-        console.log('Confirmation email resent successfully');
+        if (error) throw error;
     }
 
-    // SIGN UP - FIXED with proper error handling
+    // SIGN UP
     document.getElementById('signupForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value.trim();
@@ -644,21 +622,13 @@
         const confirm = document.getElementById('signupConfirmPassword').value;
         
         if (!email || !pwd || !confirm) return showError('Please fill in all fields');
-        if (pwd.length < 6) return showError('Password must be at least 6 characters');
         if (pwd !== confirm) return showError('Passwords do not match');
+        if (pwd.length < 6) return showError('Password must be at least 6 characters');
         
-        console.log('Starting signup process for:', email);
         setLoading('signupBtn', true);
         
         try {
-            // Check user status via edge function first
             const userStatus = await checkUserStatus(email);
-            console.log('User status result:', userStatus);
-            
-            if (userStatus.error) {
-                console.error('Edge function error, proceeding with direct signup:', userStatus.error);
-                // Continue with signup even if edge function fails
-            }
             
             if (userStatus.exists) {
                 setLoading('signupBtn', false);
@@ -666,21 +636,16 @@
                     showError('Account already exists with this email. Please sign in instead.');
                 } else {
                     try {
-                        console.log('Resending confirmation email...');
                         await resendConfirmationEmail(email);
                         showSuccess('Verification email resent! Please check your inbox.');
                     } catch (err) {
-                        console.error('Error resending confirmation:', err);
                         showError('Unable to resend verification. Please try again.');
                     }
                 }
                 return;
             }
             
-            // Proceed with signup
-            console.log('Proceeding with Supabase signup...');
-            const redirectUrl = 'https://elite.qzz.io/confirm.html';
-            
+            const redirectUrl = window.location.origin + '/confirm.html';
             const { data, error } = await sb.auth.signUp({ 
                 email, 
                 password: pwd, 
@@ -689,84 +654,53 @@
             
             setLoading('signupBtn', false);
             
-            console.log('Supabase signup result:', { data, error });
-            
             if (error) {
-                console.error('Supabase signup error:', error);
                 showError(error.message);
             } else if (data && data.user) {
                 showSuccess('Confirmation email sent! Please check your inbox to verify your email.');
-                // Clear form
                 document.getElementById('signupEmail').value = '';
                 document.getElementById('signupPassword').value = '';
                 document.getElementById('signupConfirmPassword').value = '';
                 setTimeout(() => setMode('signin'), 4000);
-            } else {
-                console.error('Unexpected signup response:', data);
-                showError('Unexpected response from server. Please try again.');
             }
-            
         } catch (err) {
             setLoading('signupBtn', false);
-            console.error('Signup process error:', err);
             showError('Network error. Please try again.');
         }
     };
 
-    // Sign In - Enhanced error handling
+    // Sign In
     document.getElementById('signinForm').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('signinEmail').value.trim();
         const pwd = document.getElementById('signinPassword').value;
+        if (!email || !pwd) return showError('Please enter email and password');
         
-        if (!email || !pwd) {
-            showError('Please enter email and password');
+        setLoading('signinBtn', true);
+        const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
+        setLoading('signinBtn', false);
+        
+        if (error) {
+            if (error.message.includes('Email not confirmed')) {
+                showError('Please confirm your email first. Check your inbox.');
+            } else if (error.message.includes('Invalid login credentials')) {
+                showError('Invalid email or password');
+            } else {
+                showError(error.message);
+            }
             return;
         }
         
-        console.log('Starting signin for:', email);
-        setLoading('signinBtn', true);
-        
-        try {
-            const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
-            setLoading('signinBtn', false);
-            
-            console.log('Signin result:', { data, error });
-            
-            if (error) {
-                console.error('Signin error:', error);
-                if (error.message.includes('Email not confirmed')) {
-                    showError('Please confirm your email first. Check your inbox.');
-                } else if (error.message.includes('Invalid login credentials')) {
-                    showError('Invalid email or password');
-                } else {
-                    showError(error.message);
-                }
-                return;
-            }
-            
-            if (data.user) {
-                console.log('User signed in successfully:', data.user);
-                const user = { 
-                    id: data.user.id, 
-                    email: data.user.email, 
-                    name: data.user.user_metadata?.full_name || data.user.email.split('@')[0], 
-                    picture: data.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${data.user.email.split('@')[0]}` 
-                };
-                localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
-                showSuccess('Signed in! Redirecting...');
-                setTimeout(() => {
-                    window.location.href = window.location.origin + '/dashboard.html';
-                }, 1500);
-            } else {
-                console.error('No user data in signin response');
-                showError('Sign in failed. Please try again.');
-            }
-            
-        } catch (err) {
-            setLoading('signinBtn', false);
-            console.error('Signin process error:', err);
-            showError('Network error. Please try again.');
+        if (data.user) {
+            const user = { 
+                id: data.user.id, 
+                email: data.user.email, 
+                name: data.user.user_metadata?.full_name || email.split('@')[0], 
+                picture: data.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${email.split('@')[0]}` 
+            };
+            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+            showSuccess('Signed in! Redirecting...');
+            setTimeout(() => window.location.href = window.location.origin + '/dashboard.html', 1500);
         }
     };
 
@@ -774,48 +708,29 @@
     document.getElementById('googleSignInBtn').onclick = async (e) => {
         e.preventDefault();
         try {
-            console.log('Starting Google OAuth flow...');
             const redirectUrl = window.location.origin + '/dashboard.html';
             const { error } = await sb.auth.signInWithOAuth({ 
                 provider: 'google', 
-                options: { 
-                    redirectTo: redirectUrl, 
-                    queryParams: { prompt: 'select_account' } 
-                } 
+                options: { redirectTo: redirectUrl, queryParams: { prompt: 'select_account' } } 
             });
-            
-            if (error) {
-                console.error('Google OAuth error:', error);
-                showError(error.message);
-            }
+            if (error) throw error;
         } catch (err) {
-            console.error('Google OAuth error:', err);
-            showError('Google sign-in error. Please try again.');
+            showError(err.message);
         }
     };
 
-    // Check existing session on load
+    // Check existing session
     (async () => {
-        try {
-            console.log('Checking for existing session...');
-            const { data: { session } } = await sb.auth.getSession();
-            
-            if (session) {
-                console.log('Found existing session:', session.user);
-                const user = { 
-                    id: session.user.id, 
-                    email: session.user.email, 
-                    name: session.user.user_metadata?.full_name || session.user.email.split('@')[0], 
-                    picture: session.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${session.user.email.split('@')[0]}` 
-                };
-                localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
-                window.location.href = window.location.origin + '/dashboard.html';
-            } else {
-                console.log('No existing session found');
-            }
-        } catch (err) {
-            console.error('Error checking session:', err);
-            // Continue with normal flow
+        const { data: { session } } = await sb.auth.getSession();
+        if (session) {
+            const user = { 
+                id: session.user.id, 
+                email: session.user.email, 
+                name: session.user.user_metadata?.full_name || session.user.email.split('@')[0], 
+                picture: session.user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?background=F7931A&color=fff&name=${session.user.email.split('@')[0]}` 
+            };
+            localStorage.setItem('cryptotax_current_user', JSON.stringify(user));
+            window.location.href = window.location.origin + '/dashboard.html';
         }
     })();
     
