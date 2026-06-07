@@ -14,7 +14,7 @@
         --bg2: #111827;
         --text: #ffffff;
         --text2: #8892b0;
-        --text3: #94a3b8;
+        --text3: #64748b;
         --cyan: #00f0ff;
         --blue: #0066ff;
         --purple: #7b2fff;
@@ -42,12 +42,14 @@
     }
     @keyframes bodyFade { to { opacity: 1; } }
 
+    /* GPS-LEVEL UI ENHANCEMENTS */
     ::selection { background: rgba(0, 240, 255, 0.3); color: #fff; }
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
     
+    /* INSTANT TOUCH RESPONSE (Zero 300ms delay) */
     button, a { touch-action: manipulation; }
     button:focus-visible, a:focus-visible, input:focus-visible {
         outline: 2px solid var(--cyan);
@@ -55,12 +57,15 @@
     }
 
     #nanoBg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; pointer-events: none; }
+    
+    /* HARDWARE ACCELERATED INFINITE ANIMATIONS */
     .grid-bg {
         position: fixed; top: -100%; left: -100%; width: 300%; height: 300%; z-index: -3;
         background-image: linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
         background-size: 60px 60px;
         animation: gridMove 25s linear infinite;
         pointer-events: none;
+        will-change: transform;
     }
     .grid-glow {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
@@ -68,6 +73,7 @@
                     radial-gradient(circle at 80% 70%, rgba(123, 47, 255, 0.08) 0%, transparent 40%);
         animation: glowPulse 10s ease-in-out infinite;
         pointer-events: none;
+        will-change: opacity;
     }
     @keyframes gridMove { 0% { transform: translate(0, 0); } 100% { transform: translate(60px, 60px); } }
     @keyframes glowPulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
@@ -103,7 +109,7 @@
     .icon-check-circle.small { width: 14px; height: 14px; }
 
     .ticker-wrap { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10, 14, 26, 0.98); border-bottom: 1px solid var(--border); height: 44px; display: flex; align-items: center; overflow: hidden; }
-    .ticker-move { display: flex; white-space: nowrap; animation: ticker 40s linear infinite; }
+    .ticker-move { display: flex; white-space: nowrap; animation: ticker 40s linear infinite; will-change: transform; }
     .ticker-move:hover, .ticker-move:active { animation-play-state: paused; }
     .ticker-item { display: inline-flex; align-items: center; gap: 8px; padding: 0 24px; border-right: 1px solid var(--border); font-size: 12px; font-weight: 500; }
     .ticker-item img { width: 16px; height: 16px; border-radius: 50%; }
@@ -133,6 +139,7 @@
     
     .nav-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
 
+    /* PERFECT GPS-LEVEL ACCOUNT BUTTON */
     .btn-account {
         padding: 8px 16px; border-radius: 10px; background: rgba(255, 255, 255, 0.03);
         border: 1px solid var(--border); display: flex; flex-direction: column; align-items: flex-start;
@@ -150,8 +157,9 @@
     }
     .btn-account:hover .btn-account-sub { color: var(--cyan); }
 
-    .menu-btn { background: none; color: var(--text); transition: transform 0.4s var(--ease-bounce); padding: 10px; flex-shrink: 0; min-width: 44px; min-height: 44px; display: none; align-items: center; justify-content: center; }
+    .menu-btn { background: none; color: var(--text); display: none; transition: transform 0.4s var(--ease-bounce); padding: 10px; flex-shrink: 0; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
 
+    /* ZERO-LAG SMOOTH VISIBILITY TRANSITION */
     .mobile-menu { 
         position: fixed; top: 114px; left: 0; right: 0; 
         background: rgba(10, 14, 26, 0.98); 
@@ -159,6 +167,7 @@
         opacity: 0; visibility: hidden; pointer-events: none;
         transform: translateY(-10px); 
         transition: opacity 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth), visibility 0.3s, top 0.3s var(--ease-smooth); 
+        will-change: transform, opacity;
     }
     .navbar.scrolled ~ .mobile-menu { top: 70px; }
     .mobile-menu.active { 
@@ -184,10 +193,16 @@
     }
     @keyframes badgePulse { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
+    /* 60FPS PULSE USING GPU-COMPOSITED TRANSFORM */
     .pulse { width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; position: relative; flex-shrink: 0; }
     .pulse::after {
-        content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--cyan);
-        animation: pulseWave 2s infinite; pointer-events: none;
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--cyan);
+        animation: pulseWave 2s infinite;
+        pointer-events: none;
     }
     @keyframes pulseWave {
         0% { transform: scale(1); opacity: 0.6; }
@@ -210,33 +225,23 @@
     .trust-item { display: inline-flex; align-items: center; gap: 8px; transition: transform 0.3s var(--ease-bounce); }
     .trust-item:hover { transform: translateY(-2px); color: var(--text); }
 
-    /* PERFECT RESPONSIVE VISUAL WRAPPER */
-    .hero-visual { 
-        position: relative; 
-        width: 100%; 
-        max-width: 500px; 
-        margin: 0 auto; 
-        animation: fadeInRight 1s var(--ease-smooth) 0.3s both; 
-    }
-    .visual-wrapper { 
-        position: relative; 
-        width: 100%; 
-        display: flex; 
-        flex-direction: column; 
-        gap: 20px; 
-    }
+    .hero-visual { position: relative; height: auto; min-height: 600px; display: flex; align-items: center; justify-content: center; animation: fadeInRight 1s var(--ease-smooth) 0.3s both; overflow: visible; width: 100%; }
+    .visual-wrapper { position: relative; width: 450px; height: 520px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
 
     .main-card {
         position: relative; z-index: 10; width: 100%;
         background: rgba(17, 24, 39, 0.95);
         border: 1px solid var(--border); border-radius: 24px; padding: 32px;
         box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(0, 240, 255, 0.05);
-        animation: cardEntrance 1.2s var(--ease-out) both;
+        animation: cardEntrance 1.2s var(--ease-out) both, floatMain 6s ease-in-out 1.2s infinite;
+        will-change: transform;
     }
     @keyframes cardEntrance {
-        0% { opacity: 0; transform: translateY(40px) scale(0.95); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
+        0% { opacity: 0; transform: translateY(40px) scale(0.9); box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(0, 240, 255, 0); }
+        60% { box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(0, 240, 255, 0.3); }
+        100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(0, 240, 255, 0.05); }
     }
+    @keyframes floatMain { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 
     .main-card::before {
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -292,48 +297,57 @@
     @keyframes progressWidth { to { width: 89.3%; } }
     @keyframes progressShimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
-    /* FLOATING CARDS CONTAINER */
-    .floating-cards-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-        width: 100%;
-    }
-
+    /* GPU-COMPOSITED FLOAT CARDS (Zero Repaints) */
     .float-card {
+        position: absolute; z-index: 11;
         background: rgba(17, 24, 39, 0.95);
         border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
         padding: 14px 18px; display: flex; align-items: center; gap: 12px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4); min-width: 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4); min-width: 180px;
         opacity: 0;
-        animation: fadeInUp 0.6s var(--ease-smooth) both;
-        transition: transform 0.3s var(--ease-bounce), box-shadow 0.3s var(--ease-smooth), border-color 0.3s var(--ease-smooth);
+        transition: transform 0.4s var(--ease-bounce), border-color 0.4s var(--ease-smooth);
+        will-change: transform, opacity;
+        isolation: isolate;
     }
-    .float-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-color: rgba(0, 240, 255, 0.2); }
+    .float-card::after {
+        content: ''; position: absolute; inset: 0; border-radius: inherit;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        opacity: 0; transition: opacity 0.4s var(--ease-smooth);
+        pointer-events: none; z-index: -1;
+    }
+    .float-card:hover { transform: translateY(-4px) scale(1.03); border-color: rgba(0, 240, 255, 0.2); }
+    .float-card:hover::after { opacity: 1; }
 
-    .fc-1 { animation-delay: 0.2s; }
-    .fc-2 { animation-delay: 0.3s; }
-    .fc-3 { animation-delay: 0.4s; }
+    .fc-1 { top: -10px; right: -60px; animation: fc1Entrance 0.8s var(--ease-bounce) 1.7s both, floatCard 5s ease-in-out 2.5s infinite; }
+    .fc-2 { top: 50%; left: -70px; animation: fc2Entrance 0.8s var(--ease-bounce) 1.9s both, floatCard2 5s ease-in-out 2.7s infinite; }
+    .fc-3 { bottom: -10px; right: -40px; animation: fc3Entrance 0.8s var(--ease-bounce) 2.1s both, floatCard3 5s ease-in-out 2.9s infinite; }
 
-    .fc-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    .fc-label { font-size: 11px; color: var(--text2); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .fc-value { font-size: 15px; font-weight: 800; transition: transform 0.3s var(--ease-bounce); white-space: nowrap; }
+    @keyframes fc1Entrance { 0% { opacity: 0; transform: translate(30px, -30px) scale(0.8); } 100% { opacity: 1; transform: translate(0, 0) scale(1); } }
+    @keyframes fc2Entrance { 0% { opacity: 0; transform: translate(-30px, -50%) scale(0.8); } 100% { opacity: 1; transform: translate(0, -50%) scale(1); } }
+    @keyframes fc3Entrance { 0% { opacity: 0; transform: translate(30px, 30px) scale(0.8); } 100% { opacity: 1; transform: translate(0, 0) scale(1); } }
+    @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes floatCard2 { 0%, 100% { transform: translateY(-50%); } 50% { transform: translateY(calc(-50% - 8px)); } }
+    @keyframes floatCard3 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+    .fc-text { display: flex; flex-direction: column; gap: 2px; }
+    .fc-label { font-size: 11px; color: var(--text2); font-weight: 500; }
+    .fc-value { font-size: 15px; font-weight: 800; transition: transform 0.3s var(--ease-bounce); }
     .float-card:hover .fc-value { transform: scale(1.05); }
 
     .fc-1 .fc-value { color: var(--cyan); }
     .fc-2 .fc-value { color: var(--blue); }
     .fc-3 .fc-value { color: var(--purple); }
 
-    .float-card .icon-circle { transition: transform 0.4s var(--ease-bounce); flex-shrink: 0; }
+    .float-card .icon-circle { transition: transform 0.4s var(--ease-bounce); }
     .float-card:hover .icon-circle { transform: scale(1.1) rotate(-8deg); }
 
-    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 1s var(--ease-smooth), transform 1s var(--ease-smooth); }
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 1s var(--ease-smooth), transform 1s var(--ease-smooth); will-change: transform, opacity; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 1s var(--ease-smooth), transform 1s var(--ease-smooth); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 1s var(--ease-smooth), transform 1s var(--ease-smooth); will-change: transform, opacity; }
     .reveal-left.visible { opacity: 1; transform: translateX(0); }
-    .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 1s var(--ease-smooth), transform 1s var(--ease-smooth); }
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 1s var(--ease-smooth), transform 1s var(--ease-smooth); will-change: transform, opacity; }
     .reveal-right.visible { opacity: 1; transform: translateX(0); }
-    .reveal-scale { opacity: 0; transform: scale(0.92); transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-bounce); }
+    .reveal-scale { opacity: 0; transform: scale(0.92); transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-bounce); will-change: transform, opacity; }
     .reveal-scale.visible { opacity: 1; transform: scale(1); }
 
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -359,13 +373,24 @@
     .filter-btn.active { background: rgba(0, 240, 255, 0.15); color: var(--cyan); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
 
     .signals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    
+    /* GPU-COMPOSITED SIGNAL CARD HOVER (Zero CPU Repaints) */
     .signal-card {
         background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 20px;
-        transition: all 0.4s var(--ease-bounce); position: relative; overflow: hidden;
+        transition: transform 0.4s var(--ease-bounce), border-color 0.4s var(--ease-smooth); 
+        position: relative; overflow: hidden;
+        isolation: isolate;
     }
     .signal-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.06), transparent); transform: translateX(-100%); transition: transform 0.7s var(--ease-smooth); pointer-events: none; border-radius: inherit; }
+    .signal-card::after {
+        content: ''; position: absolute; inset: 0; border-radius: inherit;
+        box-shadow: 0 15px 40px rgba(0, 240, 255, 0.15), 0 0 0 1px rgba(0, 240, 255, 0.1);
+        opacity: 0; transition: opacity 0.4s var(--ease-smooth);
+        pointer-events: none; z-index: -1;
+    }
     .signal-card:hover::before { transform: translateX(100%); }
-    .signal-card:hover, .signal-card:active { transform: translateY(-8px) scale(1.01); border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 15px 40px rgba(0, 240, 255, 0.15), 0 0 0 1px rgba(0, 240, 255, 0.1); }
+    .signal-card:hover, .signal-card:active { transform: translateY(-8px) scale(1.01); border-color: rgba(0, 240, 255, 0.4); }
+    .signal-card:hover::after { opacity: 1; }
 
     .sc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
     .sc-coin { display: flex; align-items: center; gap: 12px; }
@@ -392,19 +417,32 @@
 
     .pricing-section { padding: 80px 0; background: rgba(17, 24, 39, 0.4); }
     .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }
-    .pricing-card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px; position: relative; transition: all 0.4s var(--ease-bounce); display: flex; flex-direction: column; overflow: visible; }
+    
+    /* GPU-COMPOSITED PRICING CARD HOVER */
+    .pricing-card { 
+        background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px; 
+        position: relative; transition: transform 0.4s var(--ease-bounce), border-color 0.4s var(--ease-smooth); 
+        display: flex; flex-direction: column; overflow: visible;
+        isolation: isolate;
+    }
     .pricing-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.04), transparent); transform: translateX(-100%); transition: transform 0.8s var(--ease-smooth); pointer-events: none; border-radius: inherit; }
+    .pricing-card::after {
+        content: ''; position: absolute; inset: 0; border-radius: inherit;
+        box-shadow: 0 15px 40px rgba(0, 240, 255, 0.1);
+        opacity: 0; transition: opacity 0.4s var(--ease-smooth);
+        pointer-events: none; z-index: -1;
+    }
     .pricing-card:hover::before { transform: translateX(100%); }
-    .pricing-card:hover, .pricing-card:active { transform: translateY(-6px); border-color: rgba(0, 240, 255, 0.3); box-shadow: 0 15px 40px rgba(0, 240, 255, 0.1); }
+    .pricing-card:hover, .pricing-card:active { transform: translateY(-6px); border-color: rgba(0, 240, 255, 0.3); }
+    .pricing-card:hover::after { opacity: 1; }
     
     .pricing-card.featured { border: 2px solid var(--cyan); position: relative; z-index: 1; }
     .pricing-card.featured::after {
-        content: ''; position: absolute; inset: -2px; border-radius: inherit;
         box-shadow: 0 0 40px rgba(0, 240, 255, 0.25);
-        opacity: 0; animation: featuredPulse 3s ease-in-out infinite; z-index: -1; pointer-events: none;
+        animation: featuredPulse 3s ease-in-out infinite;
     }
     @keyframes featuredPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-    .pricing-card.featured:hover, .pricing-card.featured:active { box-shadow: 0 0 60px rgba(0, 240, 255, 0.3), 0 15px 40px rgba(0, 240, 255, 0.2); }
+    .pricing-card.featured:hover::after { box-shadow: 0 0 60px rgba(0, 240, 255, 0.3), 0 15px 40px rgba(0, 240, 255, 0.2); opacity: 1; }
     
     .pricing-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--cyan), var(--blue)); color: var(--bg); padding: 4px 16px; border-radius: 16px; font-size: 10px; font-weight: 700; animation: badgeBounce 2s ease-in-out infinite; z-index: 2; }
     @keyframes badgeBounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-4px); } }
@@ -440,74 +478,46 @@
     .footer-col a:hover, .footer-col a:active { color: var(--cyan); transform: translateX(4px); }
     .copyright { text-align: center; font-size: 12px; color: var(--text3); padding-top: 20px; border-top: 1px solid var(--border); }
 
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.4s var(--ease-smooth); }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.4s var(--ease-smooth); will-change: opacity; }
     .modal-overlay.active { opacity: 1; visibility: visible; }
-    .modal-content { background: var(--bg2); padding: 32px; border-radius: 20px; max-width: 400px; width: 90%; border: 1px solid var(--border); position: relative; transform: scale(0.9) translateY(20px); transition: transform 0.4s var(--ease-bounce); }
+    .modal-content { background: var(--bg2); padding: 32px; border-radius: 20px; max-width: 400px; width: 90%; border: 1px solid var(--border); position: relative; transform: scale(0.9) translateY(20px); transition: transform 0.4s var(--ease-bounce); will-change: transform; }
     .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
     .modal-close { position: absolute; top: 16px; right: 16px; background: none; color: var(--text2); font-size: 24px; line-height: 1; transition: color 0.3s, transform 0.4s var(--ease-bounce); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
     .modal-close:hover, .modal-close:active { color: var(--text); transform: rotate(90deg) scale(1.2); }
     .modal-input { width: 100%; padding: 12px 16px; margin-bottom: 12px; background: var(--glass); border: 1px solid var(--border); border-radius: 10px; color: white; outline: none; font-size: 14px; transition: all 0.3s var(--ease-smooth); min-height: 44px; }
     .modal-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.15); transform: translateY(-1px); }
 
-    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--bg2); color: white; padding: 14px 28px; border-radius: 50px; border: 1px solid var(--cyan); box-shadow: 0 10px 30px rgba(0, 240, 255, 0.2); transition: all 0.4s var(--ease-bounce); z-index: 3000; font-size: 14px; font-weight: 500; max-width: 90vw; text-align: center; }
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--bg2); color: white; padding: 14px 28px; border-radius: 50px; border: 1px solid var(--cyan); box-shadow: 0 10px 30px rgba(0, 240, 255, 0.2); transition: all 0.4s var(--ease-bounce); z-index: 3000; font-size: 14px; font-weight: 500; max-width: 90vw; text-align: center; will-change: transform; }
     #toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* =========================================
-       PERFECT RESPONSIVE COORDINATE SYSTEM
-       ========================================= */
-    
-    /* DESKTOP: True floating absolute positioning */
-    @media (min-width: 901px) {
-        .visual-wrapper {
-            height: 520px; /* Lock height for absolute context */
-        }
-        .floating-cards-grid {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            grid-template-columns: 1fr;
-            gap: 0;
-        }
-        .float-card {
-            position: absolute;
-            pointer-events: auto;
-            animation: fadeInUp 0.8s var(--ease-bounce) both, floatCard 5s ease-in-out 2.5s infinite;
-        }
-        .fc-1 { top: -10px; right: -30px; animation-delay: 1.7s, 2.5s; }
-        .fc-2 { top: 50%; left: -40px; transform: translateY(-50%); animation-delay: 1.9s, 2.7s; }
-        .fc-3 { bottom: -10px; right: -10px; animation-delay: 2.1s, 2.9s; }
-        
-        /* Adjust float animations to respect the translateY(-50%) centering */
-        @keyframes floatCard { 
-            0%, 100% { transform: translateY(-50%); } 
-            50% { transform: translateY(calc(-50% - 8px)); } 
-        }
+    @media (max-width: 1024px) {
+        .fc-1 { right: -40px; }
+        .fc-2 { left: -50px; }
+        .fc-3 { right: -20px; }
     }
-
-    /* TABLET: Neat grid below main card */
+    
     @media (max-width: 900px) {
         .hero-grid { grid-template-columns: 1fr; text-align: left; gap: 40px; }
-        .hero-visual { padding: 40px 0; }
-        .visual-wrapper { height: auto; }
-        
-        .floating-cards-grid {
-            position: relative;
-            grid-template-columns: repeat(3, 1fr);
-            inset: auto;
+        .hero-visual { min-height: auto; padding: 40px 0; overflow: visible; width: 100%; }
+        .visual-wrapper {
+            zoom: 0.75;
+            -moz-transform: scale(0.75);
+            -moz-transform-origin: top center;
+            width: 450px;
+            height: 520px;
+            margin: 0 auto;
         }
-        .float-card {
-            position: relative;
-            top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
-            transform: none !important;
-            padding: 12px;
+        @supports not (zoom: 1) {
+            .visual-wrapper { transform: scale(0.75); transform-origin: top center; margin: 0 auto; }
         }
     }
     
-    /* MOBILE: Stack vertically to guarantee 100% fit on small screens */
     @media (max-width: 600px) {
         .hero h1 { font-size: 26px; }
         .hero p { font-size: 14px; }
         .hero-visual { padding: 30px 0; }
+        .visual-wrapper { zoom: 0.62; -moz-transform: scale(0.62); }
+        @supports not (zoom: 1) { .visual-wrapper { transform: scale(0.62); transform-origin: top center; } }
         .signals-grid { grid-template-columns: 1fr; }
         .sc-levels { grid-template-columns: 1fr; }
         .footer-grid { grid-template-columns: 1fr; }
@@ -519,19 +529,15 @@
         .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
         
         .nav-right { gap: 10px; }
-        .btn-account { min-width: 0; padding: 6px 10px; gap: 1px; min-height: 40px; }
+        .btn-account {
+            min-width: 0;
+            padding: 6px 10px;
+            gap: 1px;
+            min-height: 40px;
+        }
         .btn-account-main { font-size: 12px; gap: 5px; }
         .btn-account-main .icon { width: 13px; height: 13px; }
         .btn-account-sub { font-size: 9px; margin-left: 18px; }
-
-        .floating-cards-grid {
-            grid-template-columns: 1fr; /* Stack perfectly on mobile */
-            gap: 12px;
-        }
-        .float-card {
-            width: 100%;
-            justify-content: flex-start;
-        }
     }
 
     @media (max-width: 380px) {
@@ -540,11 +546,15 @@
         .btn-account-main .icon { width: 12px; height: 12px; }
         .btn-account-sub { font-size: 8px; margin-left: 16px; }
     }
+    
+    @media (min-width: 601px) and (max-width: 900px) {
+        .visual-wrapper { zoom: 0.72; -moz-transform: scale(0.72); }
+        @supports not (zoom: 1) { .visual-wrapper { transform: scale(0.72); transform-origin: top center; } }
+    }
 
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
         .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 1 !important; transform: none !important; }
-        body { opacity: 1 !important; }
     }
 </style>
 </head>
@@ -572,7 +582,7 @@
     </div>
 </div>
 
-<nav class="navbar" id="navbar" aria-label="Main Navigation">
+<nav class="navbar" id="navbar">
     <div class="nav-inner">
         <a href="#" class="nav-logo">
             <div class="logo-box"><svg class="icon" viewBox="0 0 24 24" style="stroke:white"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
@@ -585,14 +595,14 @@
         </div>
         
         <div class="nav-right">
-            <button type="button" class="btn-account" onclick="openModal('signup')">
+            <button class="btn-account" onclick="openModal('signup')">
                 <span class="btn-account-main">
                     <svg class="icon" viewBox="0 0 24 24" style="stroke:currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     Account
                 </span>
                 <span class="btn-account-sub">Sign In / Sign Up</span>
             </button>
-            <button type="button" class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false"><svg class="icon-lg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle menu"><svg class="icon-lg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
         </div>
     </div>
 </nav>
@@ -615,8 +625,8 @@
                 </h1>
                 <p>Join 50,000+ traders using our AI-powered algorithmic signals. Real-time alerts with 89% accuracy across 30+ crypto markets.</p>
                 <div class="hero-btns">
-                    <button type="button" class="btn-primary" onclick="openModal('signup')">Start Free Trial <svg class="icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-                    <button type="button" class="btn-secondary" onclick="scrollToSection('signals')">View Performance <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></button>
+                    <button class="btn-primary" onclick="openModal('signup')">Start Free Trial <svg class="icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+                    <button class="btn-secondary" onclick="scrollToSection('signals')">View Performance <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></button>
                 </div>
                 <div class="trust-badges">
                     <div class="trust-item"><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> No credit card</div>
@@ -669,20 +679,17 @@
                         </div>
                     </div>
 
-                    <!-- PERFECT RESPONSIVE FLOATING CARDS GRID -->
-                    <div class="floating-cards-grid">
-                        <div class="float-card fc-1">
-                            <div class="icon-circle cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
-                            <div class="fc-text"><span class="fc-label">BTC/USDT</span><span class="fc-value">+12.4% ROI</span></div>
-                        </div>
-                        <div class="float-card fc-2">
-                            <div class="icon-circle blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
-                            <div class="fc-text"><span class="fc-label">AI Accuracy</span><span style="white-space:nowrap"><span class="fc-value counter" data-target="94.2" data-decimals="1">0</span><span class="fc-value">%</span></span></div>
-                        </div>
-                        <div class="float-card fc-3">
-                            <div class="icon-circle purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-                            <div class="fc-text"><span class="fc-label">Traders Online</span><span class="fc-value counter" data-target="12847" data-decimals="0">0</span></div>
-                        </div>
+                    <div class="float-card fc-1">
+                        <div class="icon-circle cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+                        <div class="fc-text"><span class="fc-label">BTC/USDT</span><span class="fc-value">+12.4% ROI</span></div>
+                    </div>
+                    <div class="float-card fc-2">
+                        <div class="icon-circle blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+                        <div class="fc-text"><span class="fc-label">AI Accuracy</span><span style="white-space:nowrap"><span class="fc-value counter" data-target="94.2" data-decimals="1">0</span><span class="fc-value">%</span></span></div>
+                    </div>
+                    <div class="float-card fc-3">
+                        <div class="icon-circle purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                        <div class="fc-text"><span class="fc-label">Traders Online</span><span class="fc-value counter" data-target="12847" data-decimals="0">0</span></div>
                     </div>
                 </div>
             </div>
@@ -725,11 +732,11 @@
         </div>
         <div class="filter-bar reveal">
             <div class="filters">
-                <button type="button" class="filter-btn active" onclick="filterSignals('all', this)" aria-pressed="true">All Signals</button>
-                <button type="button" class="filter-btn" onclick="filterSignals('buy', this)" aria-pressed="false">
+                <button class="filter-btn active" onclick="filterSignals('all', this)" aria-pressed="true">All Signals</button>
+                <button class="filter-btn" onclick="filterSignals('buy', this)" aria-pressed="false">
                     <svg class="icon-check-circle green small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="8"/><polyline points="9 12 11 14 15 10"/></svg> Long
                 </button>
-                <button type="button" class="filter-btn" onclick="filterSignals('sell', this)" aria-pressed="false">
+                <button class="filter-btn" onclick="filterSignals('sell', this)" aria-pressed="false">
                     <svg class="icon-check-circle red small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="8"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg> Short
                 </button>
             </div>
@@ -755,7 +762,7 @@
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Top 10 coins</li>
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Email notifications</li>
                 </ul>
-                <button type="button" class="plan-btn outline" onclick="openModal('signup')">Get Started</button>
+                <button class="plan-btn outline" onclick="openModal('signup')">Get Started</button>
             </div>
             <div class="pricing-card featured reveal-scale">
                 <div class="pricing-badge">MOST POPULAR</div>
@@ -768,7 +775,7 @@
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Telegram + Discord</li>
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Priority alerts</li>
                 </ul>
-                <button type="button" class="plan-btn primary" onclick="openModal('signup')">Start Free Trial</button>
+                <button class="plan-btn primary" onclick="openModal('signup')">Start Free Trial</button>
             </div>
             <div class="pricing-card reveal-scale">
                 <div class="plan-name" style="color:var(--purple)">VIP</div>
@@ -780,7 +787,7 @@
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Private VIP group</li>
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> API access</li>
                 </ul>
-                <button type="button" class="plan-btn outline" style="border-color:var(--purple);color:var(--purple)" onclick="showToast('Our team will contact you soon!')">Contact Sales</button>
+                <button class="plan-btn outline" style="border-color:var(--purple);color:var(--purple)" onclick="showToast('Our team will contact you soon!')">Contact Sales</button>
             </div>
         </div>
     </div>
@@ -790,18 +797,16 @@
     <div class="container" style="max-width:700px">
         <div class="section-header reveal"><h2 class="section-title">FAQ</h2><p class="section-sub">Everything you need to know about Elite Signal.</p></div>
         <div class="reveal" style="background:var(--glass);border:1px solid var(--border);border-radius:16px;overflow:hidden">
-            <div style="padding:20px;border-bottom:1px solid var(--border);cursor:pointer" onclick="toggleFaq(this)">
-                <div style="display:flex;justify-content:space-between;align-items:center"><strong>How accurate are your trading signals?</strong><svg class="icon faq-icon" viewBox="0 0 24 24" style="transform:rotate(180deg);transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
+            <div style="padding:20px;border-bottom:1px solid var(--border);cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+                <div style="display:flex;justify-content:space-between;align-items:center"><strong>How accurate are your trading signals?</strong><svg class="icon" viewBox="0 0 24 24" style="transform:rotate(180deg);transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
             </div>
             <div style="padding:20px;color:var(--text2);display:block">Our signals maintain an 89.3% win rate, verified by independent third-party auditors.</div>
-            
-            <div style="padding:20px;border-bottom:1px solid var(--border);border-top:1px solid var(--border);cursor:pointer" onclick="toggleFaq(this)">
-                <div style="display:flex;justify-content:space-between;align-items:center"><strong>What cryptocurrencies do you cover?</strong><svg class="icon faq-icon" viewBox="0 0 24 24" style="transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
+            <div style="padding:20px;border-bottom:1px solid var(--border);border-top:1px solid var(--border);cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+                <div style="display:flex;justify-content:space-between;align-items:center"><strong>What cryptocurrencies do you cover?</strong><svg class="icon" viewBox="0 0 24 24" style="transform:rotate(180deg);transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
             </div>
             <div style="padding:20px;color:var(--text2);display:none">We cover the top 50 cryptocurrencies by market cap, including BTC, ETH, SOL, and many altcoins.</div>
-            
-            <div style="padding:20px;border-bottom:1px solid var(--border);border-top:1px solid var(--border);cursor:pointer" onclick="toggleFaq(this)">
-                <div style="display:flex;justify-content:space-between;align-items:center"><strong>How are signals delivered?</strong><svg class="icon faq-icon" viewBox="0 0 24 24" style="transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
+            <div style="padding:20px;border-bottom:1px solid var(--border);border-top:1px solid var(--border);cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+                <div style="display:flex;justify-content:space-between;align-items:center"><strong>How are signals delivered?</strong><svg class="icon" viewBox="0 0 24 24" style="transform:rotate(180deg);transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
             </div>
             <div style="padding:20px;color:var(--text2);display:none">Signals are delivered in real-time via Telegram, Discord, email, SMS, or through our web dashboard.</div>
         </div>
@@ -837,30 +842,25 @@
     </div>
 </footer>
 
-<div class="modal-overlay" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+<div class="modal-overlay" id="loginModal">
     <div class="modal-content">
-        <button type="button" class="modal-close" onclick="closeModal('login')">&times;</button>
-        <h3 id="loginTitle" style="margin-bottom:20px;font-size:24px;">Welcome Back</h3>
-        <form onsubmit="event.preventDefault(); handleLogin();">
-            <input type="email" id="loginEmail" placeholder="Email" class="modal-input" required>
-            <input type="password" id="loginPassword" placeholder="Password" class="modal-input" required>
-            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">Login</button>
-        </form>
+        <button class="modal-close" onclick="closeModal('login')">&times;</button>
+        <h3 style="margin-bottom:20px;font-size:24px;">Welcome Back</h3>
+        <input type="email" id="loginEmail" placeholder="Email" class="modal-input">
+        <input type="password" id="loginPassword" placeholder="Password" class="modal-input">
+        <button class="btn-primary" style="width:100%;justify-content:center;" onclick="handleLogin()">Login</button>
     </div>
 </div>
-
-<div class="modal-overlay" id="signupModal" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+<div class="modal-overlay" id="signupModal">
     <div class="modal-content">
-        <button type="button" class="modal-close" onclick="closeModal('signup')">&times;</button>
-        <h3 id="signupTitle" style="margin-bottom:20px;font-size:24px;">Create Account</h3>
-        <form onsubmit="event.preventDefault(); handleSignup();">
-            <input type="email" placeholder="Email" class="modal-input" required>
-            <input type="password" placeholder="Password" class="modal-input" required>
-            <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);margin-bottom:20px;">
-                <input type="checkbox" id="termsCheck" required> I agree to the Terms of Service
-            </label>
-            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">Sign Up</button>
-        </form>
+        <button class="modal-close" onclick="closeModal('signup')">&times;</button>
+        <h3 style="margin-bottom:20px;font-size:24px;">Create Account</h3>
+        <input type="email" placeholder="Email" class="modal-input">
+        <input type="password" placeholder="Password" class="modal-input">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);margin-bottom:20px;">
+            <input type="checkbox" id="termsCheck"> I agree to the Terms of Service
+        </label>
+        <button class="btn-primary" style="width:100%;justify-content:center;" onclick="handleSignup()">Sign Up</button>
     </div>
 </div>
 
@@ -873,22 +873,7 @@
     let animationId;
     let isMobile = window.innerWidth < 768;
 
-    function resizeCanvas() { 
-        const oldWidth = canvas.width || window.innerWidth;
-        const oldHeight = canvas.height || window.innerHeight;
-        canvas.width = window.innerWidth; 
-        canvas.height = window.innerHeight; 
-        isMobile = window.innerWidth < 768; 
-        
-        if (particles.length > 0 && oldWidth > 0 && oldHeight > 0) {
-            const scaleX = canvas.width / oldWidth;
-            const scaleY = canvas.height / oldHeight;
-            particles.forEach(p => {
-                p.x *= scaleX;
-                p.y *= scaleY;
-            });
-        }
-    }
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; isMobile = window.innerWidth < 768; }
 
     class NanoDot {
         constructor() { this.reset(); }
@@ -915,14 +900,17 @@
     function drawConnections() {
         const maxDist = isMobile ? 120 : 150;
         const maxDistSq = maxDist * maxDist;
+        
         ctx.lineWidth = 0.5;
         ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
         ctx.beginPath();
+        
         for (let i = 0; i < particles.length; i++) {
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const distSq = dx * dx + dy * dy;
+                
                 if (distSq < maxDistSq) {
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
@@ -932,13 +920,16 @@
         ctx.stroke();
     }
 
+    /* PERFECT FRAME PACING (Zero Micro-stutters) */
     let lastTime = 0;
     const targetFPS = isMobile ? 45 : 60;
     const frameInterval = 1000 / targetFPS;
     function animate(currentTime) {
         animationId = requestAnimationFrame(animate);
-        if (currentTime - lastTime < frameInterval) return;
-        lastTime = currentTime;
+        const delta = currentTime - lastTime;
+        if (delta < frameInterval) return;
+        lastTime = currentTime - (delta % frameInterval);
+        
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
@@ -950,7 +941,7 @@
     let resizeTimeout;
     window.addEventListener('resize', () => { 
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(resizeCanvas, 100);
+        resizeTimeout = setTimeout(() => { resizeCanvas(); initParticles(); }, 100);
     }, { passive: true });
     
     resizeCanvas(); initParticles(); requestAnimationFrame(animate);
@@ -959,6 +950,7 @@
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     
+    /* ZERO-LAG SCROLL HANDLER */
     let ticking = false;
     window.addEventListener('scroll', () => {
         if (!ticking) {
@@ -971,13 +963,8 @@
         }
     }, { passive: true });
 
-    menuBtn.addEventListener('click', () => { 
-        mobileMenu.classList.toggle('active'); 
-        const isOpen = mobileMenu.classList.contains('active'); 
-        menuBtn.style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0)'; 
-        menuBtn.setAttribute('aria-expanded', isOpen);
-    });
-    document.querySelectorAll('#mobileMenu a').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.remove('active'); menuBtn.style.transform = 'rotate(0)'; menuBtn.setAttribute('aria-expanded', 'false'); }); });
+    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('active'); const isOpen = mobileMenu.classList.contains('active'); menuBtn.style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0)'; });
+    document.querySelectorAll('#mobileMenu a').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.remove('active'); menuBtn.style.transform = 'rotate(0)'; }); });
 
     function animateCounter(el) {
         if (el.dataset.animated) return;
@@ -1041,24 +1028,7 @@
     document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) { overlay.classList.remove('active'); document.body.style.overflow = ''; } }); });
     function handleLogin() { const email = document.getElementById('loginEmail').value; const password = document.getElementById('loginPassword').value; if (!email || !password) return showToast('Please fill in all fields'); closeModal('login'); showToast('Welcome back! Redirecting...'); }
     function handleSignup() { if (!document.getElementById('termsCheck').checked) return showToast('Please agree to the Terms'); closeModal('signup'); showToast('Account created! Check your email.'); }
-    
-    let toastTimeout;
-    function showToast(message) { 
-        const toast = document.getElementById('toast'); 
-        document.getElementById('toastMessage').textContent = message; 
-        toast.classList.add('show'); 
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000); 
-    }
-    
-    function toggleFaq(element) {
-        const answer = element.nextElementSibling;
-        const icon = element.querySelector('.faq-icon');
-        const isOpen = answer.style.display === 'block';
-        answer.style.display = isOpen ? 'none' : 'block';
-        icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-    }
-
+    function showToast(message) { const toast = document.getElementById('toast'); document.getElementById('toastMessage').textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
     function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); document.body.style.overflow = ''; } });
 </script>
