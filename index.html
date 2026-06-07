@@ -14,7 +14,7 @@
         --bg2: #111827;
         --text: #ffffff;
         --text2: #8892b0;
-        --text3: #64748b;
+        --text3: #94a3b8; /* FIXED: Lightened for better WCAG contrast ratio */
         --cyan: #00f0ff;
         --blue: #0066ff;
         --purple: #7b2fff;
@@ -42,7 +42,6 @@
     }
     @keyframes bodyFade { to { opacity: 1; } }
 
-    /* GPS-LEVEL UI ENHANCEMENTS */
     ::selection { background: rgba(0, 240, 255, 0.3); color: #fff; }
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
@@ -134,7 +133,6 @@
     
     .nav-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
 
-    /* PERFECT GPS-LEVEL ACCOUNT BUTTON */
     .btn-account {
         padding: 8px 16px; border-radius: 10px; background: rgba(255, 255, 255, 0.03);
         border: 1px solid var(--border); display: flex; flex-direction: column; align-items: flex-start;
@@ -148,14 +146,14 @@
     }
     .btn-account-sub { 
         font-size: 10px; color: var(--text3); font-weight: 500; line-height: 1.1; 
-        margin-left: 18px; /* Perfectly aligns under the 'A' in Account, ignoring the icon */
+        margin-left: 18px; 
         white-space: nowrap;
     }
     .btn-account:hover .btn-account-sub { color: var(--cyan); }
 
-    .menu-btn { background: none; color: var(--text); display: none; transition: transform 0.4s var(--ease-bounce); padding: 10px; flex-shrink: 0; min-width: 44px; min-height: 44px; display: none; align-items: center; justify-content: center; }
+    /* FIXED: Removed redundant display:none declarations */
+    .menu-btn { background: none; color: var(--text); transition: transform 0.4s var(--ease-bounce); padding: 10px; flex-shrink: 0; min-width: 44px; min-height: 44px; display: none; align-items: center; justify-content: center; }
 
-    /* FIXED: Smooth visibility transition instead of display:none snapping */
     .mobile-menu { 
         position: fixed; top: 114px; left: 0; right: 0; 
         background: rgba(10, 14, 26, 0.98); 
@@ -188,7 +186,6 @@
     }
     @keyframes badgePulse { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
-    /* FIXED: 60fps Pulse Animation using transform/opacity instead of box-shadow */
     .pulse { width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; position: relative; flex-shrink: 0; }
     .pulse::after {
         content: '';
@@ -459,16 +456,13 @@
     @media (max-width: 900px) {
         .hero-grid { grid-template-columns: 1fr; text-align: left; gap: 40px; }
         .hero-visual { min-height: auto; padding: 40px 0; overflow: visible; width: 100%; }
+        /* FIXED: Removed zoom and -moz-transform, using standard transform */
         .visual-wrapper {
-            zoom: 0.75;
-            -moz-transform: scale(0.75);
-            -moz-transform-origin: top center;
+            transform: scale(0.75);
+            transform-origin: top center;
             width: 450px;
             height: 520px;
             margin: 0 auto;
-        }
-        @supports not (zoom: 1) {
-            .visual-wrapper { transform: scale(0.75); transform-origin: top center; margin: 0 auto; }
         }
     }
     
@@ -476,8 +470,7 @@
         .hero h1 { font-size: 26px; }
         .hero p { font-size: 14px; }
         .hero-visual { padding: 30px 0; }
-        .visual-wrapper { zoom: 0.62; -moz-transform: scale(0.62); }
-        @supports not (zoom: 1) { .visual-wrapper { transform: scale(0.62); transform-origin: top center; } }
+        .visual-wrapper { transform: scale(0.62); transform-origin: top center; }
         .signals-grid { grid-template-columns: 1fr; }
         .sc-levels { grid-template-columns: 1fr; }
         .footer-grid { grid-template-columns: 1fr; }
@@ -488,7 +481,6 @@
         .pricing-grid { grid-template-columns: 1fr; max-width: 360px; }
         .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
         
-        /* PERFECT MOBILE FIT FOR ACCOUNT BUTTON */
         .nav-right { gap: 10px; }
         .btn-account {
             min-width: 0;
@@ -501,7 +493,6 @@
         .btn-account-sub { font-size: 9px; margin-left: 18px; }
     }
 
-    /* ULTRA-SMALL SCREEN SAFETY NET (e.g., iPhone SE 1st Gen) */
     @media (max-width: 380px) {
         .btn-account { padding: 5px 8px; }
         .btn-account-main { font-size: 11px; gap: 4px; }
@@ -510,13 +501,14 @@
     }
     
     @media (min-width: 601px) and (max-width: 900px) {
-        .visual-wrapper { zoom: 0.72; -moz-transform: scale(0.72); }
-        @supports not (zoom: 1) { .visual-wrapper { transform: scale(0.72); transform-origin: top center; } }
+        .visual-wrapper { transform: scale(0.72); transform-origin: top center; }
     }
 
+    /* FIXED: Added body to prevent blank page for reduced-motion users */
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
         .reveal, .reveal-left, .reveal-right, .reveal-scale { opacity: 1 !important; transform: none !important; }
+        body { opacity: 1 !important; }
     }
 </style>
 </head>
@@ -544,7 +536,8 @@
     </div>
 </div>
 
-<nav class="navbar" id="navbar">
+<!-- FIXED: Added aria-label for accessibility -->
+<nav class="navbar" id="navbar" aria-label="Main Navigation">
     <div class="nav-inner">
         <a href="#" class="nav-logo">
             <div class="logo-box"><svg class="icon" viewBox="0 0 24 24" style="stroke:white"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
@@ -557,14 +550,15 @@
         </div>
         
         <div class="nav-right">
-            <button class="btn-account" onclick="openModal('signup')">
+            <button type="button" class="btn-account" onclick="openModal('signup')">
                 <span class="btn-account-main">
                     <svg class="icon" viewBox="0 0 24 24" style="stroke:currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     Account
                 </span>
                 <span class="btn-account-sub">Sign In / Sign Up</span>
             </button>
-            <button class="menu-btn" id="menuBtn" aria-label="Toggle menu"><svg class="icon-lg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+            <!-- FIXED: Added aria-expanded -->
+            <button type="button" class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false"><svg class="icon-lg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
         </div>
     </div>
 </nav>
@@ -587,8 +581,8 @@
                 </h1>
                 <p>Join 50,000+ traders using our AI-powered algorithmic signals. Real-time alerts with 89% accuracy across 30+ crypto markets.</p>
                 <div class="hero-btns">
-                    <button class="btn-primary" onclick="openModal('signup')">Start Free Trial <svg class="icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-                    <button class="btn-secondary" onclick="scrollToSection('signals')">View Performance <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></button>
+                    <button type="button" class="btn-primary" onclick="openModal('signup')">Start Free Trial <svg class="icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+                    <button type="button" class="btn-secondary" onclick="scrollToSection('signals')">View Performance <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></button>
                 </div>
                 <div class="trust-badges">
                     <div class="trust-item"><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> No credit card</div>
@@ -694,11 +688,12 @@
         </div>
         <div class="filter-bar reveal">
             <div class="filters">
-                <button class="filter-btn active" onclick="filterSignals('all', this)" aria-pressed="true">All Signals</button>
-                <button class="filter-btn" onclick="filterSignals('buy', this)" aria-pressed="false">
+                <!-- FIXED: Added type="button" -->
+                <button type="button" class="filter-btn active" onclick="filterSignals('all', this)" aria-pressed="true">All Signals</button>
+                <button type="button" class="filter-btn" onclick="filterSignals('buy', this)" aria-pressed="false">
                     <svg class="icon-check-circle green small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="8"/><polyline points="9 12 11 14 15 10"/></svg> Long
                 </button>
-                <button class="filter-btn" onclick="filterSignals('sell', this)" aria-pressed="false">
+                <button type="button" class="filter-btn" onclick="filterSignals('sell', this)" aria-pressed="false">
                     <svg class="icon-check-circle red small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="8"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg> Short
                 </button>
             </div>
@@ -724,7 +719,7 @@
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Top 10 coins</li>
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Email notifications</li>
                 </ul>
-                <button class="plan-btn outline" onclick="openModal('signup')">Get Started</button>
+                <button type="button" class="plan-btn outline" onclick="openModal('signup')">Get Started</button>
             </div>
             <div class="pricing-card featured reveal-scale">
                 <div class="pricing-badge">MOST POPULAR</div>
@@ -737,7 +732,7 @@
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Telegram + Discord</li>
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Priority alerts</li>
                 </ul>
-                <button class="plan-btn primary" onclick="openModal('signup')">Start Free Trial</button>
+                <button type="button" class="plan-btn primary" onclick="openModal('signup')">Start Free Trial</button>
             </div>
             <div class="pricing-card reveal-scale">
                 <div class="plan-name" style="color:var(--purple)">VIP</div>
@@ -749,7 +744,7 @@
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> Private VIP group</li>
                     <li><svg class="icon-check-circle green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg> API access</li>
                 </ul>
-                <button class="plan-btn outline" style="border-color:var(--purple);color:var(--purple)" onclick="showToast('Our team will contact you soon!')">Contact Sales</button>
+                <button type="button" class="plan-btn outline" style="border-color:var(--purple);color:var(--purple)" onclick="showToast('Our team will contact you soon!')">Contact Sales</button>
             </div>
         </div>
     </div>
@@ -759,16 +754,19 @@
     <div class="container" style="max-width:700px">
         <div class="section-header reveal"><h2 class="section-title">FAQ</h2><p class="section-sub">Everything you need to know about Elite Signal.</p></div>
         <div class="reveal" style="background:var(--glass);border:1px solid var(--border);border-radius:16px;overflow:hidden">
-            <div style="padding:20px;border-bottom:1px solid var(--border);cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
-                <div style="display:flex;justify-content:space-between;align-items:center"><strong>How accurate are your trading signals?</strong><svg class="icon" viewBox="0 0 24 24" style="transform:rotate(180deg);transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
+            <!-- FIXED: Replaced inline JS with toggleFaq function and added faq-icon class -->
+            <div style="padding:20px;border-bottom:1px solid var(--border);cursor:pointer" onclick="toggleFaq(this)">
+                <div style="display:flex;justify-content:space-between;align-items:center"><strong>How accurate are your trading signals?</strong><svg class="icon faq-icon" viewBox="0 0 24 24" style="transform:rotate(180deg);transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
             </div>
             <div style="padding:20px;color:var(--text2);display:block">Our signals maintain an 89.3% win rate, verified by independent third-party auditors.</div>
-            <div style="padding:20px;border-bottom:1px solid var(--border);border-top:1px solid var(--border);cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
-                <div style="display:flex;justify-content:space-between;align-items:center"><strong>What cryptocurrencies do you cover?</strong><svg class="icon" viewBox="0 0 24 24" style="transform:rotate(180deg);transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
+            
+            <div style="padding:20px;border-bottom:1px solid var(--border);border-top:1px solid var(--border);cursor:pointer" onclick="toggleFaq(this)">
+                <div style="display:flex;justify-content:space-between;align-items:center"><strong>What cryptocurrencies do you cover?</strong><svg class="icon faq-icon" viewBox="0 0 24 24" style="transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
             </div>
             <div style="padding:20px;color:var(--text2);display:none">We cover the top 50 cryptocurrencies by market cap, including BTC, ETH, SOL, and many altcoins.</div>
-            <div style="padding:20px;border-bottom:1px solid var(--border);border-top:1px solid var(--border);cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
-                <div style="display:flex;justify-content:space-between;align-items:center"><strong>How are signals delivered?</strong><svg class="icon" viewBox="0 0 24 24" style="transform:rotate(180deg);transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
+            
+            <div style="padding:20px;border-bottom:1px solid var(--border);border-top:1px solid var(--border);cursor:pointer" onclick="toggleFaq(this)">
+                <div style="display:flex;justify-content:space-between;align-items:center"><strong>How are signals delivered?</strong><svg class="icon faq-icon" viewBox="0 0 24 24" style="transition:transform 0.4s var(--ease-smooth)"><polyline points="6 9 12 15 18 9"/></svg></div>
             </div>
             <div style="padding:20px;color:var(--text2);display:none">Signals are delivered in real-time via Telegram, Discord, email, SMS, or through our web dashboard.</div>
         </div>
@@ -804,25 +802,31 @@
     </div>
 </footer>
 
-<div class="modal-overlay" id="loginModal">
+<!-- FIXED: Added role="dialog", aria-modal="true", and wrapped inputs in <form> -->
+<div class="modal-overlay" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('login')">&times;</button>
-        <h3 style="margin-bottom:20px;font-size:24px;">Welcome Back</h3>
-        <input type="email" id="loginEmail" placeholder="Email" class="modal-input">
-        <input type="password" id="loginPassword" placeholder="Password" class="modal-input">
-        <button class="btn-primary" style="width:100%;justify-content:center;" onclick="handleLogin()">Login</button>
+        <button type="button" class="modal-close" onclick="closeModal('login')">&times;</button>
+        <h3 id="loginTitle" style="margin-bottom:20px;font-size:24px;">Welcome Back</h3>
+        <form onsubmit="event.preventDefault(); handleLogin();">
+            <input type="email" id="loginEmail" placeholder="Email" class="modal-input" required>
+            <input type="password" id="loginPassword" placeholder="Password" class="modal-input" required>
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">Login</button>
+        </form>
     </div>
 </div>
-<div class="modal-overlay" id="signupModal">
+
+<div class="modal-overlay" id="signupModal" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('signup')">&times;</button>
-        <h3 style="margin-bottom:20px;font-size:24px;">Create Account</h3>
-        <input type="email" placeholder="Email" class="modal-input">
-        <input type="password" placeholder="Password" class="modal-input">
-        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);margin-bottom:20px;">
-            <input type="checkbox" id="termsCheck"> I agree to the Terms of Service
-        </label>
-        <button class="btn-primary" style="width:100%;justify-content:center;" onclick="handleSignup()">Sign Up</button>
+        <button type="button" class="modal-close" onclick="closeModal('signup')">&times;</button>
+        <h3 id="signupTitle" style="margin-bottom:20px;font-size:24px;">Create Account</h3>
+        <form onsubmit="event.preventDefault(); handleSignup();">
+            <input type="email" placeholder="Email" class="modal-input" required>
+            <input type="password" placeholder="Password" class="modal-input" required>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);margin-bottom:20px;">
+                <input type="checkbox" id="termsCheck" required> I agree to the Terms of Service
+            </label>
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">Sign Up</button>
+        </form>
     </div>
 </div>
 
@@ -835,7 +839,24 @@
     let animationId;
     let isMobile = window.innerWidth < 768;
 
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; isMobile = window.innerWidth < 768; }
+    // FIXED: Scale existing particles instead of re-initializing to prevent jumping
+    function resizeCanvas() { 
+        const oldWidth = canvas.width || window.innerWidth;
+        const oldHeight = canvas.height || window.innerHeight;
+        
+        canvas.width = window.innerWidth; 
+        canvas.height = window.innerHeight; 
+        isMobile = window.innerWidth < 768; 
+        
+        if (particles.length > 0 && oldWidth > 0 && oldHeight > 0) {
+            const scaleX = canvas.width / oldWidth;
+            const scaleY = canvas.height / oldHeight;
+            particles.forEach(p => {
+                p.x *= scaleX;
+                p.y *= scaleY;
+            });
+        }
+    }
 
     class NanoDot {
         constructor() { this.reset(); }
@@ -898,9 +919,10 @@
     }
     
     let resizeTimeout;
+    // FIXED: Removed initParticles() from resize listener
     window.addEventListener('resize', () => { 
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => { resizeCanvas(); initParticles(); }, 100);
+        resizeTimeout = setTimeout(resizeCanvas, 100);
     }, { passive: true });
     
     resizeCanvas(); initParticles(); requestAnimationFrame(animate);
@@ -921,8 +943,14 @@
         }
     }, { passive: true });
 
-    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('active'); const isOpen = mobileMenu.classList.contains('active'); menuBtn.style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0)'; });
-    document.querySelectorAll('#mobileMenu a').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.remove('active'); menuBtn.style.transform = 'rotate(0)'; }); });
+    // FIXED: Update aria-expanded when toggling menu
+    menuBtn.addEventListener('click', () => { 
+        mobileMenu.classList.toggle('active'); 
+        const isOpen = mobileMenu.classList.contains('active'); 
+        menuBtn.style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0)'; 
+        menuBtn.setAttribute('aria-expanded', isOpen);
+    });
+    document.querySelectorAll('#mobileMenu a').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.remove('active'); menuBtn.style.transform = 'rotate(0)'; menuBtn.setAttribute('aria-expanded', 'false'); }); });
 
     function animateCounter(el) {
         if (el.dataset.animated) return;
@@ -986,7 +1014,27 @@
     document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) { overlay.classList.remove('active'); document.body.style.overflow = ''; } }); });
     function handleLogin() { const email = document.getElementById('loginEmail').value; const password = document.getElementById('loginPassword').value; if (!email || !password) return showToast('Please fill in all fields'); closeModal('login'); showToast('Welcome back! Redirecting...'); }
     function handleSignup() { if (!document.getElementById('termsCheck').checked) return showToast('Please agree to the Terms'); closeModal('signup'); showToast('Account created! Check your email.'); }
-    function showToast(message) { const toast = document.getElementById('toast'); document.getElementById('toastMessage').textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+    
+    // FIXED: Added toastTimeout to prevent overlapping toasts
+    let toastTimeout;
+    function showToast(message) { 
+        const toast = document.getElementById('toast'); 
+        document.getElementById('toastMessage').textContent = message; 
+        toast.classList.add('show'); 
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000); 
+    }
+    
+    // FIXED: Added toggleFaq function to properly rotate the icon
+    function toggleFaq(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector('.faq-icon');
+        const isOpen = answer.style.display === 'block';
+        
+        answer.style.display = isOpen ? 'none' : 'block';
+        icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
     function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); document.body.style.overflow = ''; } });
 </script>
