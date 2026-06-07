@@ -117,7 +117,7 @@
     .ticker-down { color: var(--red); }
     @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    /* FIXED NAVBAR SCROLL GLITCH USING GPU-ACCELERATED TRANSFORM */
+    /* NAVBAR WITH IMMEDIATE BLUR ON SCROLL */
     .navbar { 
         position: fixed; 
         top: 44px; 
@@ -127,17 +127,27 @@
         padding: 0 clamp(16px, 4vw, 24px); 
         height: 70px; 
         background: transparent;
-        transition: transform 0.3s var(--ease-smooth), background 0.3s var(--ease-smooth), backdrop-filter 0.3s var(--ease-smooth); 
+        transition: transform 0.3s var(--ease-smooth), background 0.3s var(--ease-smooth), backdrop-filter 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth); 
         will-change: transform, background;
     }
     .navbar.scrolled { 
         transform: translateY(-44px); 
-        background: rgba(10, 14, 26, 0.98); 
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        background: rgba(10, 14, 26, 0.75); /* Semi-transparent for blur effect */
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
         box-shadow: 0 4px 30px rgba(0,0,0,0.3); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
-    .nav-inner { max-width: 1200px; margin: 0 auto; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-inner { max-width: 1200px; margin: 0 auto; height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    
+    /* LEFT SIDE TOP LAYOUT */
+    .nav-left-group {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-shrink: 0;
+    }
+
     .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: clamp(16px, 4vw, 20px); letter-spacing: -0.5px; flex-shrink: 0; }
     
     .logo-box { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cyan), var(--blue)); border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; flex-shrink: 0; }
@@ -148,20 +158,21 @@
     }
     @keyframes logoPulse { 0%, 100% { opacity: 0; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
 
-    /* MOBILE ACCOUNT BUTTON (Placed next to logo on small screens) */
+    /* MOBILE ACCOUNT ICON */
     .mobile-nav-account {
         display: none;
         background: none;
         border: 1px solid var(--border);
         border-radius: 8px;
-        padding: 6px;
+        padding: 8px;
         color: var(--text);
-        margin-left: 12px;
         transition: all 0.2s var(--ease-smooth);
         cursor: pointer;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        min-width: 36px;
+        min-height: 36px;
     }
     .mobile-nav-account:hover {
         background: rgba(0, 240, 255, 0.1);
@@ -175,6 +186,7 @@
     
     .nav-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
 
+    /* DESKTOP ACCOUNT BUTTON */
     .btn-account {
         padding: 8px 16px; border-radius: 10px; background: rgba(255, 255, 255, 0.03);
         border: 1px solid var(--border); display: flex; flex-direction: column; align-items: flex-start;
@@ -513,7 +525,6 @@
     .modal-input { width: 100%; padding: 12px 16px; margin-bottom: 12px; background: var(--glass); border: 1px solid var(--border); border-radius: 10px; color: white; outline: none; font-size: 14px; transition: all 0.3s var(--ease-smooth); min-height: 44px; }
     .modal-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.15); transform: translateY(-1px); }
 
-    /* ACCOUNT MODAL SPECIFIC STYLES */
     .account-modal-content { max-width: 420px; }
     .account-modal-content h2 { font-size: 24px; margin-bottom: 20px; text-align: center; }
     
@@ -625,7 +636,6 @@
 
     .full-width { width: 100%; justify-content: center; }
 
-    /* TOS & PRIVACY MODAL STYLES */
     .legal-modal-content {
         max-width: 800px;
         max-height: 85vh;
@@ -684,6 +694,7 @@
         @supports not (zoom: 1) {
             .visual-wrapper { transform: scale(0.75); transform-origin: top center; margin: 0 auto; }
         }
+        .nav-links { gap: 20px; }
     }
     
     @media (max-width: 600px) {
@@ -755,13 +766,23 @@
 
 <nav class="navbar" id="navbar">
     <div class="nav-inner">
-        <a href="#" class="nav-logo">
-            <div class="logo-box"><svg class="icon" viewBox="0 0 24 24" style="stroke:white"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
-            Elite<span class="gradient-elite">Signal</span>
+        <div class="nav-left-group">
+            <a href="#" class="nav-logo">
+                <div class="logo-box"><svg class="icon" viewBox="0 0 24 24" style="stroke:white"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+                Elite<span class="gradient-elite">Signal</span>
+            </a>
+            <button class="btn-account" onclick="openModal('account')">
+                <span class="btn-account-main">
+                    <svg class="icon" viewBox="0 0 24 24" style="stroke:currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span class="account-name">Account</span>
+                </span>
+                <span class="btn-account-sub account-status">Sign In / Sign Up</span>
+            </button>
             <button class="mobile-nav-account" onclick="openModal('account')" aria-label="Account">
                 <svg class="icon" viewBox="0 0 24 24" style="stroke:currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </button>
-        </a>
+        </div>
+        
         <div class="nav-links">
             <a href="#signals" class="nav-link">Signals</a>
             <a href="#pricing" class="nav-link">Pricing</a>
@@ -769,13 +790,6 @@
         </div>
         
         <div class="nav-right">
-            <button class="btn-account" onclick="openModal('account')">
-                <span class="btn-account-main">
-                    <svg class="icon" viewBox="0 0 24 24" style="stroke:currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    Account
-                </span>
-                <span class="btn-account-sub">Sign In / Sign Up</span>
-            </button>
             <button class="menu-btn" id="menuBtn" aria-label="Toggle menu"><svg class="icon-lg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
         </div>
     </div>
@@ -1155,7 +1169,123 @@
 
 <div id="toast"><span id="toastMessage"></span></div>
 
+<!-- FIREBASE SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
 <script>
+    // --- FIREBASE INITIALIZATION ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDjpwIxoXA45Sqsutrx7yNXlpLvCkKScDY",
+        authDomain: "auth-ba051.firebaseapp.com",
+        databaseURL: "https://auth-ba051-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "auth-ba051",
+        storageBucket: "auth-ba051.firebasestorage.app",
+        messagingSenderId: "758068617505",
+        appId: "1:758068617505:web:59fb6ef0e71ad8a7325e60",
+        measurementId: "G-4GGC38RQ1T"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // --- AUTH STATE LISTENER ---
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            const displayName = user.displayName || user.email.split('@')[0];
+            updateAccountUI(displayName, user.email);
+        } else {
+            resetAccountUI();
+        }
+    });
+
+    // --- AUTH FUNCTIONS ---
+    function handleGoogleAuth() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).then((result) => {
+            closeModal('account');
+            showToast('Welcome, ' + (result.user.displayName || 'User') + '!', 'success');
+        }).catch((error) => {
+            if (error.code !== 'auth/popup-closed-by-user') {
+                showToast(error.message, 'error');
+            }
+        });
+    }
+
+    function handleSignIn() {
+        const email = document.getElementById('signin-email').value.trim();
+        const password = document.getElementById('signin-password').value;
+        
+        if (!email || !password) { showToast('Please fill in all fields.', 'error'); return; }
+        
+        auth.signInWithEmailAndPassword(email, password).then(() => {
+            closeModal('account');
+            showToast('Welcome back!', 'success');
+        }).catch((error) => {
+            showToast(error.message, 'error');
+        });
+    }
+
+    function handleSignUp() {
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value;
+        const repassword = document.getElementById('signup-repassword').value;
+        const termsAgreed = document.getElementById('terms-agree').checked;
+        
+        if (!email || !password || !repassword) { showToast('Please fill in all fields.', 'error'); return; }
+        if (password.length < 8) { showToast('Password must be at least 8 characters long.', 'error'); return; }
+        if (password !== repassword) { showToast('Passwords do not match.', 'error'); return; }
+        if (!termsAgreed) { showToast('You must agree to the Terms of Service.', 'error'); return; }
+
+        auth.createUserWithEmailAndPassword(email, password).then(() => {
+            closeModal('account');
+            showToast('Account created successfully!', 'success');
+        }).catch((error) => {
+            showToast(error.message, 'error');
+        });
+    }
+
+    function handleSignOut() {
+        auth.signOut().then(() => {
+            showToast('You have been signed out.', 'info');
+        }).catch((error) => {
+            showToast(error.message, 'error');
+        });
+    }
+
+    // --- UI UPDATES ---
+    function updateAccountUI(name, email) {
+        const nameEl = document.querySelector('.btn-account .account-name');
+        const statusEl = document.querySelector('.btn-account .account-status');
+        const desktopBtn = document.querySelector('.btn-account');
+        
+        if(nameEl) nameEl.textContent = name;
+        if(statusEl) statusEl.textContent = 'Sign Out';
+        if(desktopBtn) desktopBtn.setAttribute('onclick', 'handleSignOut()');
+
+        const mobileBtn = document.querySelector('.mobile-nav-account');
+        if(mobileBtn) {
+            mobileBtn.setAttribute('onclick', 'handleSignOut()');
+            mobileBtn.setAttribute('title', name + ' (Click to Sign Out)');
+        }
+    }
+
+    function resetAccountUI() {
+        const nameEl = document.querySelector('.btn-account .account-name');
+        const statusEl = document.querySelector('.btn-account .account-status');
+        const desktopBtn = document.querySelector('.btn-account');
+        
+        if(nameEl) nameEl.textContent = 'Account';
+        if(statusEl) statusEl.textContent = 'Sign In / Sign Up';
+        if(desktopBtn) desktopBtn.setAttribute('onclick', "openModal('account')");
+
+        const mobileBtn = document.querySelector('.mobile-nav-account');
+        if(mobileBtn) {
+            mobileBtn.setAttribute('onclick', "openModal('account')");
+            mobileBtn.removeAttribute('title');
+        }
+    }
+
+    // --- CANVAS PARTICLES ---
     const canvas = document.getElementById('nanoBg');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -1234,6 +1364,7 @@
     
     resizeCanvas(); initParticles(); requestAnimationFrame(animate);
 
+    // --- SCROLL & NAV ---
     const navbar = document.getElementById('navbar');
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
@@ -1242,7 +1373,8 @@
     window.addEventListener('scroll', () => {
         if (!ticking) {
             window.requestAnimationFrame(() => {
-                if (window.pageYOffset > 50) navbar.classList.add('scrolled');
+                // Immediate blur on scroll
+                if (window.pageYOffset > 10) navbar.classList.add('scrolled');
                 else navbar.classList.remove('scrolled');
                 ticking = false;
             });
@@ -1253,6 +1385,7 @@
     menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('active'); const isOpen = mobileMenu.classList.contains('active'); menuBtn.style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0)'; });
     document.querySelectorAll('#mobileMenu a').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.remove('active'); menuBtn.style.transform = 'rotate(0)'; }); });
 
+    // --- COUNTERS & REVEALS ---
     function animateCounter(el) {
         if (el.dataset.animated) return;
         el.dataset.animated = 'true';
@@ -1284,6 +1417,7 @@
     revealElements.forEach(el => revealObserver.observe(el));
     counters.forEach(el => counterObserver.observe(el));
 
+    // --- SIGNALS DATA ---
     const coinImages = { 'BTC': 'https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png', 'ETH': 'https://coin-images.coingecko.com/coins/images/279/large/ethereum.png', 'SOL': 'https://coin-images.coingecko.com/coins/images/4128/large/solana.png', 'BNB': 'https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png', 'XRP': 'https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png', 'AVAX': 'https://coin-images.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png', 'DOT': 'https://coin-images.coingecko.com/coins/images/12171/large/polkadot.png', 'LINK': 'https://coin-images.coingecko.com/coins/images/877/large/Chainlink_Logo_500.png', 'MATIC': 'https://coin-images.coingecko.com/coins/images/4713/large/matic-token-icon.png' };
     const signalsData = [
         { pair: 'BTC/USDT', type: 'buy', entry: 66840, target: 71200, stopLoss: 65100, rr: '1:2.5', confidence: 92, time: '2h ago', status: 'active' },
@@ -1336,87 +1470,6 @@
         
         document.querySelector(`.account-tab[onclick="switchAccountTab('${tab}')"]`).classList.add('active');
         document.getElementById(`${tab}-form`).classList.add('active');
-    }
-
-    function handleGoogleAuth() {
-        showToast('Redirecting to Google Authentication...', 'info');
-        setTimeout(() => {
-            showToast('Google Auth is a demo in this version.', 'info');
-        }, 1500);
-    }
-
-    function handleSignIn() {
-        const email = document.getElementById('signin-email').value;
-        const password = document.getElementById('signin-password').value;
-        
-        if (!email || !password) {
-            showToast('Please fill in all fields.', 'error');
-            return;
-        }
-        
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            showToast('Please enter a valid email address.', 'error');
-            return;
-        }
-
-        showToast('Signing in...', 'info');
-        setTimeout(() => {
-            closeModal('account');
-            showToast('Welcome back! You are now signed in.', 'success');
-            updateAccountUI(email);
-        }, 1000);
-    }
-
-    function handleSignUp() {
-        const email = document.getElementById('signup-email').value;
-        const password = document.getElementById('signup-password').value;
-        const repassword = document.getElementById('signup-repassword').value;
-        const termsAgreed = document.getElementById('terms-agree').checked;
-        
-        if (!email || !password || !repassword) {
-            showToast('Please fill in all fields.', 'error');
-            return;
-        }
-        
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            showToast('Please enter a valid email address.', 'error');
-            return;
-        }
-
-        if (password.length < 8) {
-            showToast('Password must be at least 8 characters long.', 'error');
-            return;
-        }
-
-        if (password !== repassword) {
-            showToast('Passwords do not match.', 'error');
-            return;
-        }
-
-        if (!termsAgreed) {
-            showToast('You must agree to the Terms of Service.', 'error');
-            return;
-        }
-
-        showToast('Creating account...', 'info');
-        setTimeout(() => {
-            closeModal('account');
-            showToast('Account created successfully! Welcome to Elite Signal.', 'success');
-            updateAccountUI(email);
-        }, 1000);
-    }
-
-    function updateAccountUI(email) {
-        const username = email.split('@')[0];
-        document.querySelectorAll('.btn-account-main span:last-child').forEach(el => {
-            el.textContent = username;
-        });
-        document.querySelectorAll('.btn-account-sub').forEach(el => {
-            el.textContent = 'Manage Account';
-        });
-        document.querySelectorAll('.btn-account, .mobile-nav-account').forEach(btn => {
-            btn.setAttribute('onclick', 'showToast("Dashboard coming soon!", "info")');
-        });
     }
 
     function showToast(message, type = 'info') { 
