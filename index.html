@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -218,30 +219,46 @@
     .nav-link { font-size: 14px; font-weight: 500; color: var(--text2); transition: color 0.2s var(--ease-smooth); }
     .nav-link:hover, .nav-link:active { color: var(--cyan); }
     
-    .btn-nav { 
-        padding: 10px 20px; 
-        border-radius: 50px; 
-        font-size: 14px; 
-        font-weight: 600; 
-        color: var(--bg); 
-        background: linear-gradient(135deg, var(--cyan), var(--blue));
-        transition: transform 0.2s var(--ease-bounce);
-        position: relative;
-        z-index: 1;
+    /* === NEW ACCOUNT BUTTON STYLES === */
+    .btn-account {
+        padding: 8px 16px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        transition: all 0.2s var(--ease-smooth);
+        cursor: pointer;
+        text-align: left;
+        min-width: 130px;
     }
-    .btn-nav::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        box-shadow: 0 0 20px 3px rgba(0, 214, 143, 0.3);
-        opacity: 0;
-        animation: btnGlow 3s ease-in-out infinite;
-        z-index: -1;
-        pointer-events: none;
+    .btn-account:hover {
+        background: rgba(0, 214, 143, 0.08);
+        border-color: rgba(0, 214, 143, 0.3);
+        transform: translateY(-2px);
     }
-    @keyframes btnGlow { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-    .btn-nav:hover, .btn-nav:active { transform: translateY(-2px) scale(1.05); }
+    .btn-account-main {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        line-height: 1.2;
+    }
+    .btn-account-sub {
+        font-size: 10px;
+        color: var(--text3);
+        font-weight: 500;
+        line-height: 1.2;
+    }
+    .btn-account:hover .btn-account-sub {
+        color: var(--cyan);
+    }
+    /* ================================ */
+
     .menu-btn { background: none; color: var(--text); display: none; transition: transform 0.3s var(--ease-bounce); padding: 8px; }
 
     .mobile-menu {
@@ -643,7 +660,7 @@
         transition: all 0.3s var(--ease-bounce);
         display: flex; 
         flex-direction: column;
-        overflow: visible; /* FIXED: Changed from hidden to visible so badge isn't clipped */
+        overflow: visible; 
     }
     .pricing-card::before { 
         content: ''; 
@@ -656,7 +673,7 @@
         transform: translateX(-100%);
         transition: transform 0.8s var(--ease-smooth); 
         pointer-events: none; 
-        border-radius: inherit; /* FIXED: Added to keep shimmer inside rounded corners */
+        border-radius: inherit; 
     }
     .pricing-card:hover::before { transform: translateX(100%); }
     .pricing-card:hover, .pricing-card:active { transform: translateY(-6px); border-color: rgba(0, 214, 143, 0.3); box-shadow: 0 15px 30px rgba(0, 214, 143, 0.1); }
@@ -691,7 +708,7 @@
         font-size: 10px; 
         font-weight: 700; 
         animation: badgeBounce 2s ease-in-out infinite; 
-        z-index: 2; /* FIXED: Added to ensure badge sits above card border/glow */
+        z-index: 2; 
     }
     @keyframes badgeBounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-4px); } }
     .plan-name { font-size: 16px; font-weight: 600; color: var(--text2); margin-bottom: 8px; }
@@ -851,6 +868,7 @@
         .menu-btn { display: block; }
         .pricing-grid { grid-template-columns: 1fr; max-width: 360px; }
         .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .btn-account { min-width: 110px; }
     }
     
     @media (max-width: 400px) {
@@ -908,13 +926,32 @@
             <a href="#signals" class="nav-link">Signals</a>
             <a href="#pricing" class="nav-link">Pricing</a>
             <a href="#faq" class="nav-link">FAQ</a>
-            <button class="btn-nav" onclick="openModal('signup')">Get Started</button>
+            
+            <!-- === NEW ACCOUNT BUTTON === -->
+            <button class="btn-account" id="accountBtn" onclick="handleAccountClick()">
+                <span class="btn-account-main">
+                    <svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span id="accountMainText">Account</span>
+                </span>
+                <span class="btn-account-sub" id="accountSubText">Sign In / Sign Up</span>
+            </button>
+            <!-- ======================== -->
         </div>
         <button class="menu-btn" id="menuBtn" aria-label="Toggle menu"><svg class="icon-lg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-    <a href="#signals">Signals</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="#" onclick="openModal('signup')">Get Started</a>
+    <a href="#signals">Signals</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <!-- Mobile Account Link -->
+    <a href="#" onclick="handleAccountClick(); return false;" style="display:flex;flex-direction:column;gap:4px;padding:14px 0;">
+        <span style="font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px" id="mobileAccountMain">
+            <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Account
+        </span>
+        <span style="font-size:11px;color:var(--text3)" id="mobileAccountSub">Sign In / Sign Up</span>
+    </a>
 </div>
 
 <section class="hero">
@@ -1287,8 +1324,23 @@ const EliteAuth = {
     }
   },
 
+  // === UPDATED UI LOGIC FOR NEW ACCOUNT BUTTON ===
   updateUI() {
     const isLoggedIn = !!eliteAuth.apiKey;
+    
+    // Update Desktop & Mobile Account Button Text
+    const mainTexts = document.querySelectorAll('#accountMainText, #mobileAccountMain');
+    const subTexts = document.querySelectorAll('#accountSubText, #mobileAccountSub');
+
+    if (isLoggedIn && eliteAuth.user) {
+        const displayName = eliteAuth.user.displayName || (eliteAuth.user.email ? eliteAuth.user.email.split('@')[0] : 'My Account');
+        mainTexts.forEach(el => el.textContent = displayName);
+        subTexts.forEach(el => el.textContent = 'Sign Out / Dashboard');
+    } else {
+        mainTexts.forEach(el => el.textContent = 'Account');
+        subTexts.forEach(el => el.textContent = 'Sign In / Sign Up');
+    }
+
     document.querySelectorAll('[data-auth-required]').forEach(el => {
       el.style.display = isLoggedIn ? '' : 'none';
     });
@@ -1331,6 +1383,9 @@ const EliteAuth = {
           <a href="https://nowpayments.io" target="_blank" class="btn-secondary" style="width:100%;justify-content:center;display:flex">
             Upgrade to Pro
           </a>
+          <button class="btn-secondary" onclick="EliteAuth.logout()" style="width:100%;justify-content:center;display:flex;margin-top:12px;border-color:var(--red);color:var(--red)">
+            Sign Out
+          </button>
           <div id="api-test-result" style="margin-top:16px;display:none">
             <div style="font-size:12px;color:var(--text3);margin-bottom:8px">Response</div>
             <pre style="background:var(--bg2);padding:12px;border-radius:8px;font-size:11px;overflow-x:auto;max-height:200px"></pre>
@@ -1377,6 +1432,7 @@ const EliteAuth = {
       localStorage.removeItem('elite_session');
       localStorage.removeItem('elite_api_key');
       this.updateUI();
+      this.hideAPIPanel();
       showToast('Signed out', 'info');
     } catch (err) { showToast('Logout failed', 'error'); }
   }
@@ -1391,6 +1447,17 @@ function showToast(message, type = 'info') {
   toast.style.boxShadow = type === 'success' ? '0 10px 30px rgba(0, 214, 143, 0.25)' : '0 10px 25px rgba(0, 214, 143, 0.2)';
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// === ACCOUNT BUTTON CLICK HANDLER ===
+function handleAccountClick() {
+    if (eliteAuth.apiKey) {
+        // If logged in, open the API/Dashboard panel
+        EliteAuth.showAPIPanel();
+    } else {
+        // If not logged in, open the signup modal
+        openModal('signup');
+    }
 }
 
 // === KEYBOARD SHORTCUTS ===
@@ -1444,7 +1511,6 @@ class NanoDot {
     update() { 
         this.x += this.speedX; 
         this.y += this.speedY;
-        // Bounce off edges instead of resetting to avoid allocation
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
         if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
     }
@@ -1467,12 +1533,9 @@ function drawConnections() {
     const maxDistSq = maxDist * maxDist;
     
     ctx.lineWidth = 0.5;
-    // CRITICAL FIX: Set strokeStyle ONCE outside the loop to maintain GPU batching
     ctx.strokeStyle = 'rgba(0, 214, 143, 0.06)'; 
     ctx.beginPath();
     
-    // CRITICAL FIX: Removed spatial grid overhead. For 40 particles, a simple nested 
-    // loop (780 checks) is significantly faster and creates ZERO garbage collection.
     for (let i = 0; i < particles.length; i++) {
         const p1 = particles[i];
         for (let j = i + 1; j < particles.length; j++) {
@@ -1682,3 +1745,4 @@ function scrollToSection(id) {
 </script>
 </body>
 </html>
+```
