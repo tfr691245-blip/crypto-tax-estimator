@@ -7,7 +7,7 @@
 
     <h1>Testing Site Unlocker</h1>
     <button onclick="alert('Site is clickable!')">Click Me to Test</button>
-    <p>If the blocker works, you can click this button immediately.</p>
+    <p>If the blocker works, you can click this button immediately and the page won't go blank.</p>
 
     <!-- Simulated Full-Screen Unclickable Malware -->
     <div id="malware-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:99999; display:flex; justify-content:center; align-items:center;">
@@ -18,26 +18,26 @@
         </div>
     </div>
 
-    <!-- The Site Unlocker Script -->
+    <!-- The Fixed Site Unlocker Script -->
     <script>
     (function() {
         function unlockSite() {
-            // 1. Find and delete the specific malware text
             const allElements = document.querySelectorAll('*');
             allElements.forEach(el => {
+                // CRITICAL FIX: Never delete the main page structure
+                if (['HTML', 'BODY', 'HEAD', 'MAIN'].includes(el.tagName)) return;
+
                 const text = el.innerText || '';
                 if (text.includes('Ctrl + V') || text.includes('Verification code') || text.includes('Terminal')) {
-                    el.remove();
-                }
-                
-                // 2. Destroy full-screen overlays that block clicks
-                const style = window.getComputedStyle(el);
-                if (style.position === 'fixed' && el.offsetWidth >= window.innerWidth && el.offsetHeight >= window.innerHeight) {
-                    el.remove();
+                    const style = window.getComputedStyle(el);
+                    // Only remove if it's an overlay (fixed/absolute) or has a high z-index
+                    if (style.position === 'fixed' || style.position === 'absolute' || parseInt(style.zIndex) > 100) {
+                        el.remove();
+                    }
                 }
             });
 
-            // 3. Force the site to be clickable again
+            // Force the site to be clickable again
             document.body.style.pointerEvents = 'auto';
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
