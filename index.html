@@ -1,56 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Blocker Test</title>
-    <style>
-        .fake-popup {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            width: 350px; z-index: 9999; font-family: Arial, sans-serif;
-        }
-        .fake-header { background: #4a90e2; color: white; padding: 15px; font-weight: bold; }
-        .fake-body { padding: 20px; font-size: 14px; color: #333; }
-    </style>
+    <title>Site Unlocker Test</title>
 </head>
-<body>
+<body style="background: #f0f0f0; padding: 20px;">
 
-    <h1>Testing Popup Blocker</h1>
-    <p>If the blocker works, the popup below will disappear instantly.</p>
+    <h1>Testing Site Unlocker</h1>
+    <button onclick="alert('Site is clickable!')">Click Me to Test</button>
+    <p>If the blocker works, you can click this button immediately.</p>
 
-    <!-- Simulated Fake Popup -->
-    <div class="fake-popup">
-        <div class="fake-header">To verify your request follow the instructions below</div>
-        <div class="fake-body">
-            <p>Use the keyboard in this order:</p>
-            <ol>
-                <li>Press Win + X</li>
-                <li>Press I (or choose Terminal)</li>
-                <li>Press Ctrl + V</li>
-                <li>Press Enter</li>
-            </ol>
+    <!-- Simulated Full-Screen Unclickable Malware -->
+    <div id="malware-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:99999; display:flex; justify-content:center; align-items:center;">
+        <div style="background:white; padding:20px; border-radius:8px; text-align:center;">
+            <h3>To verify your request follow the instructions below</h3>
+            <p>Press Ctrl + V</p>
             <p><strong>Verification code: 1FFA021DC77C</strong></p>
         </div>
     </div>
 
-    <!-- The Stronger Blocker Script -->
+    <!-- The Site Unlocker Script -->
     <script>
-        // Watch for any new elements added to the page
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                    if (node.nodeType === 1) { // Check if it's an HTML element
-                        const text = node.innerText || "";
-                        // Check for the exact text from your screenshot
-                        if (text.includes('Ctrl + V') || text.includes('Verification code') || text.includes('Terminal')) {
-                            node.remove(); // Delete it immediately
-                        }
-                    }
-                });
+    (function() {
+        function unlockSite() {
+            // 1. Find and delete the specific malware text
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(el => {
+                const text = el.innerText || '';
+                if (text.includes('Ctrl + V') || text.includes('Verification code') || text.includes('Terminal')) {
+                    el.remove();
+                }
+                
+                // 2. Destroy full-screen overlays that block clicks
+                const style = window.getComputedStyle(el);
+                if (style.position === 'fixed' && el.offsetWidth >= window.innerWidth && el.offsetHeight >= window.innerHeight) {
+                    el.remove();
+                }
             });
-        });
 
-        // Start watching the whole page
-        observer.observe(document.body, { childList: true, subtree: true });
+            // 3. Force the site to be clickable again
+            document.body.style.pointerEvents = 'auto';
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+        }
+
+        // Run immediately and continuously
+        unlockSite();
+        setInterval(unlockSite, 50);
+
+        // Watch for new injections
+        const observer = new MutationObserver(unlockSite);
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    })();
     </script>
 
 </body>
