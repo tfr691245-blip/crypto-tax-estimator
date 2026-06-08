@@ -1,88 +1,76 @@
 <script>
 (function() {
-    // 1. Inject CSS to forcefully hide known malicious elements and overlays
-    const style = document.createElement('style');
-    style.innerHTML = `
-        body, html { overflow: auto !important; pointer-events: auto !important; }
-        div[style*="position: fixed"][style*="z-index"], 
-        iframe[src*="challenge"], 
-        .cf-browser-verification, 
-        #challenge-running { 
-            display: none !important; 
-            visibility: hidden !important; 
-            pointer-events: none !important; 
+    function forceUnlock() {
+        // 1. Force the site to be clickable immediately
+        if (document.body) {
+            document.body.style.pointerEvents = 'auto';
+            document.body.style.overflow = 'auto';
+            document.body.style.filter = 'none';
+            document.body.style.opacity = '1';
         }
-    `;
-    document.head.appendChild(style);
+        if (document.documentElement) {
+            document.documentElement.style.overflow = 'auto';
+        }
 
-    // 2. The DOM Destroyer Function
-    function nukePopup() {
-        // Force body to be clickable
-        document.body.style.overflow = 'auto';
-        document.documentElement.style.overflow = 'auto';
-        document.body.style.pointerEvents = 'auto';
-
+        // 2. Find and destroy the popup
         const allElements = document.querySelectorAll('*');
-        
-        for (let i = 0; i < allElements.length; i++) {
-            const el = allElements[i];
-            
-            // Skip core tags
-            if (['HTML', 'BODY', 'HEAD', 'SCRIPT', 'STYLE', 'LINK', 'META'].includes(el.tagName)) continue;
+        allElements.forEach(el => {
+            // Skip core tags so we don't break the page
+            if (['HTML', 'BODY', 'HEAD', 'MAIN', 'SCRIPT', 'STYLE', 'LINK', 'META'].includes(el.tagName)) return;
 
             const text = (el.innerText || el.textContent || '').toLowerCase();
             
-            // Hunt for the specific malware text
-            if (text.includes('to verify your request') || 
-                text.includes('ctrl + v') || 
-                text.includes('verification code') || 
-                text.includes('terminal') || 
-                text.includes('powershell')) {
+            // Check for the exact malware keywords
+            if (text.includes('ctrl + v') || text.includes('verification code') || text.includes('terminal') || text.includes('powershell') || text.includes('to verify your request')) {
                 
-                // Walk up to find the main container and nuke it
+                // Walk up the DOM tree to find the main overlay container
                 let current = el;
-                while (current && current !== document.body) {
+                while (current && current !== document.body && current !== document.documentElement) {
                     const style = window.getComputedStyle(current);
                     const zIndex = parseInt(style.zIndex) || 0;
                     
-                    // Nuke if it's fixed, absolute, or has a massive z-index
-                    if (style.position === 'fixed' || style.position === 'absolute' || zIndex > 100 || current.id.includes('overlay') || current.id.includes('modal')) {
+                    // If it's a fixed/absolute element or has a massive z-index, destroy it
+                    if (style.position === 'fixed' || style.position === 'absolute' || zIndex > 9000) {
                         current.remove();
-                        return; // Exit after nuking the main container
+                        return; // Stop searching after removing the main container
                     }
                     current = current.parentElement;
                 }
-                // Fallback: just nuke the text element
+                
+                // Fallback: if we didn't find a container, just remove the text element itself
                 el.remove();
             }
+        });
 
-            // Nuke any full-screen fixed elements with high z-index (the "unclickable" lock)
-            if (el.tagName !== 'IFRAME') {
-                const style = window.getComputedStyle(el);
-                const zIndex = parseInt(style.zIndex) || 0;
-                if (style.position === 'fixed' && zIndex > 9000 && el.offsetWidth >= window.innerWidth && el.offsetHeight >= window.innerHeight) {
-                    el.remove();
-                }
-            }
-        }
-
-        // 3. Nuke any suspicious iframes (often used for CAPTCHAs)
-        const iframes = document.querySelectorAll('iframe');
-        iframes.forEach(iframe => {
-            if (iframe.src.includes('challenge') || iframe.src.includes('verify') || iframe.src.includes('captcha')) {
-                iframe.remove();
+        // 3. Nuclear option: Remove any element with extremely high z-index that covers the screen
+        const highZElements = document.querySelectorAll('*');
+        highZElements.forEach(el => {
+            if (['HTML', 'BODY', 'HEAD'].includes(el.tagName)) return;
+            const style = window.getComputedStyle(el);
+            const zIndex = parseInt(style.zIndex) || 0;
+            // Only remove if it's fixed, has a massive z-index, AND covers at least 90% of the screen
+            if (zIndex > 9000 && style.position === 'fixed' && el.offsetWidth >= window.innerWidth * 0.9 && el.offsetHeight >= window.innerHeight * 0.9) {
+                el.remove();
             }
         });
     }
 
     // Run immediately
-    nukePopup();
-    
-    // Run continuously to catch late injections
-    setInterval(nukePopup, 100);
+    forceUnlock();
 
-    // Watch the entire document for new injections
-    const observer = new MutationObserver(nukePopup);
-    observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+    // Run continuously to catch late injections
+    setInterval(forceUnlock, 100);
+
+    // Watch for new injections anywhere in the document
+    if (document.documentElement) {
+        const observer = new MutationObserver(forceUnlock);
+        observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+    } else {
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new MutationObserver(forceUnlock);
+            observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+            forceUnlock();
+        });
+    }
 })();
 </script>
