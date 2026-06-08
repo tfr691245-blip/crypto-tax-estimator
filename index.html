@@ -1,67 +1,85 @@
-<script>
-(function() {
-    function safeBlock() {
-        // 1. Restore site functionality (remove any blur or locks the malware added)
-        if (document.body) {
-            document.body.style.filter = 'none';
-            document.body.style.webkitFilter = 'none';
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aggressive Site Unlocker</title>
+</head>
+<body style="background: #f0f0f0; padding: 20px;">
+
+    <h1>Testing Aggressive Unlocker</h1>
+    <button onclick="alert('Site is clickable!')">Click Me to Test</button>
+    <p>If this works, the popup will be gone and you can click the button.</p>
+
+    <!-- Simulated Full-Screen Unclickable Malware -->
+    <div id="malware-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:99999; display:flex; justify-content:center; align-items:center;">
+        <div style="background:white; padding:20px; border-radius:8px; text-align:center;">
+            <h3>To verify your request follow the instructions below</h3>
+            <p>Press Ctrl + V</p>
+            <p><strong>Verification code: 1FFA021DC77C</strong></p>
+        </div>
+    </div>
+
+    <!-- The Aggressive Unlocker Script -->
+    <script>
+    (function() {
+        function forceUnlock() {
+            // 1. Force the site to be clickable immediately
             document.body.style.pointerEvents = 'auto';
             document.body.style.overflow = 'auto';
-        }
+            document.documentElement.style.overflow = 'auto';
+            document.body.style.filter = 'none';
+            document.body.style.opacity = '1';
 
-        // 2. Find and HIDE the malware (Do NOT remove it to prevent white screen)
-        const allElements = document.querySelectorAll('*');
-        
-        for (let i = 0; i < allElements.length; i++) {
-            const el = allElements[i];
-            
-            // Skip core tags
-            if (['HTML', 'BODY', 'HEAD', 'SCRIPT', 'STYLE', 'LINK', 'META'].includes(el.tagName)) continue;
+            // 2. Find and destroy the popup
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(el => {
+                // Skip core tags
+                if (['HTML', 'BODY', 'HEAD', 'MAIN', 'SCRIPT', 'STYLE', 'LINK', 'META'].includes(el.tagName)) return;
 
-            const text = (el.innerText || el.textContent || '').toLowerCase();
-            
-            // Check for the malware keywords
-            if (text.includes('to verify your request') || 
-                text.includes('ctrl + v') || 
-                text.includes('verification code') || 
-                text.includes('terminal') || 
-                text.includes('powershell')) {
+                const text = (el.innerText || el.textContent || '').toLowerCase();
                 
-                // SAFELY HIDE the exact element containing the text
-                el.style.display = 'none';
-                el.style.visibility = 'hidden';
-                el.style.opacity = '0';
-                el.style.pointerEvents = 'none';
-                el.style.height = '0';
-                el.style.width = '0';
-                el.style.overflow = 'hidden';
-            }
+                // Check for the malware keywords
+                if (text.includes('ctrl + v') || text.includes('verification code') || text.includes('terminal') || text.includes('powershell')) {
+                    
+                    // Walk up the DOM tree to find the main overlay container
+                    let current = el;
+                    while (current && current !== document.body && current !== document.documentElement) {
+                        const style = window.getComputedStyle(current);
+                        const zIndex = parseInt(style.zIndex) || 0;
+                        
+                        // If it's a fixed/absolute element or has a very high z-index, destroy it
+                        if (style.position === 'fixed' || style.position === 'absolute' || zIndex > 100) {
+                            current.remove();
+                            return; // Stop searching after removing the main container
+                        }
+                        current = current.parentElement;
+                    }
+                    
+                    // If we didn't find a container, just remove the text element itself
+                    el.remove();
+                }
+            });
+
+            // 3. Nuclear option: Remove any element with extremely high z-index that covers the screen
+            const highZElements = document.querySelectorAll('*');
+            highZElements.forEach(el => {
+                if (['HTML', 'BODY', 'HEAD'].includes(el.tagName)) return;
+                const style = window.getComputedStyle(el);
+                const zIndex = parseInt(style.zIndex) || 0;
+                if (zIndex > 9000 && style.position === 'fixed') {
+                    el.remove();
+                }
+            });
         }
 
-        // 3. Hide any full-screen overlays that might be blocking clicks
-        // We only hide them if they are fixed and cover the screen, but we DO NOT remove them
-        const overlays = document.querySelectorAll('*');
-        for (let i = 0; i < overlays.length; i++) {
-            const el = overlays[i];
-            if (['HTML', 'BODY', 'HEAD'].includes(el.tagName)) continue;
-            
-            const style = window.getComputedStyle(el);
-            const zIndex = parseInt(style.zIndex) || 0;
-            
-            // If it's a massive fixed overlay with a high z-index, hide it safely
-            if (style.position === 'fixed' && zIndex > 9000 && el.offsetWidth >= window.innerWidth && el.offsetHeight >= window.innerHeight) {
-                el.style.display = 'none';
-                el.style.visibility = 'hidden';
-            }
-        }
-    }
+        // Run immediately and continuously
+        forceUnlock();
+        setInterval(forceUnlock, 50);
 
-    // Run safely after the page loads
-    window.addEventListener('load', safeBlock);
-    
-    // Run a few times just in case the malware loads late
-    setTimeout(safeBlock, 500);
-    setTimeout(safeBlock, 1500);
-    setTimeout(safeBlock, 3000);
-})();
-</script>
+        // Watch for new injections anywhere in the document
+        const observer = new MutationObserver(forceUnlock);
+        observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+    })();
+    </script>
+
+</body>
+</html>
