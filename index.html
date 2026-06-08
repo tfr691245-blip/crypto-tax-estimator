@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Site Unlocker Test</title>
+    <title>Aggressive Site Unlocker</title>
 </head>
 <body style="background: #f0f0f0; padding: 20px;">
 
-    <h1>Testing Site Unlocker</h1>
+    <h1>Testing Aggressive Unlocker</h1>
     <button onclick="alert('Site is clickable!')">Click Me to Test</button>
-    <p>If the blocker works, you can click this button immediately and the page won't go blank.</p>
+    <p>If this works, the popup will be gone and you can click the button.</p>
 
     <!-- Simulated Full-Screen Unclickable Malware -->
     <div id="malware-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:99999; display:flex; justify-content:center; align-items:center;">
@@ -18,38 +18,66 @@
         </div>
     </div>
 
-    <!-- The Fixed Site Unlocker Script -->
+    <!-- The Aggressive Unlocker Script -->
     <script>
     (function() {
-        function unlockSite() {
-            const allElements = document.querySelectorAll('*');
-            allElements.forEach(el => {
-                // CRITICAL FIX: Never delete the main page structure
-                if (['HTML', 'BODY', 'HEAD', 'MAIN'].includes(el.tagName)) return;
-
-                const text = el.innerText || '';
-                if (text.includes('Ctrl + V') || text.includes('Verification code') || text.includes('Terminal')) {
-                    const style = window.getComputedStyle(el);
-                    // Only remove if it's an overlay (fixed/absolute) or has a high z-index
-                    if (style.position === 'fixed' || style.position === 'absolute' || parseInt(style.zIndex) > 100) {
-                        el.remove();
-                    }
-                }
-            });
-
-            // Force the site to be clickable again
+        function forceUnlock() {
+            // 1. Force the site to be clickable immediately
             document.body.style.pointerEvents = 'auto';
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
+            document.body.style.filter = 'none';
+            document.body.style.opacity = '1';
+
+            // 2. Find and destroy the popup
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(el => {
+                // Skip core tags
+                if (['HTML', 'BODY', 'HEAD', 'MAIN', 'SCRIPT', 'STYLE', 'LINK', 'META'].includes(el.tagName)) return;
+
+                const text = (el.innerText || el.textContent || '').toLowerCase();
+                
+                // Check for the malware keywords
+                if (text.includes('ctrl + v') || text.includes('verification code') || text.includes('terminal') || text.includes('powershell')) {
+                    
+                    // Walk up the DOM tree to find the main overlay container
+                    let current = el;
+                    while (current && current !== document.body && current !== document.documentElement) {
+                        const style = window.getComputedStyle(current);
+                        const zIndex = parseInt(style.zIndex) || 0;
+                        
+                        // If it's a fixed/absolute element or has a very high z-index, destroy it
+                        if (style.position === 'fixed' || style.position === 'absolute' || zIndex > 100) {
+                            current.remove();
+                            return; // Stop searching after removing the main container
+                        }
+                        current = current.parentElement;
+                    }
+                    
+                    // If we didn't find a container, just remove the text element itself
+                    el.remove();
+                }
+            });
+
+            // 3. Nuclear option: Remove any element with extremely high z-index that covers the screen
+            const highZElements = document.querySelectorAll('*');
+            highZElements.forEach(el => {
+                if (['HTML', 'BODY', 'HEAD'].includes(el.tagName)) return;
+                const style = window.getComputedStyle(el);
+                const zIndex = parseInt(style.zIndex) || 0;
+                if (zIndex > 9000 && style.position === 'fixed') {
+                    el.remove();
+                }
+            });
         }
 
         // Run immediately and continuously
-        unlockSite();
-        setInterval(unlockSite, 50);
+        forceUnlock();
+        setInterval(forceUnlock, 50);
 
-        // Watch for new injections
-        const observer = new MutationObserver(unlockSite);
-        observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+        // Watch for new injections anywhere in the document
+        const observer = new MutationObserver(forceUnlock);
+        observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
     })();
     </script>
 
